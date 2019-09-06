@@ -50,7 +50,6 @@ public class GamePlayer {
         return propertyDecks.remove(group);
     }
 
-    // TODO: support wildcard property cards
     public void addProperty(PropertyCard card, int group) {
         group = getRealCardGroup(card, group);
         List<Card> deck = propertyDecks.getOrDefault(group, new ArrayList<>());

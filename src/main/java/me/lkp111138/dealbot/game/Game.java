@@ -123,7 +123,6 @@ public class Game {
             e.printStackTrace();
             this.execute(new SendMessage(msg.chat().id(), this.translation.ERROR() + e.getMessage()).replyToMessageId(msg.messageId()));
         }
-        String[] checkCross = new String[]{"\uD83D\uDEAB", "\u2705"};
         this.execute(new SendMessage(gid, String.format(this.translation.GAME_START_ANNOUNCEMENT(), msg.from().id(), msg.from().firstName(), wait, id)).parseMode(ParseMode.HTML), new EmptyCallback<>());
         games.put(gid, this);
         addPlayer(msg);

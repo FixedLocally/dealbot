@@ -53,7 +53,7 @@ public class PlayCommand implements Command {
                         stmt1.execute();
                         stmt1.close();
                     }
-                    info = new GroupInfo(turn_wait, collect_place, fry);
+                    info = new GroupInfo(turn_wait);
                     try {
                         new Game(msg, chips, wait, info);
                     } catch (ConcurrentGameException e) {
