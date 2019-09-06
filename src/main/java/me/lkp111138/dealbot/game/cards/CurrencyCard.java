@@ -5,12 +5,10 @@ import me.lkp111138.dealbot.game.GamePlayer;
 public class CurrencyCard implements Card {
     private final int currencyValue;
     private final String title;
-    private final int group;
 
-    public CurrencyCard(int currencyValue, String title, int group) {
+    public CurrencyCard(int currencyValue, String title) {
         this.currencyValue = currencyValue;
         this.title = title;
-        this.group = group;
     }
 
     @Override
@@ -46,9 +44,5 @@ public class CurrencyCard implements Card {
     @Override
     public void execute(GamePlayer player, Object[] args) {
         player.addCurrency(this);
-    }
-
-    public int getGroup() {
-        return group;
     }
 }
