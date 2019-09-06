@@ -1,5 +1,7 @@
 package me.lkp111138.dealbot.game.cards;
 
+import me.lkp111138.dealbot.game.GamePlayer;
+
 public interface Card {
     /**
      * @return true is objectable, false otherwise
@@ -35,5 +37,5 @@ public interface Card {
     /**
      * Executes the card logic
      */
-    void execute();
+    void execute(GamePlayer player, Object[] args);
 }
