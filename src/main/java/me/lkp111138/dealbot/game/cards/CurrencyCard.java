@@ -46,4 +46,11 @@ public class CurrencyCard implements Card {
         player.addCurrency(this);
         player.promptForCard();
     }
+
+    @Override
+    public String toString() {
+        return "CurrencyCard{" +
+                "currencyValue=" + currencyValue +
+                '}';
+    }
 }

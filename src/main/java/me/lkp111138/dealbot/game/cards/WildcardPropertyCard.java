@@ -1,5 +1,7 @@
 package me.lkp111138.dealbot.game.cards;
 
+import java.util.Arrays;
+
 public class WildcardPropertyCard extends PropertyCard {
     private final int[] groups;
 
@@ -10,5 +12,12 @@ public class WildcardPropertyCard extends PropertyCard {
 
     public int[] getGroups() {
         return groups;
+    }
+
+    @Override
+    public String toString() {
+        return "WildcardPropertyCard{" +
+                "groups=" + Arrays.toString(groups) +
+                "}";
     }
 }

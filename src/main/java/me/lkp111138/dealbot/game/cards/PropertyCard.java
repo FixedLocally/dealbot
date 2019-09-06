@@ -67,4 +67,12 @@ public class PropertyCard implements Card {
     public int getGroup() {
         return group;
     }
+
+    @Override
+    public String toString() {
+        return "PropertyCard{" +
+                "title='" + title + '\'' +
+                ", group=" + group +
+                '}';
+    }
 }

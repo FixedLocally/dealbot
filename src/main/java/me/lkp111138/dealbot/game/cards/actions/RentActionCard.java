@@ -3,6 +3,8 @@ package me.lkp111138.dealbot.game.cards.actions;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 
+import java.util.Arrays;
+
 public class RentActionCard extends ActionCard {
     private final int[] groups;
 
@@ -25,5 +27,12 @@ public class RentActionCard extends ActionCard {
         // full wildcard: 1 payer
         // double wildcard: all pays
         player.promptForCard();
+    }
+
+    @Override
+    public String toString() {
+        return "RentActionCard{" +
+                "groups=" + Arrays.toString(groups) +
+                "}";
     }
 }
