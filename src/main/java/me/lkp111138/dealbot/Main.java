@@ -1,6 +1,7 @@
 package me.lkp111138.dealbot;
 
 import com.pengrad.telegrambot.TelegramBot;
+import me.lkp111138.dealbot.game.Game;
 import okhttp3.OkHttpClient;
 
 import java.io.BufferedReader;
@@ -32,8 +33,8 @@ public class Main {
         conn = DriverManager.getConnection(String.format("jdbc:mysql://%s/%s?user=%s&password=%s&useSSL=false", config.get("db.host"), config.get("db.name"), config.get("db.user"), config.get("db.pwd")));
         OkHttpClient retrying_client = new OkHttpClient.Builder().retryOnConnectionFailure(true).build();
         TelegramBot bot = new TelegramBot.Builder(config.getProperty("bot.token")).okHttpClient(retrying_client).build();
-//        new DeeBot(bot);
-//        Game.init(bot);
+        new DealBot(bot);
+        Game.init(bot);
         System.out.println("Initialization complete\n");
     }
 

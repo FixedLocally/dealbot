@@ -1,0 +1,39 @@
+package me.lkp111138.dealbot.game.cards;
+
+public interface Card {
+    /**
+     * @return true is objectable, false otherwise
+     */
+    boolean isObjectable();
+
+    /**
+     * The value of the card if used as currency
+     * @return the currency value
+     */
+    int currencyValue();
+
+    /**
+     * @return true if the card is a currency card, false otherwise
+     */
+    boolean isCurrency();
+
+    /**
+     * @return true if the card is an action card, false otherwise
+     */
+    boolean isAction();
+
+    /**
+     * @return true if the card is a property card, false otherwise
+     */
+    boolean isProperty();
+
+    /**
+     * @return the title of the card
+     */
+    String getCardTitle();
+
+    /**
+     * Executes the card logic
+     */
+    void execute();
+}
