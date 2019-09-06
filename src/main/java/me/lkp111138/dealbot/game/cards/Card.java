@@ -35,7 +35,7 @@ public interface Card {
     String getCardTitle();
 
     /**
-     * Executes the card logic.
+     * Executes the card logic. When finished, call player.promptForCard().
      * @param player the player that played the card
      * @param args the arguments passed to the card, such as target card or player
      */

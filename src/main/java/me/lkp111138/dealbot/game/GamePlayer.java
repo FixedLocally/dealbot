@@ -1,5 +1,6 @@
 package me.lkp111138.dealbot.game;
 
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.cards.Card;
@@ -101,14 +102,33 @@ public class GamePlayer {
         promptForCard();
     }
 
-    private void promptForCard() {
+    public void promptForCard() {
         if (actionCount < 3) {
             // do prompt
             SendMessage send = new SendMessage(tgid, String.format("Choose an action (%d remaining)", 3 - actionCount));
-
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[hand.size()][1];
+            for (int i = 0; i < hand.size(); i++) {
+                buttons[i][0] = new InlineKeyboardButton(hand.get(i).getCardTitle()).callbackData("play_card:" + i);
+            }
+            send.replyMarkup(new InlineKeyboardMarkup(buttons));
             game.execute(send);
         } else {
             // end turn
+            game.nextTurn();
         }
+    }
+
+    public int getTgid() {
+        return tgid;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public Card play(int i) {
+        Card card = hand.get(i);
+        card.execute(this, new Object[0]);
+        return card;
     }
 }

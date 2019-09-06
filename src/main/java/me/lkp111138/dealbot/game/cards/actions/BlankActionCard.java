@@ -16,6 +16,7 @@ public class BlankActionCard extends ActionCard {
 
     @Override
     public void execute(GamePlayer player, Object[] args) {
-
+        player.getGame().log("You've played a card!");
+        player.promptForCard();
     }
 }

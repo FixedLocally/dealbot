@@ -67,6 +67,7 @@ public class Game {
     private static final int CARDS_PER_PLAYER = 5;
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     private static int[] remindSeconds = new int[]{15, 30, 60, 90, 120, 180};
+    private Card currentCard = null;
 
     public static void init(TelegramBot _bot) {
         bot = _bot;
@@ -412,7 +413,12 @@ public class Game {
     }
 
     private void startTurn() {
+        currentCard = null;
         gamePlayers.get(currentTurn).startTurn();
+    }
+
+    public void nextTurn() {
+        currentTurn = (currentTurn + 1) % gamePlayers.size();
     }
 
     private void cancelFuture() {
@@ -438,7 +444,7 @@ public class Game {
     }
 
 
-    private void log(Object o) {
+    public void log(Object o) {
         String date = sdf.format(new Date());
         System.out.printf("[%s][Game %d] %s\n", date, id, o);
     }
@@ -478,7 +484,7 @@ public class Game {
                 if (failCount < 5) { // linear backoff, max 5 retries
                     new Thread(() -> {
                         try {
-                            Thread.sleep(5000 * failCount + 5000);
+                            Thread.sleep(5000);
                         } catch (InterruptedException ignored) {
                         }
                         Game.this.execute(request, callback, failCount + 1);
@@ -491,6 +497,20 @@ public class Game {
     }
 
     public boolean callback(CallbackQuery query) {
+        String payload = query.data();
+        if (gamePlayers.get(currentTurn).getTgid() != query.from().id()) {
+            bot.execute(new AnswerCallbackQuery(query.id()));
+            bot.execute(new EditMessageReplyMarkup(query.message().chat().id(), query.message().messageId()));
+            return true;
+        }
+        String[] args = payload.split(":");
+        switch (args[0]) {
+            case "play_card":
+                GamePlayer player = gamePlayers.get(currentTurn);
+                this.currentCard = player.play(Integer.parseInt(args[1]));
+                player.removeHand(this.currentCard);
+                return true;
+        }
         return false;
     }
 
