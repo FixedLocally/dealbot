@@ -15,6 +15,12 @@ import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.Main;
+import me.lkp111138.dealbot.game.cards.Card;
+import me.lkp111138.dealbot.game.cards.CurrencyCard;
+import me.lkp111138.dealbot.game.cards.PropertyCard;
+import me.lkp111138.dealbot.game.cards.WildcardPropertyCard;
+import me.lkp111138.dealbot.game.cards.actions.BlankActionCard;
+import me.lkp111138.dealbot.game.cards.actions.RentActionCard;
 import me.lkp111138.dealbot.misc.EmptyCallback;
 import me.lkp111138.dealbot.translation.Translation;
 
@@ -38,6 +44,7 @@ public class Game {
     private boolean started = false;
     private boolean firstRound = true;
     private List<User> players = new ArrayList<>();
+    private List<GamePlayer> gamePlayers = new ArrayList<>();
     private int[] deckMsgid = new int[4];
     private User deskUser;
     private ScheduledFuture future;
@@ -46,6 +53,8 @@ public class Game {
     private Translation translation;
     private JsonObject gameSequence = new JsonObject();
     private int id;
+    private List<Card> mainDeck = new ArrayList<>();
+    private List<Card> usedDeck = new ArrayList<>();
 
     private boolean ended = false;
     private int[] offsets;
@@ -168,8 +177,8 @@ public class Game {
                     if (response.isOk()) {
                         // notify group
                         // we only actually add the player to the group if we can deliver the pm
-                        if (playerCount() >= 4 || players.contains(msg.from())) {
-                            // oops, you're the 5th player bye
+                        if (playerCount() >= 5 || players.contains(msg.from())) {
+                            // oops, you're the 6th player bye
                             return;
                         }
                         players.add(msg.from());
@@ -235,6 +244,115 @@ public class Game {
     private void updateDeck(int i) {
     }
 
+    /**
+     * Starts the game
+     */
+    private void start() {
+        // construct mainDeck
+        // properties
+        mainDeck.add(new PropertyCard(1, "Chek Lap Kok", 0));
+        mainDeck.add(new PropertyCard(1, "Mui Wo", 0));
+
+        mainDeck.add(new PropertyCard(1, "Peng Chau", 1));
+        mainDeck.add(new PropertyCard(1, "Cheung Chau", 1));
+        mainDeck.add(new PropertyCard(1, "Lemma Island", 1));
+
+        mainDeck.add(new PropertyCard(1, "Lo Wu", 2));
+        mainDeck.add(new PropertyCard(1, "Yuen Long", 2));
+        mainDeck.add(new PropertyCard(1, "Sham Cheng", 2));
+
+        mainDeck.add(new PropertyCard(1, "Kwai Chung", 3));
+        mainDeck.add(new PropertyCard(1, "Sha Tin", 3));
+        mainDeck.add(new PropertyCard(1, "Sai Kung", 3));
+
+        mainDeck.add(new PropertyCard(1, "Lei Yue Mun", 4));
+        mainDeck.add(new PropertyCard(1, "Wong Tai Sin", 4));
+        mainDeck.add(new PropertyCard(1, "Kowloon Tong", 4));
+
+        mainDeck.add(new PropertyCard(1, "Sham Shui Po", 5));
+        mainDeck.add(new PropertyCard(1, "Mong Kok", 5));
+        mainDeck.add(new PropertyCard(1, "Tsim Sha Tsui", 5));
+
+        mainDeck.add(new PropertyCard(1, "CCauseway Bay", 6));
+        mainDeck.add(new PropertyCard(1, "Happy Valley", 6));
+        mainDeck.add(new PropertyCard(1, "Central", 6));
+
+        mainDeck.add(new PropertyCard(1, "Repulse Bay", 7));
+        mainDeck.add(new PropertyCard(1, "Victoria Peak", 7));
+
+        mainDeck.add(new PropertyCard(1, "Airport Station", 8));
+        mainDeck.add(new PropertyCard(1, "Tsing Yi Station", 8));
+        mainDeck.add(new PropertyCard(1, "Kowloon Station", 8));
+        mainDeck.add(new PropertyCard(1, "Hong Kong Station", 8));
+
+        mainDeck.add(new PropertyCard(1, "Hong Kong Electric", 9));
+        mainDeck.add(new PropertyCard(1, "Water Works", 9));
+
+        // wildcard properties
+        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{4, 5}));
+        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{4, 5}));
+        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{6, 7}));
+        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{0, 1}));
+        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{2, 3}));
+        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{2, 3}));
+        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{6, 8}));
+        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{1, 8}));
+        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{8, 9}));
+        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+
+        // action mainDeck
+        for (int i = 0; i < 34; i++) {
+            mainDeck.add(new BlankActionCard());
+        }
+
+        // rent mainDeck
+        mainDeck.add(new RentActionCard(new int[]{0, 1}));
+        mainDeck.add(new RentActionCard(new int[]{0, 1}));
+        mainDeck.add(new RentActionCard(new int[]{2, 3}));
+        mainDeck.add(new RentActionCard(new int[]{2, 3}));
+        mainDeck.add(new RentActionCard(new int[]{4, 5}));
+        mainDeck.add(new RentActionCard(new int[]{4, 5}));
+        mainDeck.add(new RentActionCard(new int[]{6, 7}));
+        mainDeck.add(new RentActionCard(new int[]{6, 7}));
+        mainDeck.add(new RentActionCard(new int[]{8, 9}));
+        mainDeck.add(new RentActionCard(new int[]{8, 9}));
+        mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+        mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+        mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+
+        // currency mainDeck
+        for (int i = 0; i < 6; i++) {
+            mainDeck.add(new CurrencyCard(1, "$1M"));
+        }
+        for (int i = 0; i < 5; i++) {
+            mainDeck.add(new CurrencyCard(2, "$2M"));
+        }
+        for (int i = 0; i < 3; i++) {
+            mainDeck.add(new CurrencyCard(3, "$3M"));
+        }
+        for (int i = 0; i < 3; i++) {
+            mainDeck.add(new CurrencyCard(4, "$4M"));
+        }
+        mainDeck.add(new CurrencyCard(5, "$5M"));
+        mainDeck.add(new CurrencyCard(5, "$5M"));
+        mainDeck.add(new CurrencyCard(10, "$10M"));
+        
+        Collections.shuffle(mainDeck);
+
+        // construct players
+        for (User player : players) {
+            gamePlayers.add(new GamePlayer(player.id(), gid));
+        }
+
+        // distribute mainDeck
+        for (GamePlayer gamePlayer : gamePlayers) {
+            for (int i = 0; i < 5; i++) {
+                gamePlayer.addHand(mainDeck.remove(0));
+            }
+        }
+    }
+
     private void kill(boolean isError) {
         this.log("Game ended");
         if (started) {
@@ -265,7 +383,7 @@ public class Game {
     private void tryStart() {
         // see if theres enough players to start the game
         if (playerCount() > 1) {
-            // start
+            start();
         } else {
             kill(false);
         }
@@ -285,7 +403,7 @@ public class Game {
             schedule(this::remind, startTime - System.currentTimeMillis() - remindSeconds[--i] * 1000);
         } else {
 //            this.log(String.format("scheduled kill task after %d seconds", seconds));
-            schedule(this::kill, startTime - System.currentTimeMillis());
+            schedule(this::tryStart, startTime - System.currentTimeMillis());
         }
     }
 

@@ -13,14 +13,14 @@ import java.util.Map;
 public class GamePlayer {
     // player info
     private final int tgid;
-    private final int gid;
+    private final long gid;
 
     // decks
     private final List<Card> hand = new ArrayList<>();
     private final List<Card> currencyDeck = new ArrayList<>();
     private final Map<Integer, List<Card>> propertyDecks = new HashMap<>();
 
-    public GamePlayer(int tgid, int gid) {
+    public GamePlayer(int tgid, long gid) {
         this.tgid = tgid;
         this.gid = gid;
     }
@@ -78,5 +78,16 @@ public class GamePlayer {
             group = card.getGroup();
         }
         return group;
+    }
+
+    public boolean checkWinCondition() {
+        // 3 full sets
+        int sets = 0;
+        for (Integer group : propertyDecks.keySet()) {
+            if (propertyDecks.get(group).size() == PropertyCard.propertySetCounts[group]) {
+                ++sets;
+            }
+        }
+        return sets >= 3;
     }
 }
