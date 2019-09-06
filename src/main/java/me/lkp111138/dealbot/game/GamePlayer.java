@@ -109,6 +109,7 @@ public class GamePlayer {
     }
 
     public void promptForCard() {
+        System.out.println(hand);
         if (actionCount < 3) {
             // do prompt
             int size = hand.size() + (actionCount > 0 ? 1 : 0);
@@ -160,8 +161,7 @@ public class GamePlayer {
         return hand.get(i);
     }
 
-    public void play(int i) {
-        Card card = hand.get(i);
+    public void play(Card card) {
         if (card instanceof PropertyCard) {
             card.execute(this, new Object[]{((PropertyCard) card).getGroup()});
         } else {

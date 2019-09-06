@@ -515,7 +515,7 @@ public class Game {
             case "play_card":
                 this.currentCard = player.handCardAt(Integer.parseInt(args[1]));
                 player.removeHand(this.currentCard);
-                player.play(Integer.parseInt(args[1]));
+                player.play(this.currentCard);
                 return true;
             case "end_turn":
                 nextTurn();
