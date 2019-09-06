@@ -1,12 +1,17 @@
 package me.lkp111138.dealbot.game;
 
+import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.request.DeleteMessage;
+import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.game.cards.Card;
 import me.lkp111138.dealbot.game.cards.PropertyCard;
 import me.lkp111138.dealbot.game.cards.WildcardPropertyCard;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +24,7 @@ public class GamePlayer {
     private final Game game;
 
     private int actionCount;
+    private int messageId;
 
     // decks
     private final List<Card> hand = new ArrayList<>();
@@ -105,7 +111,6 @@ public class GamePlayer {
     public void promptForCard() {
         if (actionCount < 3) {
             // do prompt
-            SendMessage send = new SendMessage(tgid, String.format("Choose an action (%d remaining)", 3 - actionCount));
             int size = hand.size() + (actionCount > 0 ? 1 : 0);
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[size][1];
             for (int i = 0; i < hand.size(); i++) {
@@ -114,11 +119,31 @@ public class GamePlayer {
             if (actionCount > 0) {
                 buttons[hand.size()][0] = new InlineKeyboardButton("End turn").callbackData("end_turn");
             }
-            send.replyMarkup(new InlineKeyboardMarkup(buttons));
-            game.execute(send);
+            String msg = String.format("Choose an action (%d remaining)", 3 - actionCount);
+            if (messageId == 0) {
+                SendMessage send = new SendMessage(tgid, msg);
+                send.replyMarkup(new InlineKeyboardMarkup(buttons));
+                game.execute(send, new Callback<SendMessage, SendResponse>() {
+                    @Override
+                    public void onResponse(SendMessage request, SendResponse response) {
+                        messageId = response.message().messageId();
+                    }
+
+                    @Override
+                    public void onFailure(SendMessage request, IOException e) {
+
+                    }
+                });
+            } else {
+                EditMessageText edit = new EditMessageText(tgid, messageId, msg);
+                edit.replyMarkup(new InlineKeyboardMarkup(buttons));
+                game.execute(edit);
+            }
             ++actionCount;
         } else {
             // end turn
+            game.execute(new DeleteMessage(tgid, messageId));
+            messageId = 0;
             game.nextTurn();
         }
     }
