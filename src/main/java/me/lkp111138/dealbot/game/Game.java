@@ -273,7 +273,7 @@ public class Game {
         mainDeck.add(new PropertyCard(1, "Mong Kok", 5));
         mainDeck.add(new PropertyCard(1, "Tsim Sha Tsui", 5));
 
-        mainDeck.add(new PropertyCard(1, "CCauseway Bay", 6));
+        mainDeck.add(new PropertyCard(1, "Causeway Bay", 6));
         mainDeck.add(new PropertyCard(1, "Happy Valley", 6));
         mainDeck.add(new PropertyCard(1, "Central", 6));
 
@@ -342,7 +342,7 @@ public class Game {
 
         // construct players
         for (User player : players) {
-            gamePlayers.add(new GamePlayer(player.id(), gid));
+            gamePlayers.add(new GamePlayer(this, player.id(), gid));
         }
 
         // distribute mainDeck
@@ -351,6 +351,10 @@ public class Game {
                 gamePlayer.addHand(mainDeck.remove(0));
             }
         }
+
+        // TODO pm players with their deck
+        startTime = System.currentTimeMillis();
+        startTurn();
     }
 
     private void kill(boolean isError) {
@@ -407,6 +411,10 @@ public class Game {
         }
     }
 
+    private void startTurn() {
+        gamePlayers.get(currentTurn).startTurn();
+    }
+
     private void cancelFuture() {
         if (future != null && !future.isDone() && !future.isCancelled()) {
 //            this.log("cancelled task");
@@ -444,15 +452,15 @@ public class Game {
         System.out.printf("[%s][Game %d] " + format + "\n", _objs);
     }
 
-    private <T extends BaseRequest<T, R>, R extends BaseResponse> void execute(T request) {
+    public <T extends BaseRequest<T, R>, R extends BaseResponse> void execute(T request) {
         this.execute(request, null);
     }
 
-    private <T extends BaseRequest<T, R>, R extends BaseResponse> void execute(T request, Callback<T, R> callback) {
+    public <T extends BaseRequest<T, R>, R extends BaseResponse> void execute(T request, Callback<T, R> callback) {
         this.execute(request, callback, 0);
     }
 
-    private <T extends BaseRequest<T, R>, R extends BaseResponse> void execute(T request, Callback<T, R> callback, int failCount) {
+    public <T extends BaseRequest<T, R>, R extends BaseResponse> void execute(T request, Callback<T, R> callback, int failCount) {
         bot.execute(request, new Callback<T, R>() {
             @Override
             public void onResponse(T request, R response) {

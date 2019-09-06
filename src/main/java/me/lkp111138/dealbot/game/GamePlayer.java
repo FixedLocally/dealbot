@@ -1,7 +1,8 @@
 package me.lkp111138.dealbot.game;
 
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.cards.Card;
-import me.lkp111138.dealbot.game.cards.CurrencyCard;
 import me.lkp111138.dealbot.game.cards.PropertyCard;
 import me.lkp111138.dealbot.game.cards.WildcardPropertyCard;
 
@@ -14,15 +15,19 @@ public class GamePlayer {
     // player info
     private final int tgid;
     private final long gid;
+    private final Game game;
+
+    private int actionCount;
 
     // decks
     private final List<Card> hand = new ArrayList<>();
     private final List<Card> currencyDeck = new ArrayList<>();
     private final Map<Integer, List<Card>> propertyDecks = new HashMap<>();
 
-    public GamePlayer(int tgid, long gid) {
+    public GamePlayer(Game game, int tgid, long gid) {
         this.tgid = tgid;
         this.gid = gid;
+        this.game = game;
     }
 
     public void removeHand(Card card) {
@@ -89,5 +94,21 @@ public class GamePlayer {
             }
         }
         return sets >= 3;
+    }
+
+    public void startTurn() {
+        actionCount = 0;
+        promptForCard();
+    }
+
+    private void promptForCard() {
+        if (actionCount < 3) {
+            // do prompt
+            SendMessage send = new SendMessage(tgid, String.format("Choose an action (%d remaining)", 3 - actionCount));
+
+            game.execute(send);
+        } else {
+            // end turn
+        }
     }
 }
