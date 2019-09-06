@@ -416,8 +416,10 @@ public class Game {
 
     private void startTurn() {
         currentCard = null;
-        // TODO draw 2
-        gamePlayers.get(currentTurn).startTurn();
+        GamePlayer player = gamePlayers.get(currentTurn);
+        player.addHand(mainDeck.remove(0));
+        player.addHand(mainDeck.remove(0));
+        player.startTurn();
     }
 
     public void nextTurn() {
