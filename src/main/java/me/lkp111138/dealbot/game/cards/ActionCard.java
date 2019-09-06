@@ -8,7 +8,7 @@ public abstract class ActionCard implements Card {
 
     @Override
     public final boolean isCurrency() {
-        return false;
+        return true;
     }
 
     @Override

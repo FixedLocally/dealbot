@@ -7,6 +7,21 @@ public class PropertyCard implements Card {
     protected final String title;
     protected final int group;
 
+    // there are currently 10 groups of properties
+    private static int[] propertySetCounts = {2, 3, 3, 3, 3, 3, 3, 2, 4, 2};
+    private static int[][] propertyRents = {
+            {1, 2},
+            {1, 2, 3},
+            {1, 2, 4},
+            {1, 3, 5},
+            {2, 3, 6},
+            {2, 4, 6},
+            {2, 4, 7},
+            {3, 8},
+            {1, 2, 3, 4},
+            {1, 2}
+    };
+
     public PropertyCard(int currencyValue, String title, int group) {
         this.currencyValue = currencyValue;
         this.title = title;

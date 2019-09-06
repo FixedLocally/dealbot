@@ -37,7 +37,10 @@ public class GamePlayer {
         currencyDeck.remove(card);
     }
 
-    public void addCurrency(CurrencyCard card) {
+    public void addCurrency(Card card) {
+        if (!card.isCurrency()) {
+            throw new RuntimeException("attempt to put non currency card in currency deck");
+        }
         currencyDeck.add(card);
     }
 

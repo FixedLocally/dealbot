@@ -35,6 +35,8 @@ public interface Card {
     String getCardTitle();
 
     /**
+     * @param player the player that played the card
+     * @param args the arguments passed to the card, such as target card or player
      * Executes the card logic
      */
     void execute(GamePlayer player, Object[] args);

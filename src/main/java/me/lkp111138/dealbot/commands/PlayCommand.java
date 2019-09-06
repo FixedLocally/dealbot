@@ -27,22 +27,16 @@ public class PlayCommand implements Command {
             Game g = Game.byGroup(msg.chat().id());
             if (g == null) {
                 try (Connection conn = Main.getConnection()) {
-                    PreparedStatement stmt = conn.prepareStatement("SELECT chips_per_card, wait_time, turn_wait_time, lang, fry, collect_place, protest_mode FROM `groups` WHERE gid=?");
+                    PreparedStatement stmt = conn.prepareStatement("SELECT wait_time, turn_wait_time, lang, protest_mode FROM `groups` WHERE gid=?");
                     stmt.setLong(1, msg.chat().id());
                     ResultSet rs = stmt.executeQuery();
                     GroupInfo info;
                     int turn_wait = 45;
                     int wait = 120;
-                    int chips = 1;
-                    boolean fry = false;
-                    boolean collect_place = false;
                     if (rs.next()) {
-                        turn_wait = rs.getInt(3);
-                        wait = rs.getInt(2);
-                        chips = rs.getInt(1);
-                        fry = rs.getBoolean(5);
-                        collect_place = rs.getBoolean(6);
-                        if (rs.getInt(7) > 0) {
+                        turn_wait = rs.getInt(2);
+                        wait = rs.getInt(1);
+                        if (rs.getInt(4) > 0) {
                             bot.execute(new SendMessage(msg.chat().id(), Translation.get(DealBot.lang(msg.chat().id())).JOIN_69_PROTEST()).replyToMessageId(msg.messageId()));
 //                            return;
                         }
@@ -55,7 +49,7 @@ public class PlayCommand implements Command {
                     }
                     info = new GroupInfo(turn_wait);
                     try {
-                        new Game(msg, chips, wait, info);
+                        new Game(msg, wait, info);
                     } catch (ConcurrentGameException e) {
                         if (e.getGame().started()) {
                             bot.execute(new SendMessage(msg.chat().id(), Translation.get(DealBot.lang(msg.chat().id())).GAME_STARTED()).replyToMessageId(msg.messageId()));

@@ -30,22 +30,18 @@ import java.util.concurrent.TimeUnit;
 
 public class Game {
     private final GroupInfo groupInfo;
-    private int chips;
     private int turnWait;
     private int currentTurn = 0;
-    private int autopassCount = 0;
     private long startTime;
     private long gid;
     private Chat group;
     private boolean started = false;
     private boolean firstRound = true;
-    private boolean allPassed = false;
     private List<User> players = new ArrayList<>();
     private int[] deckMsgid = new int[4];
     private User deskUser;
     private ScheduledFuture future;
     private int currentMsgid;
-    private int largestSingleObgligation = -1;
     private String lang;
     private Translation translation;
     private JsonObject gameSequence = new JsonObject();
@@ -71,13 +67,12 @@ public class Game {
         return games.get(gid);
     }
 
-    public Game(Message msg, int chips, int wait, GroupInfo groupInfo) throws ConcurrentGameException {
+    public Game(Message msg, int wait, GroupInfo groupInfo) throws ConcurrentGameException {
         // LOGIC :EYES:
         long gid = msg.chat().id();
         if (games.containsKey(gid)) {
             throw new ConcurrentGameException(this);
         }
-        this.chips = chips;
         this.gid = gid;
         this.turnWait = groupInfo.waitTime;
         this.groupInfo = groupInfo;
@@ -91,9 +86,8 @@ public class Game {
         }
         // create game
         try (Connection conn = Main.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO games (gid, chips) values (?, ?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO games (gid) values (?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setLong(1, gid);
-            stmt.setInt(2, chips);
             stmt.executeUpdate();
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
