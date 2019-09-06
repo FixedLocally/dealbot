@@ -106,12 +106,17 @@ public class GamePlayer {
         if (actionCount < 3) {
             // do prompt
             SendMessage send = new SendMessage(tgid, String.format("Choose an action (%d remaining)", 3 - actionCount));
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[hand.size()][1];
+            int size = hand.size() + (actionCount > 0 ? 1 : 0);
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[size][1];
             for (int i = 0; i < hand.size(); i++) {
                 buttons[i][0] = new InlineKeyboardButton(hand.get(i).getCardTitle()).callbackData("play_card:" + i);
             }
+            if (actionCount > 0) {
+                buttons[hand.size()][0] = new InlineKeyboardButton("End turn").callbackData("end_turn");
+            }
             send.replyMarkup(new InlineKeyboardMarkup(buttons));
             game.execute(send);
+            ++actionCount;
         } else {
             // end turn
             game.nextTurn();
@@ -126,9 +131,16 @@ public class GamePlayer {
         return game;
     }
 
-    public Card play(int i) {
+    public Card handCardAt(int i) {
+        return hand.get(i);
+    }
+
+    public void play(int i) {
         Card card = hand.get(i);
-        card.execute(this, new Object[0]);
-        return card;
+        if (card instanceof PropertyCard) {
+            card.execute(this, new Object[]{((PropertyCard) card).getGroup()});
+        } else {
+            card.execute(this, new Object[0]);
+        }
     }
 }

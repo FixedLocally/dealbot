@@ -44,5 +44,6 @@ public class CurrencyCard implements Card {
     @Override
     public void execute(GamePlayer player, Object[] args) {
         player.addCurrency(this);
+        player.promptForCard();
     }
 }

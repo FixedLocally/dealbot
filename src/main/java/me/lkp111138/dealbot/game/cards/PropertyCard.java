@@ -61,6 +61,7 @@ public class PropertyCard implements Card {
     @Override
     public void execute(GamePlayer player, Object[] args) {
         player.addProperty(this, (int) args[0]);
+        player.promptForCard();
     }
 
     public int getGroup() {

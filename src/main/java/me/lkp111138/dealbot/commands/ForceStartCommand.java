@@ -27,7 +27,7 @@ public class ForceStartCommand implements Command {
         // whitelist
         if (msg.from().id() == Main.BOT_OWNER) {
             if (DealBot.queryBan(msg.from().id()) == null) {
-                game.kill();
+                game.tryStart();
             }
             return;
         }
@@ -37,7 +37,7 @@ public class ForceStartCommand implements Command {
                 ChatMember chatMember = response.chatMember();
                 if (chatMember.status() == ChatMember.Status.administrator || chatMember.status() == ChatMember.Status.creator) {
                     // kill game
-                    game.kill();
+                    game.tryStart();
                 }
             }
 

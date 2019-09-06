@@ -352,6 +352,7 @@ public class Game {
                 gamePlayer.addHand(mainDeck.remove(0));
             }
         }
+        Collections.shuffle(gamePlayers);
 
         // TODO pm players with their deck
         startTime = System.currentTimeMillis();
@@ -385,9 +386,10 @@ public class Game {
         kill(false);
     }
 
-    private void tryStart() {
+    public void tryStart() {
         // see if theres enough players to start the game
         if (playerCount() > 1) {
+            cancelFuture();
             start();
         } else {
             kill(false);
@@ -414,11 +416,13 @@ public class Game {
 
     private void startTurn() {
         currentCard = null;
+        // TODO draw 2
         gamePlayers.get(currentTurn).startTurn();
     }
 
     public void nextTurn() {
         currentTurn = (currentTurn + 1) % gamePlayers.size();
+        startTurn();
     }
 
     private void cancelFuture() {
@@ -504,11 +508,15 @@ public class Game {
             return true;
         }
         String[] args = payload.split(":");
+        GamePlayer player = gamePlayers.get(currentTurn);
         switch (args[0]) {
             case "play_card":
-                GamePlayer player = gamePlayers.get(currentTurn);
-                this.currentCard = player.play(Integer.parseInt(args[1]));
+                this.currentCard = player.handCardAt(Integer.parseInt(args[1]));
                 player.removeHand(this.currentCard);
+                player.play(Integer.parseInt(args[1]));
+                return true;
+            case "end_turn":
+                nextTurn();
                 return true;
         }
         return false;

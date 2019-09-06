@@ -24,5 +24,6 @@ public class RentActionCard extends ActionCard {
     public void execute(GamePlayer player, Object[] args) {
         // full wildcard: 1 payer
         // double wildcard: all pays
+        player.promptForCard();
     }
 }
