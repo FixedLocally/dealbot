@@ -1,13 +1,9 @@
 package me.lkp111138.dealbot.game;
 
 public class GroupInfo {
-    final int waitTime;
-    final boolean collectPlace;
-    final boolean fry;
+    final int waitTime; // max wait time for each turn in secs
 
-    public GroupInfo(int waitTime, boolean collect_place, boolean fry) {
+    public GroupInfo(int waitTime) {
         this.waitTime = waitTime;
-        this.collectPlace = collect_place;
-        this.fry = fry;
     }
 }

@@ -124,7 +124,7 @@ public class Game {
             this.execute(new SendMessage(msg.chat().id(), this.translation.ERROR() + e.getMessage()).replyToMessageId(msg.messageId()));
         }
         String[] checkCross = new String[]{"\uD83D\uDEAB", "\u2705"};
-        this.execute(new SendMessage(gid, String.format(this.translation.GAME_START_ANNOUNCEMENT(), msg.from().id(), msg.from().firstName(), wait, checkCross[groupInfo.collectPlace ? 1 : 0], checkCross[groupInfo.fry ? 1 : 0], checkCross[1], id)).parseMode(ParseMode.HTML), new EmptyCallback<>());
+        this.execute(new SendMessage(gid, String.format(this.translation.GAME_START_ANNOUNCEMENT(), msg.from().id(), msg.from().firstName(), wait, id)).parseMode(ParseMode.HTML), new EmptyCallback<>());
         games.put(gid, this);
         addPlayer(msg);
         startTime = System.currentTimeMillis() + wait * 1000;
@@ -242,9 +242,6 @@ public class Game {
     private void updateDeck(int i) {
     }
 
-
-
-
     private void kill(boolean isError) {
         this.log("Game ended");
         if (started) {
@@ -272,8 +269,14 @@ public class Game {
         kill(false);
     }
 
-
-
+    private void tryStart() {
+        // see if theres enough players to start the game
+        if (playerCount() > 1) {
+            // start
+        } else {
+            kill(false);
+        }
+    }
 
     private void remind() {
 //        this.log("firing remind task");

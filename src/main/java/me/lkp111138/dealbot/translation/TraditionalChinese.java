@@ -151,7 +151,7 @@ public class TraditionalChinese extends Translation {
     }
     @Override
     public String GAME_START_ANNOUNCEMENT() {
-        return "[ <a href=\"tg://user?id=%d\">%s</a> ] 已開始新遊戲！你有 %d 秒加入 /join\n\n計 Place：%s\n炒：%s\n包牌：%s\n遊戲編號：%d";
+        return "[ <a href=\"tg://user?id=%d\">%s</a> ] 已開始新遊戲！你有 %d 秒加入 /join\n\n遊戲編號：%d";
     }
     @Override
     public String NOTHING_ON_DESK() {
