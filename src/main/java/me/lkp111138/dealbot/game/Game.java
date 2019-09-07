@@ -405,6 +405,7 @@ public class Game {
     // 10: birthday
     // 11: debt
     public void collectRentFromAll(int value, int group) {
+        cancelFuture();
         paymentConfirmationCount = 0;
         if (value <= 0) {
             // nothing to collect
@@ -592,7 +593,11 @@ public class Game {
             case "card_arg":
                 String[] subarray = new String[args.length - 1];
                 System.arraycopy(args, 1, subarray, 0, args.length - 1);
-                currentCard.execute(gamePlayers.get(currentTurn), subarray);
+                if (currentCard instanceof ActionCard) {
+                    ((ActionCard) currentCard).use(gamePlayers.get(currentTurn), subarray);
+                } else {
+                    currentCard.execute(gamePlayers.get(currentTurn), subarray);
+                }
                 return true;
             case "use_as":
                 if (args[1].equals("money")) {
@@ -615,11 +620,12 @@ public class Game {
                 player.endTurn();
                 return true;
             case "pay_choose":
-            case "pay_done":
+            case "pay_confirm":
                 int tgid = query.from().id();
                 for (GamePlayer gamePlayer : gamePlayers) {
                     if (gamePlayer.getTgid() == tgid) {
                         gamePlayer.payCallback(args, query.id());
+                        break;
                     }
                 }
                 return true;

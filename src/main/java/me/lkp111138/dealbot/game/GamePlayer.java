@@ -289,12 +289,12 @@ public class GamePlayer {
         paymentSelectedIndices.clear();
         if (total >= value) {
             // the currency deck can cover this
-            paymentMessage = String.format("%s is collecting $%dM as rent for group %d from you! Choose how to pay.",
+            paymentMessage = String.format("%s is collecting $ %dM as rent for group %d from you! You have " + game.getTurnWait() + " seconds to choose how to pay.",
                     collector.getName(), value, group);
             SendMessage send = new SendMessage(tgid, paymentMessage);
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
             for (int i = 0; i < currencyDeck.size(); i++) {
-                buttons[i][0] = new InlineKeyboardButton("$ " + currencyDeck.get(i) + "M").callbackData("pay_choose:" + i);
+                buttons[i][0] = new InlineKeyboardButton("$ " + currencyDeck.get(i).currencyValue() + "M").callbackData("pay_choose:" + i);
             }
             buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ 0M)").callbackData("pay_done");
             send.replyMarkup(new InlineKeyboardMarkup(buttons));
@@ -344,7 +344,7 @@ public class GamePlayer {
                 EditMessageText edit = new EditMessageText(tgid, paymentMessageId, paymentMessage);
                 InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
                 for (int i = 0; i < currencyDeck.size(); i++) {
-                    buttons[i][0] = new InlineKeyboardButton("$ " + currencyDeck.get(i) + "M").callbackData("pay_choose:" + i);
+                    buttons[i][0] = new InlineKeyboardButton((paymentSelectedIndices.contains(i) ? "[x]" : "") + "$ " + currencyDeck.get(i).currencyValue() + "M").callbackData("pay_choose:" + i);
                 }
                 int total = 0;
                 for (int i = 0; i < currencyDeck.size(); i++) {
@@ -352,7 +352,7 @@ public class GamePlayer {
                         total += currencyDeck.get(i).currencyValue();
                     }
                 }
-                buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ " + total + "M)").callbackData("pay_done");
+                buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ " + total + "M)").callbackData("pay_confirm");
                 edit.replyMarkup(new InlineKeyboardMarkup(buttons));
                 game.execute(edit);
                 break;
@@ -386,6 +386,9 @@ public class GamePlayer {
         // deduct the currencies
         List<Card> payment = getPaymentCurrencyCards();
         currencyDeck.removeAll(payment);
+        DeleteMessage del = new DeleteMessage(tgid, paymentMessageId);
+        game.execute(del);
+        paymentMessageId = 0;
     }
 
     public void addMove() {
