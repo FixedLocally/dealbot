@@ -370,6 +370,7 @@ public class GamePlayer {
                 // enough amount so confirm payment
                 confirmPayment();
                 game.confirmPayment(payment);
+                future.cancel(true);
                 break;
         }
     }
