@@ -398,6 +398,10 @@ public class Game {
         }
     }
 
+    public void addToMainDeck(Card card) {
+        mainDeck.add(card);
+    }
+
     private void remind() {
 //        this.log("firing remind task");
         long seconds = (startTime - System.currentTimeMillis()) / 1000;
@@ -562,6 +566,7 @@ public class Game {
                 this.currentCard = player.handCardAt(Integer.parseInt(args[1]));
                 player.removeHand(this.currentCard);
                 player.play(this.currentCard);
+                usedDeck.add(this.currentCard);
                 return true;
             case "end_turn":
                 player.endTurn();
@@ -584,6 +589,12 @@ public class Game {
                 this.currentCard = null;
                 player.addMove();
                 player.promptForCard();
+                return true;
+            case "dispose_card":
+                Card disposed = player.handCardAt(Integer.parseInt(args[1]));
+                player.removeHand(disposed);
+                addToMainDeck(disposed);
+                player.endTurn();
                 return true;
         }
         return false;

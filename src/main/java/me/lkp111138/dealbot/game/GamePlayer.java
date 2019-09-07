@@ -4,10 +4,12 @@ import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.DeleteMessage;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.game.cards.Card;
@@ -15,10 +17,7 @@ import me.lkp111138.dealbot.game.cards.PropertyCard;
 import me.lkp111138.dealbot.game.cards.WildcardPropertyCard;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GamePlayer {
@@ -32,6 +31,7 @@ public class GamePlayer {
     private int messageId;
     private int stateMessageId;
     private int globalStateMessageId;
+    private int disposeMessageId;
 
     // decks
     private final List<Card> hand = new ArrayList<>();
@@ -285,6 +285,49 @@ public class GamePlayer {
         game.execute(new DeleteMessage(tgid, messageId));
         messageId = 0;
         game.cancelFuture();
-        game.nextTurn();
+        // dispose cards?
+        if (handCount() > 7) {
+            // need to dispose cards
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[handCount()][1];
+            for (int i = 0; i < hand.size(); i++) {
+                buttons[i][0] = new InlineKeyboardButton(hand.get(i).getCardTitle()).callbackData("dispose_card:" + i);
+            }
+            String msg = String.format("Dispose some cards to keep you at 7 cards (%d remaining)", handCount() - 7);
+            if (disposeMessageId == 0) {
+                SendMessage send = new SendMessage(tgid, msg);
+                send.replyMarkup(new InlineKeyboardMarkup(buttons));
+                game.execute(send, new Callback<SendMessage, SendResponse>() {
+                    @Override
+                    public void onResponse(SendMessage request, SendResponse response) {
+                        disposeMessageId = response.message().messageId();
+                    }
+
+                    @Override
+                    public void onFailure(SendMessage request, IOException e) {
+
+                    }
+                });
+                game.schedule(this::randomDispose, 15000);
+            } else {
+                EditMessageText edit = new EditMessageText(tgid, disposeMessageId, msg);
+                edit.replyMarkup(new InlineKeyboardMarkup(buttons));
+                game.execute(edit);
+            }
+        } else {
+            if (disposeMessageId > 0) {
+                game.execute(new DeleteMessage(tgid, disposeMessageId));
+            }
+            game.nextTurn();
+        }
+    }
+
+    private void randomDispose() {
+        Random rand = new Random();
+        while (handCount() > 7) {
+            Card disposed = handCardAt(rand.nextInt(handCount()));
+            removeHand(disposed);
+            game.addToMainDeck(disposed);
+        }
+        endTurn();
     }
 }
