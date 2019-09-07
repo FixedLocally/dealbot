@@ -7,7 +7,6 @@ import com.pengrad.telegrambot.request.AnswerCallbackQuery;
 import com.pengrad.telegrambot.request.AnswerPreCheckoutQuery;
 import me.lkp111138.dealbot.commands.*;
 import me.lkp111138.dealbot.game.Game;
-//import me.lkp111138.dealbot.game.achievement.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+//import me.lkp111138.dealbot.game.achievement.*;
 
 public class DealBot {
     private final Command fallback = new FallbackCommand();
@@ -144,6 +145,7 @@ public class DealBot {
             return;
         }
         if (query != null) {
+            System.out.printf("query from %s: %s\n", query.from().id(), query.data());
             Game g = Game.byUser(query.from().id());
             if (g != null) {
                 try {
@@ -163,7 +165,7 @@ public class DealBot {
             if (NextGameCommand.callback(bot, query)) {
                 return;
             }
-            System.out.println("unknown query: " + query.data());
+            System.out.println("unknown query from " + query.from().id() + ": " + query.data());
             bot.execute(new AnswerCallbackQuery(query.id()));
             return;
         }
