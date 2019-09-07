@@ -41,7 +41,7 @@ public class WildcardPropertyCard extends PropertyCard {
             for (int i = 0; i < groups.length; i++) {
                 buttons[i][0] = new InlineKeyboardButton(String.valueOf(groups[i])).callbackData("card_arg:" + groups[i]);
             }
-            buttons[groups.length][0] = new InlineKeyboardButton("Cencel").callbackData("use_cancel");
+            buttons[groups.length][0] = new InlineKeyboardButton("Cancel").callbackData("use_cancel");
             edit.replyMarkup(new InlineKeyboardMarkup(buttons));
             player.getGame().execute(edit);
         }

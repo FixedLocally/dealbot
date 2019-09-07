@@ -15,10 +15,7 @@ import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.Main;
-import me.lkp111138.dealbot.game.cards.Card;
-import me.lkp111138.dealbot.game.cards.CurrencyCard;
-import me.lkp111138.dealbot.game.cards.PropertyCard;
-import me.lkp111138.dealbot.game.cards.WildcardPropertyCard;
+import me.lkp111138.dealbot.game.cards.*;
 import me.lkp111138.dealbot.game.cards.actions.BlankActionCard;
 import me.lkp111138.dealbot.game.cards.actions.RentActionCard;
 import me.lkp111138.dealbot.misc.EmptyCallback;
@@ -58,6 +55,8 @@ public class Game {
 
     private boolean ended = false;
     private int[] offsets;
+
+    private int paymentConfirmationCount;
 
     private static Map<Long, Game> games = new HashMap<>();
     public static boolean maintMode = false; // true=disallow starting games
@@ -258,7 +257,7 @@ public class Game {
 
         mainDeck.add(new PropertyCard(1, "Peng Chau", 1));
         mainDeck.add(new PropertyCard(1, "Cheung Chau", 1));
-        mainDeck.add(new PropertyCard(1, "Lemma Island", 1));
+        mainDeck.add(new PropertyCard(1, "Lamma Island", 1));
 
         mainDeck.add(new PropertyCard(1, "Lo Wu", 2));
         mainDeck.add(new PropertyCard(1, "Yuen Long", 2));
@@ -400,6 +399,25 @@ public class Game {
 
     public void addToMainDeck(Card card) {
         mainDeck.add(card);
+    }
+
+    // 0-9: normal groups
+    // 10: birthday
+    // 11: debt
+    public void collectRentFromAll(int value, int group) {
+        paymentConfirmationCount = 0;
+        if (value <= 0) {
+            // nothing to collect
+            gamePlayers.get(currentTurn).promptForCard();
+            return;
+        }
+        for (GamePlayer player : gamePlayers) {
+            if (player == gamePlayers.get(currentTurn)) {
+                // dont collect from yourself
+                continue;
+            }
+            player.collectRent(value, group, gamePlayers.get(currentTurn));
+        }
     }
 
     private void remind() {
@@ -554,12 +572,12 @@ public class Game {
 
     public boolean callback(CallbackQuery query) {
         String payload = query.data();
-        if (gamePlayers.get(currentTurn).getTgid() != query.from().id()) {
+        String[] args = payload.split(":");
+        if (gamePlayers.get(currentTurn).getTgid() != query.from().id() && !args[0].startsWith("pay_")) {
             bot.execute(new AnswerCallbackQuery(query.id()));
             bot.execute(new EditMessageReplyMarkup(query.message().chat().id(), query.message().messageId()));
             return true;
         }
-        String[] args = payload.split(":");
         GamePlayer player = gamePlayers.get(currentTurn);
         switch (args[0]) {
             case "play_card":
@@ -581,7 +599,7 @@ public class Game {
                     player.addCurrency(this.currentCard);
                     player.promptForCard();
                 } else {
-                    this.currentCard.execute(player, new String[0]);
+                    ((ActionCard) this.currentCard).use(player, new String[0]);
                 }
                 return true;
             case "use_cancel":
@@ -596,8 +614,28 @@ public class Game {
                 addToMainDeck(disposed);
                 player.endTurn();
                 return true;
+            case "pay_choose":
+            case "pay_done":
+                int tgid = query.from().id();
+                for (GamePlayer gamePlayer : gamePlayers) {
+                    if (gamePlayer.getTgid() == tgid) {
+                        gamePlayer.payCallback(args, query.id());
+                    }
+                }
+                return true;
         }
         return false;
+    }
+
+    public void confirmPayment(List<Card> payment) {
+        ++paymentConfirmationCount;
+        for (Card card : payment) {
+            gamePlayers.get(currentTurn).addCurrency(card);
+        }
+        if (paymentConfirmationCount == gamePlayers.size() - 1) {
+            // everyone has paid
+            gamePlayers.get(currentTurn).promptForCard();
+        }
     }
 
     public Translation getTranslation() {

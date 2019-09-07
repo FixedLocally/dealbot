@@ -4,21 +4,22 @@ import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.request.AnswerCallbackQuery;
 import com.pengrad.telegrambot.request.DeleteMessage;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.SendResponse;
-import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.game.cards.Card;
 import me.lkp111138.dealbot.game.cards.PropertyCard;
 import me.lkp111138.dealbot.game.cards.WildcardPropertyCard;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class GamePlayer {
     // player info
@@ -32,6 +33,14 @@ public class GamePlayer {
     private int stateMessageId;
     private int globalStateMessageId;
     private int disposeMessageId;
+
+    private Set<Integer> paymentSelectedIndices = new HashSet<>();
+    private int paymentMessageId;
+    private String paymentMessage;
+    private int paymentValue;
+
+    private ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(2);
+    private ScheduledFuture future;
 
     // decks
     private final List<Card> hand = new ArrayList<>();
@@ -209,7 +218,7 @@ public class GamePlayer {
             if (props.isEmpty()) {
                 continue;
             }
-            state.append("Group ").append(group).append(props.size()).append("/")
+            state.append("Group ").append(group).append(" ").append(props.size()).append("/")
                     .append(PropertyCard.propertySetCounts[group]).append("\n").append(" ($ ")
                     .append(PropertyCard.getRent(group, props.size()))
                     .append("M) ");
@@ -273,6 +282,112 @@ public class GamePlayer {
         return currencyDeck.size();
     }
 
+    public void collectRent(int value, int group, GamePlayer collector) {
+        // we first check if the player's currency deck can cover the rent
+        int total = currencyDeck.stream().mapToInt(Card::currencyValue).sum();
+        paymentValue = value;
+        paymentSelectedIndices.clear();
+        if (total >= value) {
+            // the currency deck can cover this
+            paymentMessage = String.format("%s is collecting $%dM as rent for group %d from you! Choose how to pay.",
+                    collector.getName(), value, group);
+            SendMessage send = new SendMessage(tgid, paymentMessage);
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
+            for (int i = 0; i < currencyDeck.size(); i++) {
+                buttons[i][0] = new InlineKeyboardButton("$ " + currencyDeck.get(i) + "M").callbackData("pay_choose:" + i);
+            }
+            buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ 0M)").callbackData("pay_done");
+            send.replyMarkup(new InlineKeyboardMarkup(buttons));
+            game.execute(send, new Callback<SendMessage, SendResponse>() {
+                @Override
+                public void onResponse(SendMessage request, SendResponse response) {
+                    paymentMessageId = response.message().messageId();
+                }
+
+                @Override
+                public void onFailure(SendMessage request, IOException e) {
+
+                }
+            });
+        } else {
+            // the currency deck wont cover, so choose some properties
+            for (int i = 0; i < currencyDeck.size(); i++) {
+                paymentSelectedIndices.add(i);
+            }
+        }
+        // if not paid in a round's time, random pay
+        if (future != null) {
+            future.cancel(true);
+        }
+        executor.schedule(() -> {
+            paymentSelectedIndices.clear();
+            int paid = 0;
+            for (int i = 0; i < currencyCount(); i++) {
+                paid += currencyDeck.get(i).currencyValue();
+                paymentSelectedIndices.add(i);
+                if (paid >= paymentValue) {
+                    break;
+                }
+            }
+            confirmPayment();
+            game.confirmPayment(getPaymentCurrencyCards());
+        }, game.getTurnWait(), TimeUnit.SECONDS);
+    }
+
+    public void payCallback(String[] args, String id) {
+        switch (args[0]) {
+            case "pay_choose":
+                int index = Integer.parseInt(args[1]);
+                if (!paymentSelectedIndices.add(index)) {
+                    paymentSelectedIndices.remove(index);
+                }
+                EditMessageText edit = new EditMessageText(tgid, paymentMessageId, paymentMessage);
+                InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
+                for (int i = 0; i < currencyDeck.size(); i++) {
+                    buttons[i][0] = new InlineKeyboardButton("$ " + currencyDeck.get(i) + "M").callbackData("pay_choose:" + i);
+                }
+                int total = 0;
+                for (int i = 0; i < currencyDeck.size(); i++) {
+                    if (paymentSelectedIndices.contains(i)) {
+                        total += currencyDeck.get(i).currencyValue();
+                    }
+                }
+                buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ " + total + "M)").callbackData("pay_done");
+                edit.replyMarkup(new InlineKeyboardMarkup(buttons));
+                game.execute(edit);
+                break;
+            case "pay_confirm":
+                List<Card> payment = getPaymentCurrencyCards();
+                total = payment.stream().mapToInt(Card::currencyValue).sum();
+                if (total < paymentValue && payment.size() < currencyCount()) {
+                    // not enough and didnt do their best
+                    AnswerCallbackQuery answer = new AnswerCallbackQuery(id);
+                    answer.text("The amount you paid is too low");
+                    answer.showAlert(true);
+                    game.execute(answer);
+                    return;
+                }
+                // enough amount so confirm payment
+                confirmPayment();
+                game.confirmPayment(payment);
+                break;
+        }
+    }
+
+    public List<Card> getPaymentCurrencyCards() {
+        List<Card> payment = new ArrayList<>();
+        for (Integer index : paymentSelectedIndices) {
+            payment.add(currencyDeck.get(index));
+        }
+        return payment;
+    }
+
+    public void confirmPayment() {
+        // deduct the currencies
+        List<Card> payment = getPaymentCurrencyCards();
+        currencyDeck.removeAll(payment);
+    }
+
     public void addMove() {
         --actionCount;
     }
@@ -325,5 +440,9 @@ public class GamePlayer {
             game.addToMainDeck(disposed);
         }
         endTurn();
+    }
+
+    public int getGroupRent(int group) {
+        return PropertyCard.getRent(group, propertyDecks.getOrDefault(group, new ArrayList<>()).size());
     }
 }
