@@ -18,9 +18,9 @@ public class DealBreakerActionCard extends ActionCard {
     }
 
     @Override
-    public void execute(GamePlayer player, Object[] args) {
-        int deckId = (int) args[1];
-        GamePlayer victim = (GamePlayer) args[0];
+    public void execute(GamePlayer player, String[] args) {
+//        int deckId = (int) args[1];
+//        GamePlayer victim = (GamePlayer) args[0];
         // TODO
     }
 }

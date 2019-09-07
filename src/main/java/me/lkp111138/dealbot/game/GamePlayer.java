@@ -157,15 +157,19 @@ public class GamePlayer {
         return game;
     }
 
+    public int getMessageId() {
+        return messageId;
+    }
+
     public Card handCardAt(int i) {
         return hand.get(i);
     }
 
     public void play(Card card) {
         if (card instanceof PropertyCard) {
-            card.execute(this, new Object[]{((PropertyCard) card).getGroup()});
+            card.execute(this, new String[0]);
         } else {
-            card.execute(this, new Object[0]);
+            card.execute(this, new String[0]);
         }
     }
 }

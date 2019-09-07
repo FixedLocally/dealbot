@@ -520,6 +520,11 @@ public class Game {
             case "end_turn":
                 nextTurn();
                 return true;
+            case "card_arg":
+                String[] subarray = new String[args.length - 1];
+                System.arraycopy(args, 1, subarray, 0, args.length - 1);
+                currentCard.execute(gamePlayers.get(currentTurn), subarray);
+                break;
         }
         return false;
     }

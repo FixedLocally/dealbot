@@ -39,5 +39,5 @@ public interface Card {
      * @param player the player that played the card
      * @param args the arguments passed to the card, such as target card or player
      */
-    void execute(GamePlayer player, Object[] args);
+    void execute(GamePlayer player, String[] args);
 }

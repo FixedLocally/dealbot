@@ -23,7 +23,7 @@ public class RentActionCard extends ActionCard {
     }
 
     @Override
-    public void execute(GamePlayer player, Object[] args) {
+    public void execute(GamePlayer player, String[] args) {
         // full wildcard: 1 payer
         // double wildcard: all pays
         player.promptForCard();
