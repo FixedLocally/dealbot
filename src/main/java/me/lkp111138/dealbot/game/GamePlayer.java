@@ -386,8 +386,8 @@ public class GamePlayer {
         // deduct the currencies
         List<Card> payment = getPaymentCurrencyCards();
         currencyDeck.removeAll(payment);
-        DeleteMessage del = new DeleteMessage(tgid, paymentMessageId);
-        game.execute(del);
+        EditMessageText edit = new EditMessageText(tgid, paymentMessageId, "Thank you for your payment.");
+        game.execute(edit);
         paymentMessageId = 0;
     }
 
