@@ -29,6 +29,7 @@ public class GamePlayer {
     private int actionCount;
     private int messageId;
     private int stateMessageId;
+    private int globalStateMessageId;
 
     // decks
     private final List<Card> hand = new ArrayList<>();
@@ -231,6 +232,26 @@ public class GamePlayer {
             });
         } else {
             EditMessageText edit = new EditMessageText(tgid, stateMessageId, getMyState());
+            game.execute(edit);
+        }
+    }
+
+    public void sendGlobalState(String s) {
+        if (globalStateMessageId == 0) {
+            SendMessage send = new SendMessage(tgid, s);
+            game.execute(send, new Callback<SendMessage, SendResponse>() {
+                @Override
+                public void onResponse(SendMessage request, SendResponse response) {
+                    stateMessageId = response.message().messageId();
+                }
+
+                @Override
+                public void onFailure(SendMessage request, IOException e) {
+
+                }
+            });
+        } else {
+            EditMessageText edit = new EditMessageText(tgid, globalStateMessageId, s);
             game.execute(edit);
         }
     }

@@ -443,7 +443,7 @@ public class Game {
             currentState.append("\n");
         }
         GamePlayer player = gamePlayers.get(currentTurn);
-        player.getGame().execute(new SendMessage(player.getTgid(), currentState.toString()));
+        player.sendGlobalState(currentState.toString());
         player.addHand(mainDeck.remove(0));
         player.addHand(mainDeck.remove(0));
         player.startTurn();
