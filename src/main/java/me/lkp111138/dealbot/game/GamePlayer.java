@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.DeleteMessage;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -112,13 +113,18 @@ public class GamePlayer {
 
     public void startTurn() {
         actionCount = 0;
+        // tell the player that its their turn now
+        SendMessage send = new SendMessage(game.getGid(),
+                String.format(game.getTranslation().YOUR_TURN_ANNOUNCEMENT(), tgid, getName(), game.getTurnWait()));
+        send.parseMode(ParseMode.HTML).disableWebPagePreview(true);
+        game.execute(send);
         promptForCard();
     }
 
     public void promptForCard() {
         sendState();
         if (actionCount < 3) {
-            game.schedule(this::endTurn, 30000);
+            game.schedule(this::endTurn, game.getTurnWait() * 1000);
             // do prompt
             int size = hand.size() + (actionCount > 0 ? 1 : 0);
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[size][1];

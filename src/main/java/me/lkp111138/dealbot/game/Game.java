@@ -64,7 +64,6 @@ public class Game {
     private static TelegramBot bot;
     private static ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(2);
     private static Map<Integer, Game> uidGames = new HashMap<>();
-    private static final int CARDS_PER_PLAYER = 5;
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     private static int[] remindSeconds = new int[]{15, 30, 60, 90, 120, 180};
     private Card currentCard = null;
@@ -446,6 +445,12 @@ public class Game {
         player.sendGlobalState(currentState.toString());
         player.addHand(mainDeck.remove(0));
         player.addHand(mainDeck.remove(0));
+        // draw 5 if starting with 0
+        if (player.handCount() == 2) {
+            player.addHand(mainDeck.remove(0));
+            player.addHand(mainDeck.remove(0));
+            player.addHand(mainDeck.remove(0));
+        }
         player.startTurn();
     }
 
@@ -485,6 +490,9 @@ public class Game {
         return lang;
     }
 
+    public int getTurnWait() {
+        return turnWait;
+    }
 
     public void log(Object o) {
         String date = sdf.format(new Date());
@@ -577,6 +585,14 @@ public class Game {
                 return true;
         }
         return false;
+    }
+
+    public Translation getTranslation() {
+        return translation;
+    }
+
+    public long getGid() {
+        return gid;
     }
 
     public static class RunInfo {
