@@ -16,7 +16,7 @@ public class Translation {
         return "Back to ";
     }
     public String JOINED_ANNOUNCEMENT() {
-        return "[ <a href=\"tg://user?id=%d\">%s</a> ] has joined the game! <b>%d</b> out of <b>4</b> has joined.";
+        return "[ <a href=\"tg://user?id=%d\">%s</a> ] has joined the game! <b>%d</b> out of <b>5</b> has joined.";
     }
     public String START_ME_FIRST() {
         return "Please start me first!";

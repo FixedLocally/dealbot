@@ -19,7 +19,7 @@ public class HongKongChinese extends Translation {
     }
     @Override
     public String JOINED_ANNOUNCEMENT() {
-        return "[ <a href=\"tg://user?id=%d\">%s</a> ] 加入咗遊戲！ 已經有 <b>%d</b> 個玩家，一共需要 <b>4</b> 個。";
+        return "[ <a href=\"tg://user?id=%d\">%s</a> ] 加入咗遊戲！ 已經有 <b>%d</b> 個玩家，最多可以 <b>5</b> 個。";
     }
     @Override
     public String START_ME_FIRST() {

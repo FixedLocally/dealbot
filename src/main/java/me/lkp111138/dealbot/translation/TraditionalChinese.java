@@ -19,7 +19,7 @@ public class TraditionalChinese extends Translation {
     }
     @Override
     public String JOINED_ANNOUNCEMENT() {
-        return "[ <a href=\"tg://user?id=%d\">%s</a> ] 已加入遊戲！ 已有 <b>%d</b> 名玩家，總共需要 <b>4</b> 名。";
+        return "[ <a href=\"tg://user?id=%d\">%s</a> ] 已加入遊戲！ 已有 <b>%d</b> 名玩家，最多可有 <b>5</b> 名。";
     }
     @Override
     public String START_ME_FIRST() {
