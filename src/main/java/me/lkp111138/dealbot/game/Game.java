@@ -249,6 +249,9 @@ public class Game {
      * Starts the game
      */
     private void start() {
+        // tell them the game is starting
+        SendMessage send = new SendMessage(gid, "The game is starting, please wait...");
+        this.execute(send);
         // construct mainDeck
         // properties
         mainDeck.add(new PropertyCard(1, "Chek Lap Kok", 0));
@@ -343,7 +346,7 @@ public class Game {
 
         // construct players
         for (User player : players) {
-            gamePlayers.add(new GamePlayer(this, player.id(), gid));
+            gamePlayers.add(new GamePlayer(this, player.id(), gid, player));
         }
 
         // distribute mainDeck
@@ -416,7 +419,31 @@ public class Game {
 
     private void startTurn() {
         currentCard = null;
+        // tell the current player the current situation
+        StringBuilder currentState = new StringBuilder("Current State:\n");
+        for (int i = 0; i < gamePlayers.size(); i++) {
+            int index = (i + currentTurn) % gamePlayers.size();
+            GamePlayer player = gamePlayers.get(index);
+            currentState.append(i + 1).append(". ").append(player.getName()).append("\n");
+            currentState.append("Cards in hand: ").append(player.handCount()).append("\n");
+            currentState.append("Cards in currency deck: ").append(player.currencyCount()).append("\n");
+            currentState.append("Properties:\n");
+            Map<Integer, List<Card>> propertyDecks = player.getPropertyDecks();
+            for (Integer group : propertyDecks.keySet()) {
+                List<Card> props = propertyDecks.get(group);
+                if (props.isEmpty()) {
+                    continue;
+                }
+                currentState.append("Group ").append(group).append(": ").append(props.size()).append("/")
+                        .append(PropertyCard.propertySetCounts[group]).append("\n");
+                for (Card prop : props) {
+                    currentState.append("- ").append(prop.getCardTitle()).append("\n");
+                }
+            }
+            currentState.append("\n");
+        }
         GamePlayer player = gamePlayers.get(currentTurn);
+        player.getGame().execute(new SendMessage(player.getTgid(), currentState.toString()));
         player.addHand(mainDeck.remove(0));
         player.addHand(mainDeck.remove(0));
         player.startTurn();

@@ -1,6 +1,7 @@
 package me.lkp111138.dealbot.game;
 
 import com.pengrad.telegrambot.Callback;
+import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.DeleteMessage;
@@ -22,6 +23,7 @@ public class GamePlayer {
     private final int tgid;
     private final long gid;
     private final Game game;
+    private final User user;
 
     private int actionCount;
     private int messageId;
@@ -31,10 +33,11 @@ public class GamePlayer {
     private final List<Card> currencyDeck = new ArrayList<>();
     private final Map<Integer, List<Card>> propertyDecks = new HashMap<>();
 
-    public GamePlayer(Game game, int tgid, long gid) {
+    public GamePlayer(Game game, int tgid, long gid, User user) {
         this.tgid = tgid;
         this.gid = gid;
         this.game = game;
+        this.user = user;
     }
 
     public void removeHand(Card card) {
@@ -161,6 +164,14 @@ public class GamePlayer {
         return messageId;
     }
 
+    public List<Card> getCurrencyDeck() {
+        return currencyDeck;
+    }
+
+    public Map<Integer, List<Card>> getPropertyDecks() {
+        return propertyDecks;
+    }
+
     public Card handCardAt(int i) {
         return hand.get(i);
     }
@@ -171,5 +182,17 @@ public class GamePlayer {
         } else {
             card.execute(this, new String[0]);
         }
+    }
+
+    public String getName() {
+        return user.firstName();
+    }
+
+    public int handCount() {
+        return hand.size();
+    }
+
+    public int currencyCount() {
+        return currencyDeck.size();
     }
 }
