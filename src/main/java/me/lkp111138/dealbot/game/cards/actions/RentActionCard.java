@@ -1,6 +1,5 @@
 package me.lkp111138.dealbot.game.cards.actions;
 
-import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
@@ -40,19 +39,24 @@ public class RentActionCard extends ActionCard {
             int value = player.getGroupRent(group);
             if (groups.length == 2) {
                 player.getGame().collectRentFromAll(value, group);
-                EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Collecting rent from everybody for group " + group);
+                EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
+                        "Collecting rent from everybody for group " + group);
                 player.getGame().execute(edit);
             } else {
-                List<User> players = player.getGame().getPlayers();
+                List<GamePlayer> players = player.getGame().getGamePlayers();
                 if (args.length > 1) {
                     // send them a huge rental bill!
                     int order = Integer.parseInt(args[1]);
                     player.getGame().collectRentFromOne(value, group, order);
-                } else {
-                    InlineKeyboardButton[][] buttons = new InlineKeyboardButton[players.size() + 1][1];
+                    EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
+                            "Collecting rent from " + players.get(order).getName() + " for group " + group);
+                    player.getGame().execute(edit); } else {
+                    InlineKeyboardButton[][] buttons = new InlineKeyboardButton[players.size()][1];
+                    int nonce = player.getGame().nextNonce();
+                    int j = 0;
                     for (int i = 0; i < players.size(); i++) {
-                        User user = players.get(i);
-                        if (user.id() == player.getTgid()) {
+                        GamePlayer user = players.get(i);
+                        if (user.getTgid() == player.getTgid()) {
                             continue;
                         }
                         buttons[j++][0] = new InlineKeyboardButton(user.getName()).callbackData(nonce + ":card_arg:" + group + ":" + i);

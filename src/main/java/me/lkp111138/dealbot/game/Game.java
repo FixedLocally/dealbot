@@ -16,7 +16,6 @@ import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.cards.*;
-import me.lkp111138.dealbot.game.cards.actions.BlankActionCard;
 import me.lkp111138.dealbot.game.cards.actions.RentActionCard;
 import me.lkp111138.dealbot.misc.EmptyCallback;
 import me.lkp111138.dealbot.translation.Translation;
@@ -30,6 +29,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class Game {
     private final GroupInfo groupInfo;
@@ -52,11 +52,14 @@ public class Game {
     private int id;
     private List<Card> mainDeck = new ArrayList<>();
     private List<Card> usedDeck = new ArrayList<>();
+    private Set<Integer> usedNonces = new HashSet<>();
+    private int nextNonce = 0;
 
     private boolean ended = false;
     private int[] offsets;
 
     private int paymentConfirmationCount;
+    private Set<Integer> paidPlayers = new HashSet<>();
 
     private static Map<Long, Game> games = new HashMap<>();
     public static boolean maintMode = false; // true=disallow starting games
@@ -214,12 +217,20 @@ public class Game {
         return players;
     }
 
+    public List<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+
     public int playerCount() {
         return players.size();
     }
 
     public boolean started() {
         return started;
+    }
+
+    public int nextNonce() {
+        return ++nextNonce;
     }
 
     public void extend() {
@@ -303,10 +314,11 @@ public class Game {
         mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
         mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
 
+        // TODO revert this
         // action mainDeck
-        for (int i = 0; i < 34; i++) {
-            mainDeck.add(new BlankActionCard());
-        }
+//        for (int i = 0; i < 34; i++) {
+//            mainDeck.add(new BlankActionCard());
+//        }
 
         // rent mainDeck
         mainDeck.add(new RentActionCard(new int[]{0, 1}));
@@ -319,9 +331,9 @@ public class Game {
         mainDeck.add(new RentActionCard(new int[]{6, 7}));
         mainDeck.add(new RentActionCard(new int[]{8, 9}));
         mainDeck.add(new RentActionCard(new int[]{8, 9}));
-        mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
-        mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
-        mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+        for (int i = 0; i < 37; i++) {
+            mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+        }
 
         // currency mainDeck
         for (int i = 0; i < 6; i++) {
@@ -407,6 +419,7 @@ public class Game {
     public void collectRentFromAll(int value, int group) {
         cancelFuture();
         paymentConfirmationCount = 0;
+        paidPlayers.clear();
         if (value <= 0) {
             // nothing to collect
             gamePlayers.get(currentTurn).promptForCard();
@@ -423,6 +436,7 @@ public class Game {
 
     public void collectRentFromOne(int value, int group, int order) {
         cancelFuture();
+        paidPlayers.clear();
         paymentConfirmationCount = gamePlayers.size() - 2; // shush
         if (value <= 0) {
             // nothing to collect
@@ -584,7 +598,15 @@ public class Game {
 
     public boolean callback(CallbackQuery query) {
         String payload = query.data();
-        String[] args = payload.split(":");
+        String[] _args = payload.split(":");
+        int nonce = Integer.parseInt(_args[0]);
+        if (usedNonces.contains(nonce)) {
+            logf("query %s ignored, repeated nonce", payload);
+            return true;
+        }
+        usedNonces.add(nonce);
+        String[] args = new String[_args.length - 1];
+        System.arraycopy(_args, 1, args, 0, args.length);
         if (gamePlayers.get(currentTurn).getTgid() != query.from().id() && !args[0].startsWith("pay_")) {
             bot.execute(new AnswerCallbackQuery(query.id()));
             bot.execute(new EditMessageReplyMarkup(query.message().chat().id(), query.message().messageId()));
@@ -644,15 +666,30 @@ public class Game {
         return false;
     }
 
-    public void confirmPayment(List<Card> payment) {
+    public boolean confirmPayment(List<Card> payment, int tgid) {
+        if (paidPlayers.contains(tgid)) {
+            return false;
+        }
+        String name = "";
+        for (User user : players) {
+            if (user.id() == tgid) {
+                name = user.firstName();
+                break;
+            }
+        }
         ++paymentConfirmationCount;
-        for (Card card : payment) {
+        paidPlayers.add(tgid);
+        String paymentStr = (payment.stream().map(x -> "$ " + x.currencyValue() + "M").collect(Collectors.joining(", "))); for (Card card : payment) {
             gamePlayers.get(currentTurn).addCurrency(card);
+            int id = gamePlayers.get(currentTurn).getTgid();
+            SendMessage send = new SendMessage(id, name + " paid you " + paymentStr);
+            execute(send);
         }
         if (paymentConfirmationCount == gamePlayers.size() - 1) {
             // everyone has paid
             gamePlayers.get(currentTurn).promptForCard();
         }
+        return true;
     }
 
     public Translation getTranslation() {

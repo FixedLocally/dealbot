@@ -38,10 +38,11 @@ public class WildcardPropertyCard extends PropertyCard {
             // ask for which group to put this card
             EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Use this card on which group?");
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[groups.length + 1][1];
+            int nonce = player.getGame().nextNonce();
             for (int i = 0; i < groups.length; i++) {
                 buttons[i][0] = new InlineKeyboardButton(String.valueOf(groups[i])).callbackData(nonce + ":card_arg:" + groups[i]);
             }
-            buttons[groups.length][0] = new InlineKeyboardButton("Cancel").callbackData("use_cancel");
+            buttons[groups.length][0] = new InlineKeyboardButton("Cancel").callbackData(nonce + ":use_cancel");
             edit.replyMarkup(new InlineKeyboardMarkup(buttons));
             player.getGame().execute(edit);
         }
