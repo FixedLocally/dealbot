@@ -20,6 +20,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class GamePlayer {
     // player info
@@ -137,11 +138,12 @@ public class GamePlayer {
             // do prompt
             int size = hand.size() + (actionCount > 0 ? 1 : 0);
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[size][1];
+            int nonce = game.nextNonce();
             for (int i = 0; i < hand.size(); i++) {
-                buttons[i][0] = new InlineKeyboardButton(hand.get(i).getCardTitle()).callbackData("play_card:" + i);
+                buttons[i][0] = new InlineKeyboardButton(hand.get(i).getCardTitle()).callbackData(nonce + ":play_card:" + i);
             }
             if (actionCount > 0) {
-                buttons[hand.size()][0] = new InlineKeyboardButton("End turn").callbackData("end_turn");
+                buttons[hand.size()][0] = new InlineKeyboardButton("End turn").callbackData(nonce + ":end_turn");
             }
             String msg = String.format("Choose an action (%d remaining)", 3 - actionCount);
             if (messageId == 0) {
@@ -293,10 +295,11 @@ public class GamePlayer {
                     collector.getName(), value, group);
             SendMessage send = new SendMessage(tgid, paymentMessage);
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
+            int nonce = game.nextNonce();
             for (int i = 0; i < currencyDeck.size(); i++) {
-                buttons[i][0] = new InlineKeyboardButton("$ " + currencyDeck.get(i).currencyValue() + "M").callbackData("pay_choose:" + i);
+                buttons[i][0] = new InlineKeyboardButton("$ " + currencyDeck.get(i).currencyValue() + "M").callbackData(nonce + ":pay_choose:" + i);
             }
-            buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ 0M)").callbackData("pay_done");
+            buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ 0M)").callbackData(nonce + ":pay_done");
             send.replyMarkup(new InlineKeyboardMarkup(buttons));
             game.execute(send, new Callback<SendMessage, SendResponse>() {
                 @Override
@@ -319,7 +322,7 @@ public class GamePlayer {
         if (future != null) {
             future.cancel(true);
         }
-        executor.schedule(() -> {
+        future = executor.schedule(() -> {
             paymentSelectedIndices.clear();
             int paid = 0;
             for (int i = 0; i < currencyCount(); i++) {
@@ -343,8 +346,9 @@ public class GamePlayer {
                 }
                 EditMessageText edit = new EditMessageText(tgid, paymentMessageId, paymentMessage);
                 InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
+                int nonce = game.nextNonce();
                 for (int i = 0; i < currencyDeck.size(); i++) {
-                    buttons[i][0] = new InlineKeyboardButton((paymentSelectedIndices.contains(i) ? "[x]" : "") + "$ " + currencyDeck.get(i).currencyValue() + "M").callbackData("pay_choose:" + i);
+                    buttons[i][0] = new InlineKeyboardButton((paymentSelectedIndices.contains(i) ? "[x]" : "") + "$ " + currencyDeck.get(i).currencyValue() + "M").callbackData(nonce + ":pay_choose:" + i);
                 }
                 int total = 0;
                 for (int i = 0; i < currencyDeck.size(); i++) {
@@ -352,7 +356,7 @@ public class GamePlayer {
                         total += currencyDeck.get(i).currencyValue();
                     }
                 }
-                buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ " + total + "M)").callbackData("pay_confirm");
+                buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ " + total + "M)").callbackData(nonce + ":pay_confirm");
                 edit.replyMarkup(new InlineKeyboardMarkup(buttons));
                 game.execute(edit);
                 break;
@@ -404,8 +408,9 @@ public class GamePlayer {
         if (handCount() > 7) {
             // need to dispose cards
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[handCount()][1];
+            int nonce = game.nextNonce();
             for (int i = 0; i < hand.size(); i++) {
-                buttons[i][0] = new InlineKeyboardButton(hand.get(i).getCardTitle()).callbackData("dispose_card:" + i);
+                buttons[i][0] = new InlineKeyboardButton(hand.get(i).getCardTitle()).callbackData(nonce + ":dispose_card:" + i);
             }
             String msg = String.format("Dispose some cards to keep you at 7 cards (%d remaining)", handCount() - 7);
             if (disposeMessageId == 0) {
