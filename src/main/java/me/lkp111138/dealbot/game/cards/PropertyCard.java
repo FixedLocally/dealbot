@@ -22,6 +22,16 @@ public class PropertyCard implements Card {
             {1, 2}
     };
 
+    public static int getRent(int group, int count) {
+        if (count <= 0) {
+            return 0;
+        }
+        if (count >= propertyRents[group].length) {
+            return propertyRents[group][propertyRents[group].length - 1];
+        }
+        return propertyRents[group][count - 1];
+    }
+
     public PropertyCard(int currencyValue, String title, int group) {
         this.currencyValue = currencyValue;
         this.title = title;

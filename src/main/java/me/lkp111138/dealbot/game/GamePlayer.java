@@ -213,8 +213,10 @@ public class GamePlayer {
             if (props.isEmpty()) {
                 continue;
             }
-            state.append("Group ").append(group).append(": ").append(props.size()).append("/")
-                    .append(PropertyCard.propertySetCounts[group]).append("\n");
+            state.append("Group ").append(group).append(props.size()).append("/")
+                    .append(PropertyCard.propertySetCounts[group]).append("\n").append(" ($ ")
+                    .append(PropertyCard.getRent(group, props.size()))
+                    .append("M) ");
             for (Card prop : props) {
                 state.append("- ").append(prop.getCardTitle()).append("\n");
             }
