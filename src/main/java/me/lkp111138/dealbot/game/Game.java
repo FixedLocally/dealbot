@@ -16,6 +16,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.cards.*;
+import me.lkp111138.dealbot.game.cards.actions.BlankActionCard;
 import me.lkp111138.dealbot.game.cards.actions.RentActionCard;
 import me.lkp111138.dealbot.misc.EmptyCallback;
 import me.lkp111138.dealbot.translation.Translation;
@@ -314,11 +315,10 @@ public class Game {
         mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
         mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
 
-        // TODO revert this
         // action mainDeck
-//        for (int i = 0; i < 34; i++) {
-//            mainDeck.add(new BlankActionCard());
-//        }
+        for (int i = 0; i < 34; i++) {
+            mainDeck.add(new BlankActionCard());
+        }
 
         // rent mainDeck
         mainDeck.add(new RentActionCard(new int[]{0, 1}));
@@ -331,7 +331,7 @@ public class Game {
         mainDeck.add(new RentActionCard(new int[]{6, 7}));
         mainDeck.add(new RentActionCard(new int[]{8, 9}));
         mainDeck.add(new RentActionCard(new int[]{8, 9}));
-        for (int i = 0; i < 37; i++) {
+        for (int i = 0; i < 3; i++) {
             mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
         }
 
