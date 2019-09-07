@@ -117,6 +117,7 @@ public class GamePlayer {
     public void promptForCard() {
         sendState();
         if (actionCount < 3) {
+            game.schedule(this::endTurn, 30000);
             // do prompt
             int size = hand.size() + (actionCount > 0 ? 1 : 0);
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[size][1];
@@ -149,9 +150,7 @@ public class GamePlayer {
             ++actionCount;
         } else {
             // end turn
-            game.execute(new DeleteMessage(tgid, messageId));
-            messageId = 0;
-            game.nextTurn();
+            endTurn();
         }
     }
 
@@ -270,5 +269,13 @@ public class GamePlayer {
 
     public void addMove() {
         --actionCount;
+    }
+
+    public void endTurn() {
+        game.execute(new DeleteMessage(tgid, messageId));
+        messageId = 0;
+        game.execute(new DeleteMessage(tgid, messageId));
+        game.cancelFuture();
+        game.nextTurn();
     }
 }

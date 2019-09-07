@@ -454,7 +454,7 @@ public class Game {
         startTurn();
     }
 
-    private void cancelFuture() {
+    void cancelFuture() {
         if (future != null && !future.isDone() && !future.isCancelled()) {
 //            this.log("cancelled task");
             future.cancel(true);
@@ -467,7 +467,7 @@ public class Game {
         }
     }
 
-    private void schedule(Runnable runnable, long l) {
+    void schedule(Runnable runnable, long l) {
         cancelFuture();
         future = executor.schedule(runnable, l, TimeUnit.MILLISECONDS);
     }
@@ -545,6 +545,7 @@ public class Game {
                 player.play(this.currentCard);
                 return true;
             case "end_turn":
+                player.endTurn();
                 nextTurn();
                 return true;
             case "card_arg":
