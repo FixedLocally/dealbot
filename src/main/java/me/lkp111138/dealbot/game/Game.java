@@ -442,7 +442,9 @@ public class Game {
             currentState.append("\n");
         }
         GamePlayer player = gamePlayers.get(currentTurn);
-        player.sendGlobalState(currentState.toString());
+        for (GamePlayer gamePlayer : gamePlayers) {
+            gamePlayer.sendGlobalState(currentState.toString());
+        }
         player.addHand(mainDeck.remove(0));
         player.addHand(mainDeck.remove(0));
         // draw 5 if starting with 0
