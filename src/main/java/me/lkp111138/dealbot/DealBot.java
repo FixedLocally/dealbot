@@ -41,7 +41,7 @@ public class DealBot {
         commands.put("start", new StartCommand());
         commands.put("play", new PlayCommand());
         commands.put("startgame", commands.get("play"));
-//        commands.put("join", new JoinCommand());
+        commands.put("join", new JoinCommand());
         commands.put("flee", new FleeCommand());
         commands.put("stats", new StatCommand());
         commands.put("killgame", new KillGameCommand());
