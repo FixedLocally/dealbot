@@ -55,7 +55,7 @@ public class PropertyCard implements Card {
 
     @Override
     public String getCardTitle() {
-        return title;
+        return "[" + group + "] " + title;
     }
 
     @Override

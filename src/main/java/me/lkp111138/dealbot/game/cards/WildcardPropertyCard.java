@@ -20,6 +20,15 @@ public class WildcardPropertyCard extends PropertyCard {
     }
 
     @Override
+    public String getCardTitle() {
+        if (groups.length == 2) {
+            return "[" + groups[0] + " / " + groups[1] + "] " + title;
+        } else {
+            return "[Rainbow] " + title;
+        }
+    }
+
+    @Override
     public void execute(GamePlayer player, String[] args) {
         if (args.length > 0) {
             player.addProperty(this, Integer.parseInt(args[0]));
