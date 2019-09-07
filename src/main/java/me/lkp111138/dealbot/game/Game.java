@@ -364,6 +364,7 @@ public class Game {
             for (int i = 0; i < 5; i++) {
                 gamePlayer.addHand(mainDeck.remove(0));
             }
+            gamePlayer.sendState();
         }
         Collections.shuffle(gamePlayers);
 

@@ -207,6 +207,9 @@ public class GamePlayer {
     public String getMyState() {
         StringBuilder state = new StringBuilder("Cards in hand: ");
         state.append(handCount()).append("\n");
+        for (Card card : hand) {
+            state.append("- ").append(card.getCardTitle()).append("\n");
+        }
         int total = currencyDeck.stream().mapToInt(Card::currencyValue).sum();
         state.append("Currency deck (").append(currencyDeck.size()).append(" / $ ").append(total).append("M): ");
         for (Card card : currencyDeck) {
@@ -221,9 +224,9 @@ public class GamePlayer {
                 continue;
             }
             state.append("Group ").append(group).append(" ").append(props.size()).append("/")
-                    .append(PropertyCard.propertySetCounts[group]).append("\n").append(" ($ ")
+                    .append(PropertyCard.propertySetCounts[group]).append(" ($ ")
                     .append(PropertyCard.getRent(group, props.size()))
-                    .append("M) ");
+                    .append("M) ").append("\n");
             for (Card prop : props) {
                 state.append("- ").append(prop.getCardTitle()).append("\n");
             }
