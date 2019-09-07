@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GamePlayer {
     // player info
@@ -189,7 +190,8 @@ public class GamePlayer {
     public String getMyState() {
         StringBuilder state = new StringBuilder("Cards in hand: ");
         state.append(handCount()).append("\n");
-        state.append("Currency deck: ");
+        int total = currencyDeck.stream().mapToInt(Card::currencyValue).sum();
+        state.append("Currency deck (").append(currencyDeck.size()).append(" / $ ").append(total).append("M): ");
         for (Card card : currencyDeck) {
             if (card instanceof ActionCard) {
                 state.append(card.getCardTitle()).append(", ");
@@ -274,7 +276,6 @@ public class GamePlayer {
     public void endTurn() {
         game.execute(new DeleteMessage(tgid, messageId));
         messageId = 0;
-        game.execute(new DeleteMessage(tgid, messageId));
         game.cancelFuture();
         game.nextTurn();
     }

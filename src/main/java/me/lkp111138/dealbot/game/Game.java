@@ -555,7 +555,6 @@ public class Game {
                 return true;
             case "end_turn":
                 player.endTurn();
-                nextTurn();
                 return true;
             case "card_arg":
                 String[] subarray = new String[args.length - 1];
