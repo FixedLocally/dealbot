@@ -524,7 +524,14 @@ public class Game {
                 String[] subarray = new String[args.length - 1];
                 System.arraycopy(args, 1, subarray, 0, args.length - 1);
                 currentCard.execute(gamePlayers.get(currentTurn), subarray);
-                break;
+                return true;
+            case "use_as":
+                if (args[1].equals("money")) {
+                    player.addCurrency(this.currentCard);
+                    player.promptForCard();
+                } else {
+                    this.currentCard.execute(player, new String[0]);
+                }
         }
         return false;
     }
