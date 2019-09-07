@@ -18,7 +18,7 @@ public class RentActionCard extends ActionCard {
     }
 
     @Override
-    public String getCardTitle() {
+    public String getCardFunctionalTitle() {
         return "Action Card - Rent";
     }
 

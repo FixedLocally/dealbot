@@ -8,6 +8,7 @@ import com.pengrad.telegrambot.request.DeleteMessage;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
+import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.game.cards.Card;
 import me.lkp111138.dealbot.game.cards.PropertyCard;
 import me.lkp111138.dealbot.game.cards.WildcardPropertyCard;
@@ -27,6 +28,7 @@ public class GamePlayer {
 
     private int actionCount;
     private int messageId;
+    private int stateMessageId;
 
     // decks
     private final List<Card> hand = new ArrayList<>();
@@ -112,7 +114,7 @@ public class GamePlayer {
     }
 
     public void promptForCard() {
-        System.out.println(hand);
+        sendState();
         if (actionCount < 3) {
             // do prompt
             int size = hand.size() + (actionCount > 0 ? 1 : 0);
@@ -181,6 +183,55 @@ public class GamePlayer {
             card.execute(this, new String[0]);
         } else {
             card.execute(this, new String[0]);
+        }
+    }
+
+    public String getMyState() {
+        StringBuilder state = new StringBuilder("Cards in hand: ");
+        state.append(handCount()).append("\n");
+        state.append("Currency deck: ");
+        for (Card card : currencyDeck) {
+            if (card instanceof ActionCard) {
+                state.append(card.getCardTitle()).append(" [$ ").append(card.currencyValue()).append("M], ");
+            } else {
+                state.append("$ ").append(card.currencyValue()).append("M, ");
+            }
+        }
+        state.setLength(state.length() - 2);
+
+        state.append("\nProperties:\n");
+        for (Integer group : propertyDecks.keySet()) {
+            List<Card> props = propertyDecks.get(group);
+            if (props.isEmpty()) {
+                continue;
+            }
+            state.append("Group ").append(group).append(": ").append(props.size()).append("/")
+                    .append(PropertyCard.propertySetCounts[group]).append("\n");
+            for (Card prop : props) {
+                state.append("- ").append(prop.getCardTitle()).append("\n");
+            }
+            state.append("\n");
+        }
+        return state.toString();
+    }
+
+    public void sendState() {
+        if (stateMessageId == 0) {
+            SendMessage send = new SendMessage(tgid, getMyState());
+            game.execute(send, new Callback<SendMessage, SendResponse>() {
+                @Override
+                public void onResponse(SendMessage request, SendResponse response) {
+                    stateMessageId = response.message().messageId();
+                }
+
+                @Override
+                public void onFailure(SendMessage request, IOException e) {
+
+                }
+            });
+        } else {
+            EditMessageText edit = new EditMessageText(tgid, stateMessageId, getMyState());
+            game.execute(edit);
         }
     }
 

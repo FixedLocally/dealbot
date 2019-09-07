@@ -10,7 +10,7 @@ public class BlankActionCard extends ActionCard {
     }
 
     @Override
-    public String getCardTitle() {
+    public String getCardFunctionalTitle() {
         return "Blank Action Card";
     }
 

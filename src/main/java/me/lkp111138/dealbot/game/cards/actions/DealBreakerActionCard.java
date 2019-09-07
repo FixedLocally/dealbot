@@ -13,7 +13,7 @@ public class DealBreakerActionCard extends ActionCard {
     }
 
     @Override
-    public String getCardTitle() {
+    public String getCardFunctionalTitle() {
         return "Deal Breaker";
     }
 

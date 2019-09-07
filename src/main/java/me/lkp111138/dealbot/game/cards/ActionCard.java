@@ -27,6 +27,13 @@ public abstract class ActionCard implements Card {
     }
 
     @Override
+    public final String getCardTitle() {
+        return getCardFunctionalTitle() + "[$ " + currencyValue() + "M]";
+    }
+
+    public abstract String getCardFunctionalTitle();
+
+    @Override
     public final void execute(GamePlayer player, String[] args) {
         // use as $ or action card?
         EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), String.format("Use as %s currency or an action?", this.getCardTitle()));
