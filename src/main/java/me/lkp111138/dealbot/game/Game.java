@@ -559,6 +559,13 @@ public class Game {
                 } else {
                     this.currentCard.execute(player, new String[0]);
                 }
+                return true;
+            case "use_cancel":
+                player.addHand(this.currentCard);
+                this.currentCard = null;
+                player.addMove();
+                player.promptForCard();
+                return true;
         }
         return false;
     }

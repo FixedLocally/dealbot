@@ -40,6 +40,7 @@ public abstract class ActionCard implements Card {
         InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][1];
         buttons[0][0] = new InlineKeyboardButton("As currency").callbackData("use_as:money");
         buttons[1][0] = new InlineKeyboardButton("As action").callbackData("use_as:action");
+        buttons[1][0] = new InlineKeyboardButton("As action").callbackData("use_cancel");
         edit.replyMarkup(new InlineKeyboardMarkup(buttons));
         player.getGame().execute(edit);
     }

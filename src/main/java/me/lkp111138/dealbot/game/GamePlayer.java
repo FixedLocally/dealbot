@@ -246,4 +246,8 @@ public class GamePlayer {
     public int currencyCount() {
         return currencyDeck.size();
     }
+
+    public void addMove() {
+        --actionCount;
+    }
 }
