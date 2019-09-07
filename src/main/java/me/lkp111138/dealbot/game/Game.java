@@ -450,6 +450,15 @@ public class Game {
     }
 
     public void nextTurn() {
+        // before we start, we check if the previous player had won
+        GamePlayer player = gamePlayers.get(currentTurn);
+        if (player.checkWinCondition()) {
+            // won
+            String msg = String.format("<a href=\"tg://user?id=%1$s\">%2$s<a> successfully gather 3 full sets of properties and won!", player.getTgid(), player.getName());
+            this.execute(new SendMessage(gid, msg).parseMode(ParseMode.HTML));
+            this.kill(false);
+            return;
+        }
         currentTurn = (currentTurn + 1) % gamePlayers.size();
         startTurn();
     }
