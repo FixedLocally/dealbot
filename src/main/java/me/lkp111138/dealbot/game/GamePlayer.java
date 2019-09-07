@@ -242,7 +242,7 @@ public class GamePlayer {
             game.execute(send, new Callback<SendMessage, SendResponse>() {
                 @Override
                 public void onResponse(SendMessage request, SendResponse response) {
-                    stateMessageId = response.message().messageId();
+                    globalStateMessageId = response.message().messageId();
                 }
 
                 @Override
