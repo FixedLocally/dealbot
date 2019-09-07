@@ -199,11 +199,7 @@ public class GamePlayer {
         int total = currencyDeck.stream().mapToInt(Card::currencyValue).sum();
         state.append("Currency deck (").append(currencyDeck.size()).append(" / $ ").append(total).append("M): ");
         for (Card card : currencyDeck) {
-            if (card instanceof ActionCard) {
-                state.append(card.getCardTitle()).append(", ");
-            } else {
-                state.append("$ ").append(card.currencyValue()).append("M, ");
-            }
+            state.append("$ ").append(card.currencyValue()).append("M, ");
         }
         state.setLength(state.length() - 2);
 
