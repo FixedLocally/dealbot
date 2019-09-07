@@ -1,5 +1,6 @@
 package me.lkp111138.dealbot.game.cards.actions;
 
+import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
@@ -7,6 +8,7 @@ import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class RentActionCard extends ActionCard {
     private final int[] groups;
@@ -36,9 +38,31 @@ public class RentActionCard extends ActionCard {
         if (args.length > 0) {
             int group = Integer.parseInt(args[0]);
             int value = player.getGroupRent(group);
-            player.getGame().collectRentFromAll(value, group);
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Collecting rent from everybody for group " + group);
-            player.getGame().execute(edit);
+            if (groups.length == 2) {
+                player.getGame().collectRentFromAll(value, group);
+                EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Collecting rent from everybody for group " + group);
+                player.getGame().execute(edit);
+            } else {
+                List<User> players = player.getGame().getPlayers();
+                if (args.length > 1) {
+                    // send them a huge rental bill!
+                    int order = Integer.parseInt(args[1]);
+                    player.getGame().collectRentFromOne(value, group, order);
+                } else {
+                    InlineKeyboardButton[][] buttons = new InlineKeyboardButton[players.size() + 1][1];
+                    for (int i = 0; i < players.size(); i++) {
+                        User user = players.get(i);
+                        if (user.id() == player.getTgid()) {
+                            continue;
+                        }
+                        buttons[i][0] = new InlineKeyboardButton(user.firstName()).callbackData("card_arg:" + group + ":" + i);
+                    }
+                    buttons[players.size()][0] = new InlineKeyboardButton("Cancel").callbackData("use_cancel");
+                    EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Choose a player to collect this rent");
+                    edit.replyMarkup(new InlineKeyboardMarkup(buttons));
+                    player.getGame().execute(edit);
+                }
+            }
         } else {
             // ask to choose group
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[groups.length + 1][1];

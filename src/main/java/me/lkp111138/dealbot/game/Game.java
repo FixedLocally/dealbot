@@ -421,6 +421,17 @@ public class Game {
         }
     }
 
+    public void collectRentFromOne(int value, int group, int order) {
+        cancelFuture();
+        paymentConfirmationCount = gamePlayers.size() - 2; // shush
+        if (value <= 0) {
+            // nothing to collect
+            gamePlayers.get(currentTurn).promptForCard();
+            return;
+        }
+        gamePlayers.get(order).collectRent(value, group, gamePlayers.get(currentTurn));
+    }
+
     private void remind() {
 //        this.log("firing remind task");
         long seconds = (startTime - System.currentTimeMillis()) / 1000;
