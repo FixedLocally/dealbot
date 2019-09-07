@@ -55,9 +55,9 @@ public class RentActionCard extends ActionCard {
                         if (user.id() == player.getTgid()) {
                             continue;
                         }
-                        buttons[i][0] = new InlineKeyboardButton(user.firstName()).callbackData("card_arg:" + group + ":" + i);
+                        buttons[j++][0] = new InlineKeyboardButton(user.getName()).callbackData(nonce + ":card_arg:" + group + ":" + i);
                     }
-                    buttons[players.size()][0] = new InlineKeyboardButton("Cancel").callbackData("use_cancel");
+                    buttons[players.size() - 1][0] = new InlineKeyboardButton("Cancel").callbackData(nonce + ":use_cancel");
                     EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Choose a player to collect this rent");
                     edit.replyMarkup(new InlineKeyboardMarkup(buttons));
                     player.getGame().execute(edit);
@@ -66,15 +66,16 @@ public class RentActionCard extends ActionCard {
         } else {
             // ask to choose group
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[groups.length + 1][1];
-            EditMessageText send = new EditMessageText(player.getTgid(), player.getMessageId(), "Choose a group to collect rent for:");
+            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Choose a group to collect rent for:");
+            int nonce = player.getGame().nextNonce();
             for (int i = 0; i < groups.length; i++) {
                 int group = groups[i];
                 buttons[i][0] = new InlineKeyboardButton("Group " + group + " ($ " + player.getGroupRent(group) + "M)")
-                        .callbackData("card_arg:" + group);
+                        .callbackData(nonce + ":card_arg:" + group);
             }
-            buttons[groups.length][0] = new InlineKeyboardButton("Cancel").callbackData("use_cancel");
-            send.replyMarkup(new InlineKeyboardMarkup(buttons));
-            player.getGame().execute(send);
+            buttons[groups.length][0] = new InlineKeyboardButton("Cancel").callbackData(nonce + ":use_cancel");
+            edit.replyMarkup(new InlineKeyboardMarkup(buttons));
+            player.getGame().execute(edit);
         }
     }
 

@@ -39,7 +39,7 @@ public class WildcardPropertyCard extends PropertyCard {
             EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Use this card on which group?");
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[groups.length + 1][1];
             for (int i = 0; i < groups.length; i++) {
-                buttons[i][0] = new InlineKeyboardButton(String.valueOf(groups[i])).callbackData("card_arg:" + groups[i]);
+                buttons[i][0] = new InlineKeyboardButton(String.valueOf(groups[i])).callbackData(nonce + ":card_arg:" + groups[i]);
             }
             buttons[groups.length][0] = new InlineKeyboardButton("Cancel").callbackData("use_cancel");
             edit.replyMarkup(new InlineKeyboardMarkup(buttons));
