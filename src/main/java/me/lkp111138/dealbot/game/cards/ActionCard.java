@@ -28,7 +28,7 @@ public abstract class ActionCard implements Card {
 
     @Override
     public final String getCardTitle() {
-        return getCardFunctionalTitle() + "[$ " + currencyValue() + "M]";
+        return getCardFunctionalTitle() + " [$ " + currencyValue() + "M]";
     }
 
     public abstract String getCardFunctionalTitle();

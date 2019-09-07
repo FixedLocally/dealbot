@@ -193,7 +193,7 @@ public class GamePlayer {
         state.append("Currency deck: ");
         for (Card card : currencyDeck) {
             if (card instanceof ActionCard) {
-                state.append(card.getCardTitle()).append(" [$ ").append(card.currencyValue()).append("M], ");
+                state.append(card.getCardTitle()).append(", ");
             } else {
                 state.append("$ ").append(card.currencyValue()).append("M, ");
             }
