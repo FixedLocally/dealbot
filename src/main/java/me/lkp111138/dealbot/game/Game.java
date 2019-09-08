@@ -428,6 +428,10 @@ public class Game {
         mainDeck.add(card);
     }
 
+    public void addToUsedDeck(Card card) {
+        usedDeck.add(card);
+    }
+
     // 0-9: normal groups
     // 10: birthday
     // 11: debt

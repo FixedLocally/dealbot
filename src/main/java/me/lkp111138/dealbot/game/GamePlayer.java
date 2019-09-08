@@ -420,6 +420,13 @@ public class GamePlayer {
                 if (sayNos > 0) {
                     if (game.confirmPayment(null, tgid)) {
                         confirmPayment();
+                        for (Card card : hand) {
+                            if (card instanceof JustSayNoCard) {
+                                removeHand(card);
+                                game.addToUsedDeck(card);
+                                break;
+                            }
+                        }
                     }
                     if (future != null) {
                         future.cancel(true);

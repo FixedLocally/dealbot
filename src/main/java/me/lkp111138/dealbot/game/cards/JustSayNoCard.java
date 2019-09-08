@@ -35,7 +35,9 @@ public class JustSayNoCard implements Card {
 
     @Override
     public void execute(GamePlayer player, String[] args) {
-        throw new RuntimeException("just say no!");
+        player.addMove();
+        player.addHand(this);
+        player.promptForCard();
     }
 
     @Override
