@@ -1,5 +1,6 @@
 package me.lkp111138.dealbot.game.cards.actions;
 
+import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 
@@ -12,6 +13,10 @@ public class ItsMyBirthdayActionCard extends ActionCard {
     @Override
     public void use(GamePlayer player, String[] args) {
         player.getGame().collectRentFromAll(2, 10);
+        SendMessage send = new SendMessage(player.getTgid(), "You have used " + getCardFunctionalTitle());
+        player.getGame().execute(send);
+        send = new SendMessage(player.getGame().getGid(), player.getName() + " has used " + getCardFunctionalTitle());
+        player.getGame().execute(send);
     }
 
     @Override

@@ -134,6 +134,7 @@ public class GamePlayer {
 
     public void startTurn() {
         actionCount = 0;
+        setDoubleRentBuff(false);
         // tell the player that its their turn now
         SendMessage send = new SendMessage(game.getGid(),
                 String.format(game.getTranslation().YOUR_TURN_ANNOUNCEMENT(), tgid, getName(), game.getTurnWait()));

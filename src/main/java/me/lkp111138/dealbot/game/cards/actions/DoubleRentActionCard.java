@@ -13,7 +13,9 @@ public class DoubleRentActionCard extends ActionCard {
     @Override
     public void use(GamePlayer player, String[] args) {
         player.setDoubleRentBuff(true);
-        player.getGame().execute(new SendMessage(player.getTgid(), "The next rent you collect will be doubled."));
+        player.getGame().execute(new SendMessage(player.getTgid(), "The next rent you collect in this turn will be doubled."));
+        player.getGame().execute(new SendMessage(player.getGame().getGid(),
+                player.getName() + " has used " + getCardFunctionalTitle()));
         player.promptForCard();
     }
 

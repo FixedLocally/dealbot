@@ -3,6 +3,7 @@ package me.lkp111138.dealbot.game.cards.actions;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
+import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 
@@ -54,6 +55,12 @@ public class RentActionCard extends ActionCard {
                 EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
                         "Collecting rent from everybody for group " + group);
                 player.getGame().execute(edit);
+                String msg = String.format("You have used %s for group %s.", getCardFunctionalTitle(), group);
+                SendMessage send = new SendMessage(player.getTgid(), msg);
+                player.getGame().execute(send);
+                msg = String.format("%s have used %s for group %s.", player.getName(), getCardFunctionalTitle(), group);
+                send = new SendMessage(player.getGame().getGid(), msg);
+                player.getGame().execute(send);
             } else {
                 List<GamePlayer> players = player.getGame().getGamePlayers();
                 if (args.length > 1) {
@@ -61,9 +68,19 @@ public class RentActionCard extends ActionCard {
                     int order = Integer.parseInt(args[1]);
                     player.getGame().collectRentFromOne(value * (doubleRentBuff ? 2 : 1), group, order);
                     player.setDoubleRentBuff(false);
+                    String victim = players.get(order).getName();
                     EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
-                            "Collecting rent from " + players.get(order).getName() + " for group " + group);
-                    player.getGame().execute(edit); } else {
+                            "Collecting rent from " + victim + " for group " + group);
+                    player.getGame().execute(edit);
+                    String msg = String.format("You have used %s against %s for group %s.",
+                            getCardFunctionalTitle(), victim, group);
+                    SendMessage send = new SendMessage(player.getTgid(), msg);
+                    player.getGame().execute(send);
+                    msg = String.format("%s have used %s against %s for group %s.", player.getName(),
+                            getCardFunctionalTitle(), victim, group);
+                    send = new SendMessage(player.getGame().getGid(), msg);
+                    player.getGame().execute(send);
+                } else {
                     InlineKeyboardButton[][] buttons = new InlineKeyboardButton[players.size()][1];
                     int nonce = player.getGame().nextNonce();
                     int j = 0;
