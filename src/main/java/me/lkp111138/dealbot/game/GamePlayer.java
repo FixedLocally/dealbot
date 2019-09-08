@@ -157,8 +157,9 @@ public class GamePlayer {
         }
         if (actionCount < 3) {
             game.schedule(this::endTurn, game.getTurnWait() * 1000);
+            boolean hasWildcards = propertyDecks.values().stream().anyMatch(x -> x.stream().anyMatch(xx -> xx instanceof WildcardPropertyCard));
             // do prompt
-            int size = hand.size() + (actionCount > 0 ? 1 : 0);
+            int size = hand.size() + (actionCount > 0 ? 1 : 0) + (hasWildcards ? 1 : 0);
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[size][1];
             int nonce = game.nextNonce();
             for (int i = 0; i < hand.size(); i++) {
@@ -166,6 +167,9 @@ public class GamePlayer {
             }
             if (actionCount > 0) {
                 buttons[hand.size()][0] = new InlineKeyboardButton("End turn").callbackData(nonce + ":end_turn");
+            }
+            if (hasWildcards) {
+                buttons[hand.size() + 1][0] = new InlineKeyboardButton("Manage wildcards").callbackData(nonce + ":wildcard_menu");
             }
             String msg = String.format("Choose an action (%d remaining)", 3 - actionCount);
             if (messageId == 0) {
@@ -376,6 +380,70 @@ public class GamePlayer {
                 confirmPayment();
             }
         }, game.getTurnWait(), TimeUnit.SECONDS);
+    }
+
+    public void wildcardMenuCallback(String[] args, String id) {
+        AnswerCallbackQuery answer = new AnswerCallbackQuery(id);
+        if (args.length == 1) {
+            // root menu, select card to manage
+            addMove(); // there's no real move yet
+            List<InlineKeyboardButton[]> buttons = new ArrayList<>();
+            for (Integer group : propertyDecks.keySet()) {
+                List<Card> get = propertyDecks.get(group);
+                for (int i = 0; i < get.size(); i++) {
+                    Card card = get.get(i);
+                    if (card instanceof WildcardPropertyCard) {
+                        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle())
+                                .callbackData("wildcard_menu:" + group + ":" + i)});
+                    }
+                }
+            }
+            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Cancel").callbackData("wildcard_menu:cancel")});
+            EditMessageText edit = new EditMessageText(tgid, messageId, "Choose a card to manage:");
+            edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
+            game.execute(edit);
+        }
+        if (args.length == 2) {
+            // cancel
+            promptForCard();
+        }
+        if (args.length == 3) {
+            // card chosen so manage card
+            int group = Integer.parseInt(args[1]);
+            int index = Integer.parseInt(args[2]);
+            WildcardPropertyCard card = (WildcardPropertyCard) propertyDecks.get(group).get(index);
+            int[] groups = card.getGroups();
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[groups.length + 1][1];
+            for (int i = 0; i < groups.length; i++) {
+                int _group = groups[i];
+                int count = propertyDecks.getOrDefault(_group, new ArrayList<>()).size();
+                int total = PropertyCard.propertySetCounts[_group];
+                buttons[i][0] = new InlineKeyboardButton("Group " + _group + " (" + count + "/" + total + ")")
+                        .callbackData("wildcard_menu:" + group + ":" + index + ":" + _group);
+            }
+            buttons[groups.length][0] = new InlineKeyboardButton("Cancel").callbackData("wildcard_menu:cancel");
+            EditMessageText edit = new EditMessageText(tgid, messageId, "Choose a group to relocate this card:");
+            edit.replyMarkup(new InlineKeyboardMarkup(buttons));
+            game.execute(edit);
+        }
+        if (args.length == 4) {
+            // move and deduct action
+            int group = Integer.parseInt(args[1]);
+            int index = Integer.parseInt(args[2]);
+            int newGroup = Integer.parseInt(args[3]);
+            WildcardPropertyCard card = (WildcardPropertyCard) propertyDecks.get(group).get(index);
+            if (addProperty(card, newGroup)) {
+                // success, remove from old group
+                propertyDecks.get(group).remove(card);
+                ++actionCount;
+                promptForCard();
+            } else {
+                answer.showAlert(true);
+                answer.text("That group is full.");
+                promptForCard();
+            }
+        }
+        game.execute(answer);
     }
 
     public void payCallback(String[] args, String id) {

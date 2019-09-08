@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class WildcardPropertyCard extends PropertyCard {
@@ -52,7 +53,7 @@ public class WildcardPropertyCard extends PropertyCard {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[groups.length + 1][1];
             int nonce = player.getGame().nextNonce();
             for (int i = 0; i < groups.length; i++) {
-                int possessed = player.getPropertyDecks().get(groups[i]).size();
+                int possessed = player.getPropertyDecks().getOrDefault(groups[i], new ArrayList<>()).size();
                 int total = PropertyCard.propertySetCounts[groups[i]];
                 buttons[i][0] = new InlineKeyboardButton(groups[i] + " (" + possessed + "/" + total).callbackData(nonce + ":card_arg:" + groups[i]);
             }

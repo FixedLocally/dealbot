@@ -692,6 +692,15 @@ public class Game {
                     }
                 }
                 return true;
+            case "wildcard_menu":
+                tgid = query.from().id();
+                for (GamePlayer gamePlayer : gamePlayers) {
+                    if (gamePlayer.getTgid() == tgid) {
+                        gamePlayer.wildcardMenuCallback(args, query.id());
+                        break;
+                    }
+                }
+                return true;
         }
         return false;
     }
