@@ -3,6 +3,7 @@ package me.lkp111138.dealbot.game.cards;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
+import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
 
 import java.util.Arrays;
@@ -38,6 +39,12 @@ public class WildcardPropertyCard extends PropertyCard {
         if (args.length > 0) {
             player.addProperty(this, Integer.parseInt(args[0]));
             player.promptForCard();
+            SendMessage send = new SendMessage(player.getTgid(), "You have placed " +
+                    getCardTitle() + " in your properties as group " + args[0]);
+            player.getGame().execute(send);
+            send = new SendMessage(player.getGame().getGid(), player.getName() + " have placed " +
+                    getCardTitle() + " in their properties as group " + args[0]);
+            player.getGame().execute(send);
         }
         if (args.length == 0) {
             // ask for which group to put this card

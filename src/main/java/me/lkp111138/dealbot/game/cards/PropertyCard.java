@@ -1,5 +1,6 @@
 package me.lkp111138.dealbot.game.cards;
 
+import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
 
 public class PropertyCard implements Card {
@@ -77,6 +78,12 @@ public class PropertyCard implements Card {
     public void execute(GamePlayer player, String[] args) {
         player.addProperty(this, group);
         player.promptForCard();
+        SendMessage send = new SendMessage(player.getTgid(), "You have placed " +
+                getCardTitle() + " in your properties.");
+        player.getGame().execute(send);
+        send = new SendMessage(player.getGame().getGid(), player.getName() + " have placed " +
+                getCardTitle() + " in their properties.");
+        player.getGame().execute(send);
     }
 
     public int getGroup() {
