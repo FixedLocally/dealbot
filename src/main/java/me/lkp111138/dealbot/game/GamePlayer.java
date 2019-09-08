@@ -114,7 +114,7 @@ public class GamePlayer {
         // 3 full sets
         int sets = 0;
         for (Integer group : propertyDecks.keySet()) {
-            if (propertyDecks.get(group).size() == PropertyCard.propertySetCounts[group]) {
+            if (propertyDecks.get(group).size() >= PropertyCard.propertySetCounts[group]) {
                 ++sets;
             }
         }
@@ -133,6 +133,11 @@ public class GamePlayer {
 
     public void promptForCard() {
         sendState();
+        // before we actually prompt for a card, check for win condition
+        if (checkWinCondition()) {
+            endTurn(); // the game will take care of the announcement
+            return;
+        }
         if (actionCount < 3) {
             game.schedule(this::endTurn, game.getTurnWait() * 1000);
             // do prompt
