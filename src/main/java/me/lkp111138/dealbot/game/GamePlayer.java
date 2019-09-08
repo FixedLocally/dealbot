@@ -299,8 +299,18 @@ public class GamePlayer {
         paymentSelectedIndices.clear();
         if (total >= value) {
             // the currency deck can cover this
-            paymentMessage = String.format("%s is collecting $ %dM as rent for group %d from you! You have " + game.getTurnWait() + " seconds to choose how to pay.",
-                    collector.getName(), value, group);
+            if (group < 10) {
+                paymentMessage = String.format("%s is collecting $ %dM as rent for group %d from you! You have " + game.getTurnWait() + " seconds to choose how to pay.",
+                        collector.getName(), value, group);
+            }
+            if (group == 10) {
+                paymentMessage = String.format("%s is collecting $ %dM as their birthday present from you! You have " + game.getTurnWait() + " seconds to choose how to pay.",
+                        collector.getName(), value);
+            }
+            if (group == 11) {
+                paymentMessage = String.format("%s is collecting your debt of $ %dM owed to them from you! You have " + game.getTurnWait() + " seconds to choose how to pay.",
+                        collector.getName(), value);
+            }
             SendMessage send = new SendMessage(tgid, paymentMessage);
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
             int nonce = game.nextNonce();
