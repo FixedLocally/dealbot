@@ -522,9 +522,14 @@ public class GamePlayer {
         // deduct the currencies
         List<Card> payment = getPaymentCurrencyCards();
         currencyDeck.removeAll(payment);
-        String paymentStr = payment.stream().map(x -> "$ " + x.currencyValue() + "M").collect(Collectors.joining(", "));
-        EditMessageText edit = new EditMessageText(tgid, paymentMessageId, "Thank you for your payment - " + paymentStr);
-        game.execute(edit);
+        if (payment.size() > 0) {
+            String paymentStr = payment.stream().map(x -> "$ " + x.currencyValue() + "M").collect(Collectors.joining(", "));
+            EditMessageText edit = new EditMessageText(tgid, paymentMessageId, "Thank you for your payment - " + paymentStr);
+            game.execute(edit);
+        } else {
+            EditMessageText edit = new EditMessageText(tgid, paymentMessageId, "You refused to pay.");
+            game.execute(edit);
+        }
         paymentMessageId = 0;
     }
 
