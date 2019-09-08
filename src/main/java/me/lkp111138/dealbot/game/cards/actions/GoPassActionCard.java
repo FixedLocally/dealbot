@@ -3,29 +3,26 @@ package me.lkp111138.dealbot.game.cards.actions;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 
-public class ItsMyBirthdayActionCard extends ActionCard {
+public class GoPassActionCard extends ActionCard {
     @Override
     public String getCardFunctionalTitle() {
-        return "It's my birthday!";
+        return "GO Pass";
     }
 
     @Override
     public void use(GamePlayer player, String[] args) {
-        player.getGame().collectRentFromAll(2, 10);
+        player.addHand(player.getGame().draw());
+        player.addHand(player.getGame().draw());
+        player.promptForCard();
     }
 
     @Override
     public int currencyValue() {
-        return 2;
+        return 1;
     }
 
     @Override
     public String getDescription() {
-        return "It's your birthday! Everyone pays you $ 2M as a gift.";
-    }
-
-    @Override
-    public String toString() {
-        return "ItsMyBirthdayActionCard{}";
+        return "Draw two cards from the deck";
     }
 }

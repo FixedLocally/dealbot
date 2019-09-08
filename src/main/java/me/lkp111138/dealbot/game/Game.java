@@ -16,10 +16,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.cards.*;
-import me.lkp111138.dealbot.game.cards.actions.BlankActionCard;
-import me.lkp111138.dealbot.game.cards.actions.DebtCollectorCard;
-import me.lkp111138.dealbot.game.cards.actions.ItsMyBirthdayActionCard;
-import me.lkp111138.dealbot.game.cards.actions.RentActionCard;
+import me.lkp111138.dealbot.game.cards.actions.*;
 import me.lkp111138.dealbot.misc.EmptyCallback;
 import me.lkp111138.dealbot.translation.Translation;
 
@@ -324,7 +321,10 @@ public class Game {
         for (int i = 0; i < 3; i++) {
             mainDeck.add(new DebtCollectorCard());
         }
-        for (int i = 0; i < 28; i++) {
+        for (int i = 0; i < 3; i++) {
+            mainDeck.add(new GoPassActionCard());
+        }
+        for (int i = 0; i < 18; i++) {
             mainDeck.add(new BlankActionCard());
         }
 
@@ -511,6 +511,10 @@ public class Game {
             player.addHand(mainDeck.remove(0));
         }
         player.startTurn();
+    }
+
+    public Card draw() {
+        return mainDeck.remove(0);
     }
 
     public void nextTurn() {
