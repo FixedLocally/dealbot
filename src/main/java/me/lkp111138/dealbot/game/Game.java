@@ -512,6 +512,7 @@ public class Game {
         for (GamePlayer gamePlayer : gamePlayers) {
             gamePlayer.sendGlobalState(currentState.toString());
         }
+        execute(new SendMessage(gid, currentState.toString()));
         player.addHand(mainDeck.remove(0));
         player.addHand(mainDeck.remove(0));
         // draw 5 if starting with 0
