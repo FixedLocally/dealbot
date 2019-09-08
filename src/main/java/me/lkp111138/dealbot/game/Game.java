@@ -659,10 +659,10 @@ public class Game {
                 if (args[1].equals("money")) {
                     player.addCurrency(this.currentCard);
                     SendMessage send = new SendMessage(player.getTgid(), "You have deposited " +
-                            this.currentCard.getCardTitle() + " into you bank.");
+                            this.currentCard.getCardTitle() + " into your bank.");
                     player.getGame().execute(send);
                     send = new SendMessage(gid, player.getName() + " have deposited " +
-                            this.currentCard.getCardTitle() + " into you bank.");
+                            this.currentCard.getCardTitle() + " into their bank.");
                     player.getGame().execute(send);
                     player.promptForCard();
                 } else {
