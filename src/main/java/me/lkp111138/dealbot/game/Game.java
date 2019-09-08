@@ -680,12 +680,13 @@ public class Game {
         }
         ++paymentConfirmationCount;
         paidPlayers.add(tgid);
-        String paymentStr = (payment.stream().map(x -> "$ " + x.currencyValue() + "M").collect(Collectors.joining(", "))); for (Card card : payment) {
+        String paymentStr = (payment.stream().map(x -> "$ " + x.currencyValue() + "M").collect(Collectors.joining(", ")));
+        for (Card card : payment) {
             gamePlayers.get(currentTurn).addCurrency(card);
-            int id = gamePlayers.get(currentTurn).getTgid();
-            SendMessage send = new SendMessage(id, name + " paid you " + paymentStr);
-            execute(send);
         }
+        int id = gamePlayers.get(currentTurn).getTgid();
+        SendMessage send = new SendMessage(id, name + " paid you " + paymentStr);
+        execute(send);
         if (paymentConfirmationCount == gamePlayers.size() - 1) {
             // everyone has paid
             gamePlayers.get(currentTurn).promptForCard();
