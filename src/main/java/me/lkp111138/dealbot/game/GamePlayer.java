@@ -29,6 +29,8 @@ public class GamePlayer {
     private final Game game;
     private final User user;
 
+    private boolean doubleRentBuff = false;
+
     private int actionCount;
     private int messageId;
     private int stateMessageId;
@@ -119,6 +121,14 @@ public class GamePlayer {
             }
         }
         return sets >= 3;
+    }
+
+    public boolean isDoubleRentBuff() {
+        return doubleRentBuff;
+    }
+
+    public void setDoubleRentBuff(boolean buff) {
+        doubleRentBuff = buff;
     }
 
     public void startTurn() {

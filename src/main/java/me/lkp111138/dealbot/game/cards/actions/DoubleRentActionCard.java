@@ -1,18 +1,19 @@
 package me.lkp111138.dealbot.game.cards.actions;
 
+import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 
-public class GoPassActionCard extends ActionCard {
+public class DoubleRentActionCard extends ActionCard {
     @Override
     public String getCardFunctionalTitle() {
-        return "GO Pass";
+        return "Double Rent";
     }
 
     @Override
     public void use(GamePlayer player, String[] args) {
-        player.addHand(player.getGame().draw());
-        player.addHand(player.getGame().draw());
+        player.setDoubleRentBuff(true);
+        player.getGame().execute(new SendMessage(player.getTgid(), "The next rent you collect will be doubled."));
         player.promptForCard();
     }
 
@@ -23,11 +24,11 @@ public class GoPassActionCard extends ActionCard {
 
     @Override
     public String getDescription() {
-        return "Draw two cards from the deck";
+        return "Double the next rent you collect.";
     }
 
     @Override
     public String toString() {
-        return "GoPassActionCard{}";
+        return "DoubleRentActionCard{}";
     }
 }

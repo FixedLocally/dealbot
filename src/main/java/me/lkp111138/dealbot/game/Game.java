@@ -324,7 +324,10 @@ public class Game {
         for (int i = 0; i < 3; i++) {
             mainDeck.add(new GoPassActionCard());
         }
-        for (int i = 0; i < 18; i++) {
+        for (int i = 0; i < 2; i++) {
+            mainDeck.add(new DoubleRentActionCard());
+        }
+        for (int i = 0; i < 16; i++) {
             mainDeck.add(new BlankActionCard());
         }
 
