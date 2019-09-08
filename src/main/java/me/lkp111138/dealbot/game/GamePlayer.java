@@ -384,6 +384,7 @@ public class GamePlayer {
 
     public void wildcardMenuCallback(String[] args, String id) {
         AnswerCallbackQuery answer = new AnswerCallbackQuery(id);
+        int nonce = game.nextNonce();
         if (args.length == 1) {
             // root menu, select card to manage
             addMove(); // there's no real move yet
@@ -394,11 +395,11 @@ public class GamePlayer {
                     Card card = get.get(i);
                     if (card instanceof WildcardPropertyCard) {
                         buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle())
-                                .callbackData("wildcard_menu:" + group + ":" + i)});
+                                .callbackData(nonce + ":wildcard_menu:" + group + ":" + i)});
                     }
                 }
             }
-            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Cancel").callbackData("wildcard_menu:cancel")});
+            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Cancel").callbackData(nonce + ":wildcard_menu:cancel")});
             EditMessageText edit = new EditMessageText(tgid, messageId, "Choose a card to manage:");
             edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
             game.execute(edit);
@@ -419,9 +420,9 @@ public class GamePlayer {
                 int count = propertyDecks.getOrDefault(_group, new ArrayList<>()).size();
                 int total = PropertyCard.propertySetCounts[_group];
                 buttons[i][0] = new InlineKeyboardButton("Group " + _group + " (" + count + "/" + total + ")")
-                        .callbackData("wildcard_menu:" + group + ":" + index + ":" + _group);
+                        .callbackData(nonce + ":wildcard_menu:" + group + ":" + index + ":" + _group);
             }
-            buttons[groups.length][0] = new InlineKeyboardButton("Cancel").callbackData("wildcard_menu:cancel");
+            buttons[groups.length][0] = new InlineKeyboardButton("Cancel").callbackData(nonce + ":wildcard_menu:cancel");
             EditMessageText edit = new EditMessageText(tgid, messageId, "Choose a group to relocate this card:");
             edit.replyMarkup(new InlineKeyboardMarkup(buttons));
             game.execute(edit);
