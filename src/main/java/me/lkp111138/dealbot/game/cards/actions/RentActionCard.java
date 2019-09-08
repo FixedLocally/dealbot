@@ -31,6 +31,16 @@ public class RentActionCard extends ActionCard {
     }
 
     @Override
+    public String getDescription() {
+        String players = groups.length == 2 ? "all players" : "a player";
+        String _groups = "any group";
+        if (groups.length == 2) {
+            _groups = "group " + groups[0] + " or " + groups[1];
+        }
+        return "Collect rent for " + _groups + " from " + players;
+    }
+
+    @Override
     public void use(GamePlayer player, String[] args) {
         // full wildcard: 1 payer
         // double wildcard: all pays

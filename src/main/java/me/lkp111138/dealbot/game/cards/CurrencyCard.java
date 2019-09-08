@@ -48,6 +48,11 @@ public class CurrencyCard implements Card {
     }
 
     @Override
+    public String getDescription() {
+        return "";
+    }
+
+    @Override
     public String toString() {
         return "CurrencyCard{" +
                 "currencyValue=" + currencyValue +

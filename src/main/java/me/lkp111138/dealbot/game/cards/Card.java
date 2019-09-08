@@ -40,4 +40,6 @@ public interface Card {
      * @param args the arguments passed to the card, such as target card or player
      */
     void execute(GamePlayer player, String[] args);
+
+    String getDescription();
 }

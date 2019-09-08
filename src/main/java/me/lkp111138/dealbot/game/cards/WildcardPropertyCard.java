@@ -29,6 +29,11 @@ public class WildcardPropertyCard extends PropertyCard {
     }
 
     @Override
+    public String getDescription() {
+        return getCardTitle();
+    }
+
+    @Override
     public void execute(GamePlayer player, String[] args) {
         if (args.length > 0) {
             player.addProperty(this, Integer.parseInt(args[0]));

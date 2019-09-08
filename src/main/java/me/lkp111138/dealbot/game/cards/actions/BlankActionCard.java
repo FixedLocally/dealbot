@@ -21,6 +21,11 @@ public class BlankActionCard extends ActionCard {
     }
 
     @Override
+    public String getDescription() {
+        return "Does nothing";
+    }
+
+    @Override
     public String toString() {
         return "BlankActionCard{}";
     }
