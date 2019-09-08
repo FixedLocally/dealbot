@@ -76,14 +76,21 @@ public class PropertyCard implements Card {
 
     @Override
     public void execute(GamePlayer player, String[] args) {
-        player.addProperty(this, group);
-        player.promptForCard();
-        SendMessage send = new SendMessage(player.getTgid(), "You have placed " +
-                getCardTitle() + " in your properties.");
-        player.getGame().execute(send);
-        send = new SendMessage(player.getGame().getGid(), player.getName() + " have placed " +
-                getCardTitle() + " in their properties.");
-        player.getGame().execute(send);
+        if (player.addProperty(this, group)) {
+            player.promptForCard();
+            SendMessage send = new SendMessage(player.getTgid(), "You have placed " +
+                    getCardTitle() + " in your properties.");
+            player.getGame().execute(send);
+            send = new SendMessage(player.getGame().getGid(), player.getName() + " have placed " +
+                    getCardTitle() + " in their properties.");
+            player.getGame().execute(send);
+        } else {
+            // deck full
+            player.addHand(this);
+            player.addMove();
+            SendMessage send = new SendMessage(player.getTgid(), "This group is full!");
+            player.getGame().execute(send);
+        }
     }
 
     public int getGroup() {

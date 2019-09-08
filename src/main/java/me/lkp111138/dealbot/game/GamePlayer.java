@@ -86,11 +86,16 @@ public class GamePlayer {
         return propertyDecks.remove(group);
     }
 
-    public void addProperty(PropertyCard card, int group) {
+    public boolean addProperty(PropertyCard card, int group) {
         group = getRealCardGroup(card, group);
         List<Card> deck = propertyDecks.getOrDefault(group, new ArrayList<>());
+        if (deck.size() >= PropertyCard.propertySetCounts[group]) {
+            // this deck is full
+            return false;
+        }
         deck.add(card);
         propertyDecks.put(group, deck);
+        return true;
     }
 
     private int getRealCardGroup(PropertyCard card, int group) {
