@@ -17,6 +17,8 @@ import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.cards.*;
 import me.lkp111138.dealbot.game.cards.actions.BlankActionCard;
+import me.lkp111138.dealbot.game.cards.actions.DebtCollectorCard;
+import me.lkp111138.dealbot.game.cards.actions.ItsMyBirthdayActionCard;
 import me.lkp111138.dealbot.game.cards.actions.RentActionCard;
 import me.lkp111138.dealbot.misc.EmptyCallback;
 import me.lkp111138.dealbot.translation.Translation;
@@ -316,7 +318,13 @@ public class Game {
         mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
 
         // action mainDeck
-        for (int i = 0; i < 34; i++) {
+        for (int i = 0; i < 3; i++) {
+            mainDeck.add(new ItsMyBirthdayActionCard());
+        }
+        for (int i = 0; i < 3; i++) {
+            mainDeck.add(new DebtCollectorCard());
+        }
+        for (int i = 0; i < 28; i++) {
             mainDeck.add(new BlankActionCard());
         }
 
@@ -510,7 +518,7 @@ public class Game {
         GamePlayer player = gamePlayers.get(currentTurn);
         if (player.checkWinCondition()) {
             // won
-            String msg = String.format("<a href=\"tg://user?id=%1$s\">%2$s<a> successfully gather 3 full sets of properties and won!", player.getTgid(), player.getName());
+            String msg = String.format("<a href=\"tg://user?id=%1$s\">%2$s</a> has successfully gathered 3 full sets of properties and won!", player.getTgid(), player.getName());
             this.execute(new SendMessage(gid, msg).parseMode(ParseMode.HTML));
             this.kill(false);
             return;
