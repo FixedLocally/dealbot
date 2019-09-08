@@ -327,7 +327,10 @@ public class Game {
         for (int i = 0; i < 2; i++) {
             mainDeck.add(new DoubleRentActionCard());
         }
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 3; i++) {
+            mainDeck.add(new JustSayNoCard());
+        }
+        for (int i = 0; i < 13; i++) {
             mainDeck.add(new BlankActionCard());
         }
 
@@ -670,6 +673,7 @@ public class Game {
                 return true;
             case "pay_choose":
             case "pay_confirm":
+            case "pay_reject":
                 int tgid = query.from().id();
                 for (GamePlayer gamePlayer : gamePlayers) {
                     if (gamePlayer.getTgid() == tgid) {
@@ -695,13 +699,18 @@ public class Game {
         }
         ++paymentConfirmationCount;
         paidPlayers.add(tgid);
-        String paymentStr = (payment.stream().map(x -> "$ " + x.currencyValue() + "M").collect(Collectors.joining(", ")));
-        for (Card card : payment) {
-            gamePlayers.get(currentTurn).addCurrency(card);
-        }
         int id = gamePlayers.get(currentTurn).getTgid();
-        SendMessage send = new SendMessage(id, name + " paid you " + paymentStr);
-        execute(send);
+        if (payment != null) {
+            String paymentStr = (payment.stream().map(x -> "$ " + x.currencyValue() + "M").collect(Collectors.joining(", ")));
+            for (Card card : payment) {
+                gamePlayers.get(currentTurn).addCurrency(card);
+            }
+            SendMessage send = new SendMessage(id, name + " paid you " + paymentStr);
+            execute(send);
+        } else {
+            SendMessage send = new SendMessage(id, name + " used Just Say No!");
+            execute(send);
+        }
         if (paymentConfirmationCount == gamePlayers.size() - 1) {
             // everyone has paid
             gamePlayers.get(currentTurn).promptForCard();

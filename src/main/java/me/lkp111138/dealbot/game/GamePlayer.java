@@ -11,6 +11,7 @@ import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.game.cards.Card;
+import me.lkp111138.dealbot.game.cards.JustSayNoCard;
 import me.lkp111138.dealbot.game.cards.PropertyCard;
 import me.lkp111138.dealbot.game.cards.WildcardPropertyCard;
 
@@ -321,13 +322,18 @@ public class GamePlayer {
                 paymentMessage = String.format("%s is collecting your debt of $ %dM owed to them from you! You have " + game.getTurnWait() + " seconds to choose how to pay.",
                         collector.getName(), value);
             }
+            int sayNos = hand.stream().mapToInt(x -> x instanceof JustSayNoCard ? 1 : 0).sum();
             SendMessage send = new SendMessage(tgid, paymentMessage);
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + (sayNos > 0 ? 2 : 1)][1];
             int nonce = game.nextNonce();
             for (int i = 0; i < currencyDeck.size(); i++) {
                 buttons[i][0] = new InlineKeyboardButton("$ " + currencyDeck.get(i).currencyValue() + "M").callbackData(nonce + ":pay_choose:" + i);
             }
             buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ 0M)").callbackData(nonce + ":pay_done");
+            if (sayNos > 0) {
+                // say no
+                buttons[currencyDeck.size() + 1][0] = new InlineKeyboardButton("Just Say No! (You have " + sayNos + ")").callbackData(nonce + ":pay_reject");
+            }
             send.replyMarkup(new InlineKeyboardMarkup(buttons));
             game.execute(send, new Callback<SendMessage, SendResponse>() {
                 @Override
@@ -406,6 +412,18 @@ public class GamePlayer {
                 }
                 if (future != null) {
                     future.cancel(true);
+                }
+                break;
+            case "pay_reject":
+                // just say no lol
+                int sayNos = hand.stream().mapToInt(x -> x instanceof JustSayNoCard ? 1 : 0).sum();
+                if (sayNos > 0) {
+                    if (game.confirmPayment(null, tgid)) {
+                        confirmPayment();
+                    }
+                    if (future != null) {
+                        future.cancel(true);
+                    }
                 }
                 break;
         }
