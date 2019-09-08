@@ -169,7 +169,7 @@ public class GamePlayer {
                 buttons[hand.size()][0] = new InlineKeyboardButton("End turn").callbackData(nonce + ":end_turn");
             }
             if (hasWildcards) {
-                buttons[hand.size() + 1][0] = new InlineKeyboardButton("Manage wildcards").callbackData(nonce + ":wildcard_menu");
+                buttons[hand.size() + (actionCount > 0 ? 1 : 0)][0] = new InlineKeyboardButton("Manage wildcards").callbackData(nonce + ":wildcard_menu");
             }
             String msg = String.format("Choose an action (%d remaining)", 3 - actionCount);
             if (messageId == 0) {
