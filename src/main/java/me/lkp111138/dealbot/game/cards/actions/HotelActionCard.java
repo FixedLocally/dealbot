@@ -8,7 +8,7 @@ public class HotelActionCard extends BuildingActionCard {
 
     @Override
     public int currencyValue() {
-        return 3;
+        return 4;
     }
 
     @Override
