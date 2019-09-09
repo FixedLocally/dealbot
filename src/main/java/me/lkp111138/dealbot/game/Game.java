@@ -392,7 +392,7 @@ public class Game {
             mainDeck.add(new PropertyCard(1, "Peng Chau", 1));
         }
         for (int i = 0; i < 35; i++) {
-            mainDeck.add(new SlyDealActionCard());
+            mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
         }
         for (int i = 0; i < 36; i++) {
             mainDeck.add(new JustSayNoCard());
@@ -771,7 +771,12 @@ public class Game {
         if (payment != null) {
             String paymentStr = (payment.stream().map(x -> "$ " + x.currencyValue() + "M").collect(Collectors.joining(", ")));
             for (Card card : payment) {
-                gamePlayers.get(currentTurn).addCurrency(card);
+                if (card instanceof PropertyCard) {
+                    PropertyCard pcard = (PropertyCard) card;
+                    gamePlayers.get(currentTurn).addProperty(pcard, (pcard).getGroup());
+                } else {
+                    gamePlayers.get(currentTurn).addCurrency(card);
+                }
             }
             SendMessage send = new SendMessage(id, name + " paid you " + paymentStr);
             execute(send);
