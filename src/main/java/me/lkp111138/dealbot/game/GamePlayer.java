@@ -340,6 +340,21 @@ public class GamePlayer {
     }
 
     public void collectRent(int value, int group, GamePlayer collector) {
+        promptSayNo(String.format("%s is collecting $ %dM as rent for group %d from you! You have " + game.getTurnWait() + " seconds to choose how to pay.",
+                collector.getName(), value, group), () -> realCollectRent(value, group, collector), () -> {
+            // tell the sender its objected
+            game.log("Objection!");
+            SendMessage send = new SendMessage(collector,  getName() + " has used Just Say No!");
+            game.execute(send);
+            send = new SendMessage(collector.getTgid(), getName() + " has used Just Say No!");
+            game.execute(send);
+            if (game.confirmPayment(null, tgid)) {
+                confirmPayment();
+            }
+        });
+    }
+
+    private void realCollectRent(int value, int group, GamePlayer collector) {
         // we first check if the player's currency deck can cover the rent
         int total = currencyDeck.stream().mapToInt(Card::currencyValue).sum();
         paymentValue = value;
@@ -358,18 +373,13 @@ public class GamePlayer {
                 paymentMessage = String.format("%s is collecting your debt of $ %dM owed to them from you! You have " + game.getTurnWait() + " seconds to choose how to pay.",
                         collector.getName(), value);
             }
-            int sayNos = hand.stream().mapToInt(x -> x instanceof JustSayNoCard ? 1 : 0).sum();
             SendMessage send = new SendMessage(tgid, paymentMessage);
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + (sayNos > 0 ? 2 : 1)][1];
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
             int nonce = game.nextNonce();
             for (int i = 0; i < currencyDeck.size(); i++) {
                 buttons[i][0] = new InlineKeyboardButton("$ " + currencyDeck.get(i).currencyValue() + "M").callbackData(nonce + ":pay_choose:" + i);
             }
             buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ 0M)").callbackData(nonce + ":pay_done");
-            if (sayNos > 0) {
-                // say no
-                buttons[currencyDeck.size() + 1][0] = new InlineKeyboardButton("Just Say No! (You have " + sayNos + ")").callbackData(nonce + ":pay_reject");
-            }
             send.replyMarkup(new InlineKeyboardMarkup(buttons));
             game.execute(send, new Callback<SendMessage, SendResponse>() {
                 @Override
@@ -384,7 +394,7 @@ public class GamePlayer {
                 }
             });
         } else {
-            // the currency deck wont cover, so choose some properties
+            // TODO the currency deck wont cover, so choose some properties
             for (int i = 0; i < currencyDeck.size(); i++) {
                 paymentSelectedIndices.add(i);
             }
