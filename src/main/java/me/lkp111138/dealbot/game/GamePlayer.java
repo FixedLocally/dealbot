@@ -474,7 +474,6 @@ public class GamePlayer {
                 // success, remove from old group
                 propertyDecks.get(group).remove(card);
                 card.setGroup(group);
-                ++actionCount;
                 promptForCard();
             } else {
                 answer.showAlert(true);
