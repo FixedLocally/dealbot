@@ -272,49 +272,49 @@ public class Game {
         mainDeck.add(new PropertyCard(1, "Cheung Chau", 1));
         mainDeck.add(new PropertyCard(1, "Lamma Island", 1));
 
-        mainDeck.add(new PropertyCard(1, "Lo Wu", 2));
-        mainDeck.add(new PropertyCard(1, "Yuen Long", 2));
-        mainDeck.add(new PropertyCard(1, "Sham Cheng", 2));
+        mainDeck.add(new PropertyCard(2, "Lo Wu", 2));
+        mainDeck.add(new PropertyCard(2, "Yuen Long", 2));
+        mainDeck.add(new PropertyCard(2, "Sham Cheng", 2));
 
-        mainDeck.add(new PropertyCard(1, "Kwai Chung", 3));
-        mainDeck.add(new PropertyCard(1, "Sha Tin", 3));
-        mainDeck.add(new PropertyCard(1, "Sai Kung", 3));
+        mainDeck.add(new PropertyCard(2, "Kwai Chung", 3));
+        mainDeck.add(new PropertyCard(2, "Sha Tin", 3));
+        mainDeck.add(new PropertyCard(2, "Sai Kung", 3));
 
-        mainDeck.add(new PropertyCard(1, "Lei Yue Mun", 4));
-        mainDeck.add(new PropertyCard(1, "Wong Tai Sin", 4));
-        mainDeck.add(new PropertyCard(1, "Kowloon Tong", 4));
+        mainDeck.add(new PropertyCard(3, "Lei Yue Mun", 4));
+        mainDeck.add(new PropertyCard(3, "Wong Tai Sin", 4));
+        mainDeck.add(new PropertyCard(3, "Kowloon Tong", 4));
 
-        mainDeck.add(new PropertyCard(1, "Sham Shui Po", 5));
-        mainDeck.add(new PropertyCard(1, "Mong Kok", 5));
-        mainDeck.add(new PropertyCard(1, "Tsim Sha Tsui", 5));
+        mainDeck.add(new PropertyCard(3, "Sham Shui Po", 5));
+        mainDeck.add(new PropertyCard(3, "Mong Kok", 5));
+        mainDeck.add(new PropertyCard(3, "Tsim Sha Tsui", 5));
 
-        mainDeck.add(new PropertyCard(1, "Causeway Bay", 6));
-        mainDeck.add(new PropertyCard(1, "Happy Valley", 6));
-        mainDeck.add(new PropertyCard(1, "Central", 6));
+        mainDeck.add(new PropertyCard(4, "Causeway Bay", 6));
+        mainDeck.add(new PropertyCard(4, "Happy Valley", 6));
+        mainDeck.add(new PropertyCard(4, "Central", 6));
 
-        mainDeck.add(new PropertyCard(1, "Repulse Bay", 7));
-        mainDeck.add(new PropertyCard(1, "Victoria Peak", 7));
+        mainDeck.add(new PropertyCard(4, "Repulse Bay", 7));
+        mainDeck.add(new PropertyCard(4, "Victoria Peak", 7));
 
-        mainDeck.add(new PropertyCard(1, "Airport Station", 8));
-        mainDeck.add(new PropertyCard(1, "Tsing Yi Station", 8));
-        mainDeck.add(new PropertyCard(1, "Kowloon Station", 8));
-        mainDeck.add(new PropertyCard(1, "Hong Kong Station", 8));
+        mainDeck.add(new PropertyCard(2, "Airport Station", 8));
+        mainDeck.add(new PropertyCard(2, "Tsing Yi Station", 8));
+        mainDeck.add(new PropertyCard(2, "Kowloon Station", 8));
+        mainDeck.add(new PropertyCard(2, "Hong Kong Station", 8));
 
-        mainDeck.add(new PropertyCard(1, "Hong Kong Electric", 9));
-        mainDeck.add(new PropertyCard(1, "Water Works", 9));
+        mainDeck.add(new PropertyCard(2, "Hong Kong Electric", 9));
+        mainDeck.add(new PropertyCard(2, "Water Works", 9));
 
         // wildcard properties
-        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{4, 5}));
-        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{4, 5}));
-        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{6, 7}));
+        mainDeck.add(new WildcardPropertyCard(3, "Wild Card", new int[]{4, 5}));
+        mainDeck.add(new WildcardPropertyCard(3, "Wild Card", new int[]{4, 5}));
+        mainDeck.add(new WildcardPropertyCard(4, "Wild Card", new int[]{6, 7}));
         mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{0, 1}));
-        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{2, 3}));
-        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{2, 3}));
-        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{6, 8}));
-        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{1, 8}));
-        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{8, 9}));
-        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
-        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+        mainDeck.add(new WildcardPropertyCard(2, "Wild Card", new int[]{2, 3}));
+        mainDeck.add(new WildcardPropertyCard(2, "Wild Card", new int[]{2, 3}));
+        mainDeck.add(new WildcardPropertyCard(4, "Wild Card", new int[]{6, 8}));
+        mainDeck.add(new WildcardPropertyCard(4, "Wild Card", new int[]{1, 8}));
+        mainDeck.add(new WildcardPropertyCard(2, "Wild Card", new int[]{8, 9}));
+        mainDeck.add(new WildcardPropertyCard(0, "Wild Card", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+        mainDeck.add(new WildcardPropertyCard(0, "Wild Card", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
 
         // action mainDeck
         for (int i = 0; i < 3; i++) {
