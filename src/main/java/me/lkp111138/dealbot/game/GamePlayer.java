@@ -340,8 +340,19 @@ public class GamePlayer {
     }
 
     public void collectRent(int value, int group, GamePlayer collector) {
-        promptSayNo(String.format("%s is collecting $ %dM as rent for group %d from you! Do you want to say no?",
-                collector.getName(), value, group), () -> realCollectRent(value, group, collector), () -> {
+        if (group < 10) {
+            paymentMessage = String.format("%s is collecting $ %dM as rent for group %d from you! Do you want to Just Say No?",
+                    collector.getName(), value, group);
+        }
+        if (group == 10) {
+            paymentMessage = String.format("%s is collecting $ %dM as their birthday present from you! Do you want to Just Say No?",
+                    collector.getName(), value);
+        }
+        if (group == 11) {
+            paymentMessage = String.format("%s is collecting your debt of $ %dM owed to them from you! Do you want to Just Say No?",
+                    collector.getName(), value);
+        }
+        promptSayNo(paymentMessage, () -> realCollectRent(value, group, collector), () -> {
             // tell the sender its objected
             game.log("Objection!");
 //            SendMessage send = new SendMessage(tgid, "You refused to pay.");
@@ -390,8 +401,6 @@ public class GamePlayer {
         game.execute(send, new Callback<SendMessage, SendResponse>() {
             @Override
             public void onResponse(SendMessage request, SendResponse response) {
-                System.out.println(response.description());
-                System.out.println(response.isOk());
                 paymentMessageId = response.message().messageId();
             }
 
