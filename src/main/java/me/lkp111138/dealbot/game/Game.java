@@ -15,11 +15,8 @@ import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.Main;
-import me.lkp111138.dealbot.game.cards.ActionCard;
-import me.lkp111138.dealbot.game.cards.Card;
-import me.lkp111138.dealbot.game.cards.JustSayNoCard;
-import me.lkp111138.dealbot.game.cards.PropertyCard;
-import me.lkp111138.dealbot.game.cards.actions.SlyDealActionCard;
+import me.lkp111138.dealbot.game.cards.*;
+import me.lkp111138.dealbot.game.cards.actions.*;
 import me.lkp111138.dealbot.misc.EmptyCallback;
 import me.lkp111138.dealbot.translation.Translation;
 
@@ -264,7 +261,7 @@ public class Game {
         // tell them the game is starting
         SendMessage send = new SendMessage(gid, "The game is starting, please wait...");
         this.execute(send);
-        /*
+        //*
         // construct mainDeck
         // properties
         mainDeck.add(new PropertyCard(1, "Chek Lap Kok", 0));
@@ -337,7 +334,10 @@ public class Game {
         for (int i = 0; i < 2; i++) {
             mainDeck.add(new DealBreakerActionCard());
         }
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 3; i++) {
+            mainDeck.add(new SlyDealActionCard());
+        }
+        for (int i = 0; i < 8; i++) {
             mainDeck.add(new BlankActionCard());
         }
 
@@ -374,7 +374,7 @@ public class Game {
         mainDeck.add(new CurrencyCard(10, "$10M"));
         //*/
 
-        //*
+        /*
         for (int i = 0; i < 5; i++) {
             mainDeck.add(new PropertyCard(1, "Repulse Bay", 7));
             mainDeck.add(new PropertyCard(1, "Central", 6));
