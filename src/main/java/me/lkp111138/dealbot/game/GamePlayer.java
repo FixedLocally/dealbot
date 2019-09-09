@@ -43,6 +43,9 @@ public class GamePlayer {
     private String paymentMessage;
     private int paymentValue;
 
+    private Runnable savedActionIfNotObjected;
+    private Runnable savedActionIfObjected;
+
     private ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(2);
     private ScheduledFuture future;
 
@@ -281,6 +284,23 @@ public class GamePlayer {
         }
     }
 
+    public void promptSayNo(String msg, Runnable actionIfApproved, Runnable actionIfObjected) {
+        int nonce = game.nextNonce();
+        SendMessage send = new SendMessage(tgid, msg);
+        long sayNos = hand.stream().filter(x -> x instanceof JustSayNoCard).count();
+        InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1 + (sayNos > 0 ? 1 : 0)][1];
+        if (sayNos > 0) {
+            buttons[0][0] = new InlineKeyboardButton("Just Say No! (You have " + sayNos + ")").callbackData(nonce + ":say_no:y");
+            buttons[1][0] = new InlineKeyboardButton("No").callbackData(nonce + ":say_no:n");
+        } else {
+            buttons[0][0] = new InlineKeyboardButton("No").callbackData(nonce + ":say_no:n");
+        }
+        send.replyMarkup(new InlineKeyboardMarkup(buttons));
+        savedActionIfNotObjected = actionIfApproved;
+        savedActionIfObjected = actionIfObjected;
+        game.execute(send);
+    }
+
     public void sendGlobalState(String s) {
         if (globalStateMessageId == 0) {
             SendMessage send = new SendMessage(tgid, s);
@@ -509,6 +529,31 @@ public class GamePlayer {
                 }
                 break;
         }
+    }
+
+    public void sayNoCallback(String[] args, String id) {
+        switch (args[1]) {
+            case "y":
+                // say no
+                boolean removed = false;
+                for (Card card : hand) {
+                    if (card instanceof JustSayNoCard) {
+                        hand.remove(card);
+                        removed = true;
+                        break;
+                    }
+                }
+                if (removed) {
+                    // did say no, notify sender
+                    savedActionIfObjected.run();
+                    break;
+                }
+                // pass thru if not removed
+            case "n":
+                savedActionIfNotObjected.run();
+                break;
+        }
+        game.execute(new AnswerCallbackQuery(id));
     }
 
     public List<Card> getPaymentCurrencyCards() {

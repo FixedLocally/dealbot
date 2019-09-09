@@ -702,6 +702,15 @@ public class Game {
                     }
                 }
                 return true;
+            case "say_no":
+                tgid = query.from().id();
+                for (GamePlayer gamePlayer : gamePlayers) {
+                    if (gamePlayer.getTgid() == tgid) {
+                        gamePlayer.sayNoCallback(args, query.id());
+                        break;
+                    }
+                }
+                return true;
         }
         return false;
     }
