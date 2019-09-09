@@ -29,10 +29,15 @@ public class PropertyCard implements Card {
 
     public static int getRent(int group, List<Card> props) {
         int count = 0;
+        int realCount = 0;
         int extra = 0;
         for (Card prop : props) {
             if (prop instanceof PropertyCard) {
                 ++count;
+                ++realCount;
+            }
+            if (prop instanceof WildcardPropertyCard && ((WildcardPropertyCard) prop).getGroups().length == 10) {
+                --realCount;
             }
             if (prop instanceof HouseActionCard) {
                 extra += 3;
@@ -41,13 +46,17 @@ public class PropertyCard implements Card {
                 extra += 4;
             }
         }
+        if (realCount == 0) {
+            return 0;
+        }
         if (count <= 0) {
             return 0;
         }
         if (count >= propertyRents[group].length) {
             return propertyRents[group][propertyRents[group].length - 1] + extra;
         }
-        return propertyRents[group][count - 1] + extra;
+        // those non full sets do not enjoy yhr benefits from houses and hotels
+        return propertyRents[group][count - 1];
     }
 
     public PropertyCard(int currencyValue, String title, int group) {
