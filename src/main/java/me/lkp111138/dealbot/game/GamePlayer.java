@@ -374,12 +374,13 @@ public class GamePlayer {
             game.execute(send, new Callback<SendMessage, SendResponse>() {
                 @Override
                 public void onResponse(SendMessage request, SendResponse response) {
+                    System.out.println(response.description());
                     paymentMessageId = response.message().messageId();
                 }
 
                 @Override
                 public void onFailure(SendMessage request, IOException e) {
-
+                    e.printStackTrace();
                 }
             });
         } else {
@@ -557,12 +558,13 @@ public class GamePlayer {
                     break;
                 }
                 // pass thru if not removed
+                game.execute(new EditMessageText(tgid, mid, "You have used Just Say No!"));
             case "n":
                 System.out.println("running");
                 savedActionIfNotObjected.run();
+                game.execute(new EditMessageText(tgid, mid, "You didn't use Just Say No!"));
                 break;
         }
-        game.execute(new EditMessageText(tgid, mid, "You have used Just Say No!"));
         game.execute(new AnswerCallbackQuery(id));
     }
 
