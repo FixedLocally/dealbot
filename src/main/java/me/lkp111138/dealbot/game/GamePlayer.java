@@ -98,6 +98,9 @@ public class GamePlayer {
             return false;
         }
         deck.add(card);
+        if (card instanceof WildcardPropertyCard) {
+            ((WildcardPropertyCard) card).setGroup(group);
+        }
         propertyDecks.put(group, deck);
         return true;
     }
@@ -340,14 +343,12 @@ public class GamePlayer {
     }
 
     public void collectRent(int value, int group, GamePlayer collector) {
-        promptSayNo(String.format("%s is collecting $ %dM as rent for group %d from you! You have " + game.getTurnWait() + " seconds to choose how to pay.",
+        promptSayNo(String.format("%s is collecting $ %dM as rent for group %d from you! Do you want to say no?",
                 collector.getName(), value, group), () -> realCollectRent(value, group, collector), () -> {
             // tell the sender its objected
             game.log("Objection!");
-            SendMessage send = new SendMessage(collector,  getName() + " has used Just Say No!");
-            game.execute(send);
-            send = new SendMessage(collector.getTgid(), getName() + " has used Just Say No!");
-            game.execute(send);
+//            SendMessage send = new SendMessage(tgid, "You refused to pay.");
+//            game.execute(send);
             if (game.confirmPayment(null, tgid)) {
                 confirmPayment();
             }
@@ -359,23 +360,23 @@ public class GamePlayer {
         int total = currencyDeck.stream().mapToInt(Card::currencyValue).sum();
         paymentValue = value;
         paymentSelectedIndices.clear();
+        int nonce = game.nextNonce();
+        if (group < 10) {
+            paymentMessage = String.format("%s is collecting $ %dM as rent for group %d from you! You have %d seconds to choose how to pay.",
+                    collector.getName(), value, group, game.getTurnWait());
+        }
+        if (group == 10) {
+            paymentMessage = String.format("%s is collecting $ %dM as their birthday present from you! You have %d seconds to choose how to pay.",
+                    collector.getName(), value, game.getTurnWait());
+        }
+        if (group == 11) {
+            paymentMessage = String.format("%s is collecting your debt of $ %dM owed to them from you! You have %d seconds to choose how to pay.",
+                    collector.getName(), value, game.getTurnWait());
+        }
         if (total >= value) {
             // the currency deck can cover this
-            if (group < 10) {
-                paymentMessage = String.format("%s is collecting $ %dM as rent for group %d from you! You have " + game.getTurnWait() + " seconds to choose how to pay.",
-                        collector.getName(), value, group);
-            }
-            if (group == 10) {
-                paymentMessage = String.format("%s is collecting $ %dM as their birthday present from you! You have " + game.getTurnWait() + " seconds to choose how to pay.",
-                        collector.getName(), value);
-            }
-            if (group == 11) {
-                paymentMessage = String.format("%s is collecting your debt of $ %dM owed to them from you! You have " + game.getTurnWait() + " seconds to choose how to pay.",
-                        collector.getName(), value);
-            }
             SendMessage send = new SendMessage(tgid, paymentMessage);
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
-            int nonce = game.nextNonce();
             for (int i = 0; i < currencyDeck.size(); i++) {
                 buttons[i][0] = new InlineKeyboardButton("$ " + currencyDeck.get(i).currencyValue() + "M").callbackData(nonce + ":pay_choose:" + i);
             }
@@ -385,6 +386,7 @@ public class GamePlayer {
                 @Override
                 public void onResponse(SendMessage request, SendResponse response) {
                     System.out.println(response.description());
+                    System.out.println(response.isOk());
                     paymentMessageId = response.message().messageId();
                 }
 
@@ -398,6 +400,31 @@ public class GamePlayer {
             for (int i = 0; i < currencyDeck.size(); i++) {
                 paymentSelectedIndices.add(i);
             }
+            paymentMessage += "\nYour currency deck can't cover this payment, please select some properties.";
+            SendMessage send = new SendMessage(tgid, paymentMessage);
+            List<InlineKeyboardButton[]> buttons = new ArrayList<>();
+            for (Integer grp : propertyDecks.keySet()) {
+                List<Card> get = propertyDecks.get(grp);
+                for (int i = 0; i < get.size(); i++) {
+                    Card card = get.get(i);
+                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + i)});
+                }
+            }
+            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Pay ($ 0M)").callbackData(nonce + ":pay_done")});
+            send.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
+            game.execute(send, new Callback<SendMessage, SendResponse>() {
+                @Override
+                public void onResponse(SendMessage request, SendResponse response) {
+                    System.out.println(response.description());
+                    System.out.println(response.isOk());
+                    paymentMessageId = response.message().messageId();
+                }
+
+                @Override
+                public void onFailure(SendMessage request, IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }
         // if not paid in a round's time, random pay
         if (future != null) {
@@ -473,6 +500,7 @@ public class GamePlayer {
             if (addProperty(card, newGroup)) {
                 // success, remove from old group
                 propertyDecks.get(group).remove(card);
+                card.setGroup(group);
                 ++actionCount;
                 promptForCard();
             } else {
@@ -565,10 +593,10 @@ public class GamePlayer {
                 if (removed) {
                     // did say no, notify sender
                     savedActionIfObjected.run();
+                    game.execute(new EditMessageText(tgid, mid, "You have used Just Say No!"));
                     break;
                 }
                 // pass thru if not removed
-                game.execute(new EditMessageText(tgid, mid, "You have used Just Say No!"));
             case "n":
                 System.out.println("running");
                 savedActionIfNotObjected.run();
@@ -593,9 +621,6 @@ public class GamePlayer {
         if (payment.size() > 0) {
             String paymentStr = payment.stream().map(x -> "$ " + x.currencyValue() + "M").collect(Collectors.joining(", "));
             EditMessageText edit = new EditMessageText(tgid, paymentMessageId, "Thank you for your payment - " + paymentStr);
-            game.execute(edit);
-        } else {
-            EditMessageText edit = new EditMessageText(tgid, paymentMessageId, "You refused to pay.");
             game.execute(edit);
         }
         paymentMessageId = 0;

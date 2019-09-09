@@ -21,6 +21,10 @@ public class WildcardPropertyCard extends PropertyCard {
         return groups;
     }
 
+    public void setGroup(int group) {
+        this.group = group;
+    }
+
     @Override
     public String getCardTitle() {
         if (groups.length == 2) {

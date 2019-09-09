@@ -10,7 +10,7 @@ import java.util.List;
 public class PropertyCard implements Card {
     protected final int currencyValue;
     protected final String title;
-    protected final int group;
+    protected int group;
 
     // there are currently 10 groups of properties
     public static final int[] propertySetCounts = {2, 3, 3, 3, 3, 3, 3, 2, 4, 2};
