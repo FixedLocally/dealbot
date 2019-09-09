@@ -261,6 +261,7 @@ public class Game {
         // tell them the game is starting
         SendMessage send = new SendMessage(gid, "The game is starting, please wait...");
         this.execute(send);
+        //*
         // construct mainDeck
         // properties
         mainDeck.add(new PropertyCard(1, "Chek Lap Kok", 0));
@@ -365,6 +366,19 @@ public class Game {
         mainDeck.add(new CurrencyCard(5, "$5M"));
         mainDeck.add(new CurrencyCard(5, "$5M"));
         mainDeck.add(new CurrencyCard(10, "$10M"));
+        //*/
+
+        /*
+        for (int i = 0; i < 35; i++) {
+            mainDeck.add(new PropertyCard(1, "Repulse Bay", 7));
+        }
+        for (int i = 0; i < 35; i++) {
+            mainDeck.add(new DealBreakerActionCard());
+        }
+        for (int i = 0; i < 36; i++) {
+            mainDeck.add(new JustSayNoCard());
+        }
+        //*/
         
         Collections.shuffle(mainDeck);
 
@@ -636,7 +650,8 @@ public class Game {
         usedNonces.add(nonce);
         String[] args = new String[_args.length - 1];
         System.arraycopy(_args, 1, args, 0, args.length);
-        if (gamePlayers.get(currentTurn).getTgid() != query.from().id() && !args[0].startsWith("pay_")) {
+        if (gamePlayers.get(currentTurn).getTgid() != query.from().id() && !args[0].startsWith("pay_")
+                && !args[0].equals("say_no")) {
             bot.execute(new AnswerCallbackQuery(query.id()));
             bot.execute(new EditMessageReplyMarkup(query.message().chat().id(), query.message().messageId()));
             return true;
@@ -711,7 +726,7 @@ public class Game {
                 tgid = query.from().id();
                 for (GamePlayer gamePlayer : gamePlayers) {
                     if (gamePlayer.getTgid() == tgid) {
-                        gamePlayer.sayNoCallback(args, query.id());
+                        gamePlayer.sayNoCallback(args, query.id(), query.message().messageId());
                         break;
                     }
                 }

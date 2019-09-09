@@ -73,16 +73,23 @@ public class DealBreakerActionCard extends ActionCard {
             int index = Integer.parseInt(args[0]);
             int group = Integer.parseInt(args[1]);
             GamePlayer victim = player.getGame().getGamePlayers().get(index);
+            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "You have used Deal breaker against " + victim.getName());
+            player.getGame().execute(edit);
             victim.promptSayNo(String.format("%s has used Deal Breaker against your group %s property. Would you like to say no?", player.getName(), group), () -> {
                 List<Card> cards = victim.getPropertyDecks().get(group);
                 List<Card> props = player.getPropertyDecks().getOrDefault(group, new ArrayList<>());
                 props.addAll(cards);
                 player.getPropertyDecks().put(group, props);
                 victim.getPropertyDecks().remove(group);
+                player.promptForCard();
             }, () -> {
                 // tell the sender its objected
-                SendMessage send = new SendMessage(player.getTgid(),  victim.getName()+ " has used Just Say No!");
+                player.getGame().log("Objection!");
+                SendMessage send = new SendMessage(player.getTgid(),  victim.getName() + " has used Just Say No!");
                 player.getGame().execute(send);
+                send = new SendMessage(player.getTgid(), victim.getName() + " has used Just Say No!");
+                player.getGame().execute(send);
+                player.promptForCard();
             });
         }
     }

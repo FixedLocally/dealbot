@@ -531,7 +531,8 @@ public class GamePlayer {
         }
     }
 
-    public void sayNoCallback(String[] args, String id) {
+    public void sayNoCallback(String[] args, String id, int mid) {
+        System.out.println(args[1]);
         switch (args[1]) {
             case "y":
                 // say no
@@ -543,6 +544,7 @@ public class GamePlayer {
                         break;
                     }
                 }
+                System.out.println(removed);
                 if (removed) {
                     // did say no, notify sender
                     savedActionIfObjected.run();
@@ -550,9 +552,11 @@ public class GamePlayer {
                 }
                 // pass thru if not removed
             case "n":
+                System.out.println("running");
                 savedActionIfNotObjected.run();
                 break;
         }
+        game.execute(new EditMessageText(tgid, mid, "You have used Just Say No!"));
         game.execute(new AnswerCallbackQuery(id));
     }
 
