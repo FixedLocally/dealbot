@@ -14,6 +14,7 @@ import me.lkp111138.dealbot.game.cards.Card;
 import me.lkp111138.dealbot.game.cards.JustSayNoCard;
 import me.lkp111138.dealbot.game.cards.PropertyCard;
 import me.lkp111138.dealbot.game.cards.WildcardPropertyCard;
+import me.lkp111138.dealbot.game.cards.actions.BuildingActionCard;
 
 import java.io.IOException;
 import java.util.*;
@@ -101,6 +102,11 @@ public class GamePlayer {
         return true;
     }
 
+    public void addBuilding(BuildingActionCard card, int group) {
+        List<Card> deck = propertyDecks.get(group);
+        deck.add(card);
+    }
+
     private int getRealCardGroup(PropertyCard card, int group) {
         if (card instanceof WildcardPropertyCard) {
             WildcardPropertyCard wildcardPropertyCard = (WildcardPropertyCard) card;
@@ -160,9 +166,9 @@ public class GamePlayer {
         }
         if (actionCount < 3) {
             game.schedule(this::endTurn, game.getTurnWait() * 1000);
-            boolean hasWildcards = propertyDecks.values().stream().anyMatch(x -> x.stream().anyMatch(xx -> xx instanceof WildcardPropertyCard));
+            boolean hasWildcardsOrBuildings = propertyDecks.values().stream().anyMatch(x -> x.stream().anyMatch(xx -> xx instanceof WildcardPropertyCard || xx instanceof BuildingActionCard));
             // do prompt
-            int size = hand.size() + (actionCount > 0 ? 1 : 0) + (hasWildcards ? 1 : 0);
+            int size = hand.size() + (actionCount > 0 ? 1 : 0) + (hasWildcardsOrBuildings ? 1 : 0);
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[size][1];
             int nonce = game.nextNonce();
             for (int i = 0; i < hand.size(); i++) {
@@ -171,8 +177,8 @@ public class GamePlayer {
             if (actionCount > 0) {
                 buttons[hand.size()][0] = new InlineKeyboardButton("End turn").callbackData(nonce + ":end_turn");
             }
-            if (hasWildcards) {
-                buttons[hand.size() + (actionCount > 0 ? 1 : 0)][0] = new InlineKeyboardButton("Manage wildcards").callbackData(nonce + ":wildcard_menu");
+            if (hasWildcardsOrBuildings) {
+                buttons[hand.size() + (actionCount > 0 ? 1 : 0)][0] = new InlineKeyboardButton("Manage wildcards and buildings").callbackData(nonce + ":wildcard_menu");
             }
             String msg = String.format("Choose an action (%d remaining)", 3 - actionCount);
             if (messageId == 0) {
@@ -254,7 +260,7 @@ public class GamePlayer {
             }
             state.append("Group ").append(group).append(" ").append(props.size()).append("/")
                     .append(PropertyCard.propertySetCounts[group]).append(" ($ ")
-                    .append(PropertyCard.getRent(group, props.size()))
+                    .append(PropertyCard.getRent(group, props))
                     .append("M) ").append("\n");
             for (Card prop : props) {
                 state.append("- ").append(prop.getCardTitle()).append("\n");
@@ -639,6 +645,6 @@ public class GamePlayer {
     }
 
     public int getGroupRent(int group) {
-        return PropertyCard.getRent(group, propertyDecks.getOrDefault(group, new ArrayList<>()).size());
+        return PropertyCard.getRent(group, propertyDecks.getOrDefault(group, new ArrayList<>()));
     }
 }

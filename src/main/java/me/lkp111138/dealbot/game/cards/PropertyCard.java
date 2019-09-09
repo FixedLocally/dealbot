@@ -2,6 +2,10 @@ package me.lkp111138.dealbot.game.cards;
 
 import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
+import me.lkp111138.dealbot.game.cards.actions.HotelActionCard;
+import me.lkp111138.dealbot.game.cards.actions.HouseActionCard;
+
+import java.util.List;
 
 public class PropertyCard implements Card {
     protected final int currencyValue;
@@ -23,14 +27,27 @@ public class PropertyCard implements Card {
             {1, 2}
     };
 
-    public static int getRent(int group, int count) {
+    public static int getRent(int group, List<Card> props) {
+        int count = 0;
+        int extra = 0;
+        for (Card prop : props) {
+            if (prop instanceof PropertyCard) {
+                ++count;
+            }
+            if (prop instanceof HouseActionCard) {
+                extra += 3;
+            }
+            if (prop instanceof HotelActionCard) {
+                extra += 4;
+            }
+        }
         if (count <= 0) {
             return 0;
         }
         if (count >= propertyRents[group].length) {
-            return propertyRents[group][propertyRents[group].length - 1];
+            return propertyRents[group][propertyRents[group].length - 1] + extra;
         }
-        return propertyRents[group][count - 1];
+        return propertyRents[group][count - 1] + extra;
     }
 
     public PropertyCard(int currencyValue, String title, int group) {
