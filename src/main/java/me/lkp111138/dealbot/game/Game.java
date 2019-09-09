@@ -166,7 +166,7 @@ public class Game {
             uidGames.remove(from.id());
         }
         // add to player list
-        if (!started && !players.contains(from) && !uidGames.containsKey(from.id()) && playerCount() < 4) {
+        if (!started && !players.contains(from) && !uidGames.containsKey(from.id()) && playerCount() < 5) {
             // notify player
             // .replyMarkup(new InlineKeyboardMarkup(new InlineKeyboardButton[]{}
             SendMessage send = new SendMessage(msg.from().id(), String.format(this.translation.JOIN_SUCCESS(), msg.chat().title().replace("*", "\\*"), this.id)).parseMode(ParseMode.Markdown);
@@ -260,6 +260,7 @@ public class Game {
     private void start() {
         // tell them the game is starting
         SendMessage send = new SendMessage(gid, "The game is starting, please wait...");
+        started = true;
         this.execute(send);
         //*
         // construct mainDeck
