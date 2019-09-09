@@ -40,6 +40,7 @@ public class GamePlayer {
     private int disposeMessageId;
 
     private Set<Integer> paymentSelectedIndices = new HashSet<>();
+    private Set<Integer> paymentSelectedPropertyIndices = new HashSet<>();
     private int paymentMessageId;
     private String paymentMessage;
     private int paymentValue;
@@ -84,10 +85,6 @@ public class GamePlayer {
     public void removeProperty(PropertyCard card, int group) {
         group = getRealCardGroup(card, group);
         propertyDecks.getOrDefault(group, new ArrayList<>()).remove(card);
-    }
-
-    public List<Card> removePropertyDeck(int group) {
-        return propertyDecks.remove(group);
     }
 
     public boolean addProperty(PropertyCard card, int group) {
@@ -403,11 +400,12 @@ public class GamePlayer {
             paymentMessage += "\nYour currency deck can't cover this payment, please select some properties.";
             SendMessage send = new SendMessage(tgid, paymentMessage);
             List<InlineKeyboardButton[]> buttons = new ArrayList<>();
+            int k = 0;
             for (Integer grp : propertyDecks.keySet()) {
                 List<Card> get = propertyDecks.get(grp);
                 for (int i = 0; i < get.size(); i++) {
                     Card card = get.get(i);
-                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + i)});
+                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
                 }
             }
             buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Pay ($ 0M)").callbackData(nonce + ":pay_done")});
@@ -432,6 +430,7 @@ public class GamePlayer {
         }
         future = executor.schedule(() -> {
             paymentSelectedIndices.clear();
+            paymentSelectedPropertyIndices.clear();
             int paid = 0;
             for (int i = 0; i < currencyCount(); i++) {
                 paid += currencyDeck.get(i).currencyValue();
@@ -513,31 +512,62 @@ public class GamePlayer {
     }
 
     public void payCallback(String[] args, String id) {
+        int nonce = game.nextNonce();
         switch (args[0]) {
             case "pay_choose":
-                int index = Integer.parseInt(args[1]);
-                if (!paymentSelectedIndices.add(index)) {
-                    paymentSelectedIndices.remove(index);
-                }
-                EditMessageText edit = new EditMessageText(tgid, paymentMessageId, paymentMessage);
-                InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
-                int nonce = game.nextNonce();
-                for (int i = 0; i < currencyDeck.size(); i++) {
-                    buttons[i][0] = new InlineKeyboardButton((paymentSelectedIndices.contains(i) ? "[x]" : "") + "$ " + currencyDeck.get(i).currencyValue() + "M").callbackData(nonce + ":pay_choose:" + i);
-                }
-                int total = 0;
-                for (int i = 0; i < currencyDeck.size(); i++) {
-                    if (paymentSelectedIndices.contains(i)) {
-                        total += currencyDeck.get(i).currencyValue();
+                if (args[1].equals("p")) {
+                    int index = Integer.parseInt(args[2]);
+                    if (!paymentSelectedPropertyIndices.add(index)) {
+                        paymentSelectedPropertyIndices.remove(index);
                     }
+                    EditMessageText edit = new EditMessageText(tgid, paymentMessageId, paymentMessage);
+                    List<InlineKeyboardButton[]> buttons = new ArrayList<>();
+                    // TODO
+                    int total = 0;
+                    for (Integer grp : propertyDecks.keySet()) {
+                        List<Card> get = propertyDecks.get(grp);
+                        int k = 0;
+                        for (int i = 0; i < get.size(); i++) {
+                            Card card = get.get(i);
+                            boolean contains = paymentSelectedPropertyIndices.contains(k);
+                            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton((contains ? "[x] " : "") + card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
+                            if (contains) {
+                                total += card.currencyValue();
+                            }
+                        }
+                    }
+                    for (int i = 0; i < currencyDeck.size(); i++) {
+                        if (paymentSelectedIndices.contains(i)) {
+                            total += currencyDeck.get(i).currencyValue();
+                        }
+                    }
+                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Pay ($ " + total + "M)").callbackData(nonce + ":pay_confirm")});
+                    edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
+                    game.execute(edit);
+                } else {
+                    int index = Integer.parseInt(args[1]);
+                    if (!paymentSelectedIndices.add(index)) {
+                        paymentSelectedIndices.remove(index);
+                    }
+                    EditMessageText edit = new EditMessageText(tgid, paymentMessageId, paymentMessage);
+                    InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
+                    for (int i = 0; i < currencyDeck.size(); i++) {
+                        buttons[i][0] = new InlineKeyboardButton((paymentSelectedIndices.contains(i) ? "[x] " : "") + "$ " + currencyDeck.get(i).currencyValue() + "M").callbackData(nonce + ":pay_choose:" + i);
+                    }
+                    int total = 0;
+                    for (int i = 0; i < currencyDeck.size(); i++) {
+                        if (paymentSelectedIndices.contains(i)) {
+                            total += currencyDeck.get(i).currencyValue();
+                        }
+                    }
+                    buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ " + total + "M)").callbackData(nonce + ":pay_confirm");
+                    edit.replyMarkup(new InlineKeyboardMarkup(buttons));
+                    game.execute(edit);
                 }
-                buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ " + total + "M)").callbackData(nonce + ":pay_confirm");
-                edit.replyMarkup(new InlineKeyboardMarkup(buttons));
-                game.execute(edit);
                 break;
             case "pay_confirm":
                 List<Card> payment = getPaymentCurrencyCards();
-                total = payment.stream().mapToInt(Card::currencyValue).sum();
+                int total = payment.stream().mapToInt(Card::currencyValue).sum();
                 if (total < paymentValue && payment.size() < currencyCount()) {
                     // not enough and didnt do their best
                     AnswerCallbackQuery answer = new AnswerCallbackQuery(id);
@@ -577,7 +607,6 @@ public class GamePlayer {
     }
 
     public void sayNoCallback(String[] args, String id, int mid) {
-        System.out.println(args[1]);
         switch (args[1]) {
             case "y":
                 // say no
@@ -598,7 +627,6 @@ public class GamePlayer {
                 }
                 // pass thru if not removed
             case "n":
-                System.out.println("running");
                 savedActionIfNotObjected.run();
                 game.execute(new EditMessageText(tgid, mid, "You didn't use Just Say No!"));
                 break;
@@ -611,6 +639,15 @@ public class GamePlayer {
         for (Integer index : paymentSelectedIndices) {
             payment.add(currencyDeck.get(index));
         }
+        for (Integer grp : propertyDecks.keySet()) {
+            List<Card> get = propertyDecks.get(grp);
+            for (int i = 0; i < get.size(); i++) {
+                Card card = get.get(i);
+                if (paymentSelectedPropertyIndices.contains(i)) {
+                    payment.add(card);
+                }
+            }
+        }
         return payment;
     }
 
@@ -619,7 +656,7 @@ public class GamePlayer {
         List<Card> payment = getPaymentCurrencyCards();
         currencyDeck.removeAll(payment);
         if (payment.size() > 0) {
-            String paymentStr = payment.stream().map(x -> "$ " + x.currencyValue() + "M").collect(Collectors.joining(", "));
+            String paymentStr = payment.stream().map(x -> !(x instanceof PropertyCard) ? "$ " + x.currencyValue() + "M" : x.getCardTitle()).collect(Collectors.joining(", "));
             EditMessageText edit = new EditMessageText(tgid, paymentMessageId, "Thank you for your payment - " + paymentStr);
             game.execute(edit);
         }
