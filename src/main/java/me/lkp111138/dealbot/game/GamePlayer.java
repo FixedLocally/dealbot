@@ -380,7 +380,9 @@ public class GamePlayer {
             List<Card> get = propertyDecks.get(grp);
             for (int i = 0; i < get.size(); i++) {
                 Card card = get.get(i);
-                buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
+                if (card.currencyValue() > 0) {
+                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
+                }
             }
         }
         buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Pay ($ 0M)").callbackData(nonce + ":pay_done")});
@@ -411,6 +413,19 @@ public class GamePlayer {
                 paymentSelectedIndices.add(i);
                 if (paid >= paymentValue) {
                     break;
+                }
+            }
+            int _k = 0;
+            for (Integer grp : propertyDecks.keySet()) {
+                for (Card card : propertyDecks.get(grp)) {
+                    if (card.currencyValue() > 0) {
+                        ++_k;
+                        paid += currencyDeck.get(grp).currencyValue();
+                        paymentSelectedPropertyIndices.add(_k);
+                        if (paid >= paymentValue) {
+                            break;
+                        }
+                    }
                 }
             }
             if (game.confirmPayment(getPaymentCurrencyCards(), tgid)) {
@@ -517,7 +532,9 @@ public class GamePlayer {
                     for (int i = 0; i < get.size(); i++) {
                         Card card = get.get(i);
                         boolean contains = paymentSelectedPropertyIndices.contains(k);
-                        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton((contains ? "[x] " : "") + card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
+                        if (card.currencyValue() > 0) {
+                            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton((contains ? "[x] " : "") + card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
+                        }
                         if (contains) {
                             total += card.currencyValue();
                         }
