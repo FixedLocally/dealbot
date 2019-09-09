@@ -337,7 +337,13 @@ public class Game {
         for (int i = 0; i < 3; i++) {
             mainDeck.add(new SlyDealActionCard());
         }
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 3; i++) {
+            mainDeck.add(new HouseActionCard());
+        }
+        for (int i = 0; i < 2; i++) {
+            mainDeck.add(new HotelActionCard());
+        }
+        for (int i = 0; i < 3; i++) {
             mainDeck.add(new BlankActionCard());
         }
 
