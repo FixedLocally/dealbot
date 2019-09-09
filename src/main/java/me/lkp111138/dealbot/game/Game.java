@@ -382,7 +382,6 @@ public class Game {
         }
         Collections.shuffle(gamePlayers);
 
-        // TODO pm players with their deck
         startTime = System.currentTimeMillis();
         startTurn();
     }
@@ -486,6 +485,28 @@ public class Game {
     private void startTurn() {
         currentCard = null;
         // tell the current player the current situation
+        GamePlayer player = gamePlayers.get(currentTurn);
+        String currentState = getGlobalState();
+        for (GamePlayer gamePlayer : gamePlayers) {
+            gamePlayer.sendGlobalState(currentState);
+        }
+        execute(new SendMessage(gid, currentState));
+        player.addHand(mainDeck.remove(0));
+        player.addHand(mainDeck.remove(0));
+        // draw 5 if starting with 0
+        if (player.handCount() == 2) {
+            player.addHand(mainDeck.remove(0));
+            player.addHand(mainDeck.remove(0));
+            player.addHand(mainDeck.remove(0));
+        }
+        player.startTurn();
+    }
+
+    public Card draw() {
+        return mainDeck.remove(0);
+    }
+
+    private String getGlobalState() {
         StringBuilder currentState = new StringBuilder("Current State:\n");
         for (int i = 0; i < gamePlayers.size(); i++) {
             int index = (i + currentTurn) % gamePlayers.size();
@@ -508,24 +529,7 @@ public class Game {
             }
             currentState.append("\n");
         }
-        GamePlayer player = gamePlayers.get(currentTurn);
-        for (GamePlayer gamePlayer : gamePlayers) {
-            gamePlayer.sendGlobalState(currentState.toString());
-        }
-        execute(new SendMessage(gid, currentState.toString()));
-        player.addHand(mainDeck.remove(0));
-        player.addHand(mainDeck.remove(0));
-        // draw 5 if starting with 0
-        if (player.handCount() == 2) {
-            player.addHand(mainDeck.remove(0));
-            player.addHand(mainDeck.remove(0));
-            player.addHand(mainDeck.remove(0));
-        }
-        player.startTurn();
-    }
-
-    public Card draw() {
-        return mainDeck.remove(0);
+        return currentState.toString();
     }
 
     public void nextTurn() {
@@ -534,6 +538,7 @@ public class Game {
         if (player.checkWinCondition()) {
             // won
             String msg = String.format("<a href=\"tg://user?id=%1$s\">%2$s</a> has successfully gathered 3 full sets of properties and won!", player.getTgid(), player.getName());
+            execute(new SendMessage(gid, getGlobalState()));
             this.execute(new SendMessage(gid, msg).parseMode(ParseMode.HTML));
             this.kill(false);
             return;
