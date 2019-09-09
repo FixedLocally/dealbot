@@ -769,7 +769,7 @@ public class Game {
         paidPlayers.add(tgid);
         int id = gamePlayers.get(currentTurn).getTgid();
         if (payment != null) {
-            String paymentStr = (payment.stream().map(x -> "$ " + x.currencyValue() + "M").collect(Collectors.joining(", ")));
+            String paymentStr = (payment.stream().map(x -> x instanceof CurrencyCard ? ("$ " + x.currencyValue() + "M") : (x.getCardTitle())).collect(Collectors.joining(", ")));
             for (Card card : payment) {
                 if (card instanceof PropertyCard) {
                     PropertyCard pcard = (PropertyCard) card;

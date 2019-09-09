@@ -354,7 +354,6 @@ public class GamePlayer {
 
     private void realCollectRent(int value, int group, GamePlayer collector) {
         // we first check if the player's currency deck can cover the rent
-        int total = currencyDeck.stream().mapToInt(Card::currencyValue).sum();
         paymentValue = value;
         paymentSelectedIndices.clear();
         int nonce = game.nextNonce();
@@ -370,60 +369,35 @@ public class GamePlayer {
             paymentMessage = String.format("%s is collecting your debt of $ %dM owed to them from you! You have %d seconds to choose how to pay.",
                     collector.getName(), value, game.getTurnWait());
         }
-        if (total >= value) {
-            // the currency deck can cover this
-            SendMessage send = new SendMessage(tgid, paymentMessage);
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
-            for (int i = 0; i < currencyDeck.size(); i++) {
-                buttons[i][0] = new InlineKeyboardButton("$ " + currencyDeck.get(i).currencyValue() + "M").callbackData(nonce + ":pay_choose:" + i);
-            }
-            buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ 0M)").callbackData(nonce + ":pay_done");
-            send.replyMarkup(new InlineKeyboardMarkup(buttons));
-            game.execute(send, new Callback<SendMessage, SendResponse>() {
-                @Override
-                public void onResponse(SendMessage request, SendResponse response) {
-                    System.out.println(response.description());
-                    System.out.println(response.isOk());
-                    paymentMessageId = response.message().messageId();
-                }
-
-                @Override
-                public void onFailure(SendMessage request, IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        } else {
-            // TODO the currency deck wont cover, so choose some properties
-            for (int i = 0; i < currencyDeck.size(); i++) {
-                paymentSelectedIndices.add(i);
-            }
-            paymentMessage += "\nYour currency deck can't cover this payment, please select some properties.";
-            SendMessage send = new SendMessage(tgid, paymentMessage);
-            List<InlineKeyboardButton[]> buttons = new ArrayList<>();
-            int k = 0;
-            for (Integer grp : propertyDecks.keySet()) {
-                List<Card> get = propertyDecks.get(grp);
-                for (int i = 0; i < get.size(); i++) {
-                    Card card = get.get(i);
-                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
-                }
-            }
-            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Pay ($ 0M)").callbackData(nonce + ":pay_done")});
-            send.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
-            game.execute(send, new Callback<SendMessage, SendResponse>() {
-                @Override
-                public void onResponse(SendMessage request, SendResponse response) {
-                    System.out.println(response.description());
-                    System.out.println(response.isOk());
-                    paymentMessageId = response.message().messageId();
-                }
-
-                @Override
-                public void onFailure(SendMessage request, IOException e) {
-                    e.printStackTrace();
-                }
-            });
+        // the currency deck can cover this
+        SendMessage send = new SendMessage(tgid, paymentMessage);
+        List<InlineKeyboardButton[]> buttons = new ArrayList<>();
+        for (int i = 0; i < currencyDeck.size(); i++) {
+            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("$ " + currencyDeck.get(i).currencyValue() + "M").callbackData(nonce + ":pay_choose:" + i)});
         }
+        int k = 0;
+        for (Integer grp : propertyDecks.keySet()) {
+            List<Card> get = propertyDecks.get(grp);
+            for (int i = 0; i < get.size(); i++) {
+                Card card = get.get(i);
+                buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
+            }
+        }
+        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Pay ($ 0M)").callbackData(nonce + ":pay_done")});
+        send.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
+        game.execute(send, new Callback<SendMessage, SendResponse>() {
+            @Override
+            public void onResponse(SendMessage request, SendResponse response) {
+                System.out.println(response.description());
+                System.out.println(response.isOk());
+                paymentMessageId = response.message().messageId();
+            }
+
+            @Override
+            public void onFailure(SendMessage request, IOException e) {
+                e.printStackTrace();
+            }
+        });
         // if not paid in a round's time, random pay
         if (future != null) {
             future.cancel(true);
@@ -520,54 +494,44 @@ public class GamePlayer {
                     if (!paymentSelectedPropertyIndices.add(index)) {
                         paymentSelectedPropertyIndices.remove(index);
                     }
-                    EditMessageText edit = new EditMessageText(tgid, paymentMessageId, paymentMessage);
-                    List<InlineKeyboardButton[]> buttons = new ArrayList<>();
-                    // TODO
-                    int total = 0;
-                    for (Integer grp : propertyDecks.keySet()) {
-                        List<Card> get = propertyDecks.get(grp);
-                        int k = 0;
-                        for (int i = 0; i < get.size(); i++) {
-                            Card card = get.get(i);
-                            boolean contains = paymentSelectedPropertyIndices.contains(k);
-                            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton((contains ? "[x] " : "") + card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
-                            if (contains) {
-                                total += card.currencyValue();
-                            }
-                        }
-                    }
-                    for (int i = 0; i < currencyDeck.size(); i++) {
-                        if (paymentSelectedIndices.contains(i)) {
-                            total += currencyDeck.get(i).currencyValue();
-                        }
-                    }
-                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Pay ($ " + total + "M)").callbackData(nonce + ":pay_confirm")});
-                    edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
-                    game.execute(edit);
                 } else {
                     int index = Integer.parseInt(args[1]);
                     if (!paymentSelectedIndices.add(index)) {
                         paymentSelectedIndices.remove(index);
                     }
-                    EditMessageText edit = new EditMessageText(tgid, paymentMessageId, paymentMessage);
-                    InlineKeyboardButton[][] buttons = new InlineKeyboardButton[currencyDeck.size() + 1][1];
-                    for (int i = 0; i < currencyDeck.size(); i++) {
-                        buttons[i][0] = new InlineKeyboardButton((paymentSelectedIndices.contains(i) ? "[x] " : "") + "$ " + currencyDeck.get(i).currencyValue() + "M").callbackData(nonce + ":pay_choose:" + i);
+                }
+                EditMessageText edit = new EditMessageText(tgid, paymentMessageId, paymentMessage);
+                List<InlineKeyboardButton[]> buttons = new ArrayList<>();
+                for (int i = 0; i < currencyDeck.size(); i++) {
+                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton((paymentSelectedIndices.contains(i) ? "[x] " : "") + "$ " + currencyDeck.get(i).currencyValue() + "M").callbackData(nonce + ":pay_choose:" + i)});
+                }
+
+                int total = 0;
+                for (int i = 0; i < currencyDeck.size(); i++) {
+                    if (paymentSelectedIndices.contains(i)) {
+                        total += currencyDeck.get(i).currencyValue();
                     }
-                    int total = 0;
-                    for (int i = 0; i < currencyDeck.size(); i++) {
-                        if (paymentSelectedIndices.contains(i)) {
-                            total += currencyDeck.get(i).currencyValue();
+                }
+                int k = 0;
+                for (Integer grp : propertyDecks.keySet()) {
+                    List<Card> get = propertyDecks.get(grp);
+                    for (int i = 0; i < get.size(); i++) {
+                        Card card = get.get(i);
+                        boolean contains = paymentSelectedPropertyIndices.contains(k);
+                        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton((contains ? "[x] " : "") + card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
+                        if (contains) {
+                            total += card.currencyValue();
                         }
                     }
-                    buttons[currencyDeck.size()][0] = new InlineKeyboardButton("Pay ($ " + total + "M)").callbackData(nonce + ":pay_confirm");
-                    edit.replyMarkup(new InlineKeyboardMarkup(buttons));
-                    game.execute(edit);
                 }
+
+                buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Pay ($ " + total + "M)").callbackData(nonce + ":pay_confirm")});
+                edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
+                game.execute(edit);
                 break;
             case "pay_confirm":
                 List<Card> payment = getPaymentCurrencyCards();
-                int total = payment.stream().mapToInt(Card::currencyValue).sum();
+                total = payment.stream().mapToInt(Card::currencyValue).sum();
                 if (total < paymentValue && payment.size() < currencyCount()) {
                     // not enough and didnt do their best
                     AnswerCallbackQuery answer = new AnswerCallbackQuery(id);
