@@ -409,7 +409,9 @@ public class GamePlayer {
         if (future != null) {
             future.cancel(true);
         }
+        game.logf("scheduled autopay task for %s", tgid);
         future = executor.schedule(() -> {
+            game.logf("firing autopay task for %s", tgid);
             paymentSelectedIndices.clear();
             paymentSelectedPropertyIndices.clear();
             int paid = 0;
@@ -421,17 +423,20 @@ public class GamePlayer {
                 }
             }
             int _k = 0;
-            for (Integer grp : propertyDecks.keySet()) {
-                for (Card card : propertyDecks.get(grp)) {
-                    if (card.currencyValue() > 0) {
-                        paid += currencyDeck.get(grp).currencyValue();
-                        paymentSelectedPropertyIndices.add(_k++);
-                        if (paid >= paymentValue) {
-                            break;
+            if (paid < paymentValue) {
+                for (Integer grp : propertyDecks.keySet()) {
+                    for (Card card : propertyDecks.get(grp)) {
+                        if (card.currencyValue() > 0) {
+                            paid += card.currencyValue();
+                            paymentSelectedPropertyIndices.add(_k++);
+                            if (paid >= paymentValue) {
+                                break;
+                            }
                         }
                     }
                 }
             }
+            System.out.println(getPaymentCurrencyCards());
             if (game.confirmPayment(getPaymentCurrencyCards(), tgid)) {
                 confirmPayment();
             }

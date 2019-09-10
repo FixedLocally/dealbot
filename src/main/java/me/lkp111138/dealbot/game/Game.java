@@ -666,7 +666,7 @@ public class Game {
         System.out.printf("[%s][Game %d] %s\n", date, id, o);
     }
 
-    private void logf(String format, Object ...objs) {
+    public void logf(String format, Object ...objs) {
         String date = sdf.format(new Date());
         Object[] _objs = new Object[objs.length + 2];
         _objs[1] = id;
