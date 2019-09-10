@@ -171,7 +171,7 @@ public class GamePlayer {
             game.schedule(this::endTurn, game.getTurnWait() * 1000);
             boolean hasWildcardsOrBuildings = propertyDecks.values().stream().anyMatch(x -> x.stream().anyMatch(xx -> xx instanceof WildcardPropertyCard || xx instanceof BuildingActionCard));
             // do prompt
-            int size = hand.size() + (actionCount > -1 ? 1 : 0) + (hasWildcardsOrBuildings ? 1 : 0);
+            int size = hand.size() + (hasWildcardsOrBuildings ? 2 : 1);
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[size][1];
             int nonce = game.nextNonce();
             for (int i = 0; i < hand.size(); i++) {
@@ -181,7 +181,7 @@ public class GamePlayer {
                 buttons[hand.size()][0] = new InlineKeyboardButton(translation.PASS()).callbackData(nonce + ":end_turn");
             }
             if (hasWildcardsOrBuildings) {
-                buttons[hand.size() + (actionCount > 0 ? 1 : 0)][0] = new InlineKeyboardButton(translation.MANAGE_CARD_MENU()).callbackData(nonce + ":wildcard_menu");
+                buttons[hand.size() + 1][0] = new InlineKeyboardButton(translation.MANAGE_CARD_MENU()).callbackData(nonce + ":wildcard_menu");
             }
             String msg = translation.CHOOSE_AN_ACTION(3 - actionCount);
             if (messageId == 0) {
@@ -190,6 +190,9 @@ public class GamePlayer {
                 game.execute(send, new Callback<SendMessage, SendResponse>() {
                     @Override
                     public void onResponse(SendMessage request, SendResponse response) {
+                        if (!response.isOk()) {
+                            System.out.println(response.description());
+                        }
                         messageId = response.message().messageId();
                     }
 
