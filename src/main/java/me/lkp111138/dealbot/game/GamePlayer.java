@@ -594,6 +594,9 @@ public class GamePlayer {
     }
 
     public void sayNoCallback(String[] args, String id, int mid) {
+        if (future != null) {
+            future.cancel(true);
+        }
         switch (args[1]) {
             case "y":
                 // say no
