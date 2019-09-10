@@ -14,7 +14,7 @@ public class KillGameCommand implements Command {
                 return;
         }
         // only bot owner can kill game
-        if (msg.from().id() == Main.BOT_OWNER) {
+        if (msg.from().id() == Main.BOT_OWNER || Game.maintMode) {
             if (Game.byGroup(msg.chat().id()) != null) {
                 Game.byGroup(msg.chat().id()).kill();
             }
