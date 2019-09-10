@@ -436,6 +436,9 @@ public class GamePlayer {
                             }
                         }
                     }
+                    if (paid >= paymentValue) {
+                        break;
+                    }
                 }
             }
             System.out.println(getPaymentCurrencyCards());
@@ -642,12 +645,16 @@ public class GamePlayer {
         for (Integer index : paymentSelectedIndices) {
             payment.add(currencyDeck.get(index));
         }
+        int k = -1;
         for (Integer grp : propertyDecks.keySet()) {
             List<Card> get = propertyDecks.get(grp);
             for (int i = 0; i < get.size(); i++) {
                 Card card = get.get(i);
-                if (paymentSelectedPropertyIndices.contains(i)) {
-                    payment.add(card);
+                if (card.currencyValue() > 0) {
+                    k++;
+                    if (paymentSelectedPropertyIndices.contains(k)) {
+                        payment.add(card);
+                    }
                 }
             }
         }
