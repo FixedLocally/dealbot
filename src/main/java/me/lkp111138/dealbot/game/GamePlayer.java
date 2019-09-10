@@ -398,10 +398,7 @@ public class GamePlayer {
                 e.printStackTrace();
             }
         });
-        // if not paid in a round's time, random pay
-        if (future != null) {
-            future.cancel(true);
-        }
+        // if not paid in time, random pay
         if (future != null) {
             future.cancel(true);
         }
@@ -420,9 +417,8 @@ public class GamePlayer {
             for (Integer grp : propertyDecks.keySet()) {
                 for (Card card : propertyDecks.get(grp)) {
                     if (card.currencyValue() > 0) {
-                        ++_k;
                         paid += currencyDeck.get(grp).currencyValue();
-                        paymentSelectedPropertyIndices.add(_k);
+                        paymentSelectedPropertyIndices.add(_k++);
                         if (paid >= paymentValue) {
                             break;
                         }
@@ -648,6 +644,9 @@ public class GamePlayer {
         List<Card> payment = getPaymentCurrencyCards();
         currencyDeck.removeAll(payment);
         propertyDecks.values().forEach(x -> x.removeAll(payment));
+//        if (paymentMessageId != 0) {
+//            game.execute(new DeleteMessage(tgid, paymentMessageId));
+//        }
         if (payment.size() > 0) {
             String paymentStr = payment.stream().map(x -> !(x instanceof PropertyCard) ? "$ " + x.currencyValue() + "M" : x.getCardTitle()).collect(Collectors.joining(", "));
             EditMessageText edit = new EditMessageText(tgid, paymentMessageId, translation.PAYMENT_THX() + paymentStr);
