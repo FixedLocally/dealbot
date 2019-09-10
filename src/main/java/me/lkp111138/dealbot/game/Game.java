@@ -789,7 +789,7 @@ public class Game {
             }
             SendMessage send = new SendMessage(id, translation.SB_PAID_YOU(name, paymentStr));
             execute(send);
-            send = new SendMessage(id, translation.SB_PAID_SB(name, gamePlayers.get(currentTurn).getName(), paymentStr));
+            send = new SendMessage(gid, translation.SB_PAID_SB(name, gamePlayers.get(currentTurn).getName(), paymentStr));
             execute(send);
         } else {
             SendMessage send = new SendMessage(id, translation.VICTIM_SAID_NO(name));
