@@ -54,6 +54,8 @@ public class Game {
     private List<Card> usedDeck = new ArrayList<>();
     private Set<Integer> usedNonces = new HashSet<>();
     private int nextNonce = 0;
+    private long turnStartTime;
+    private long turnTime;
 
     private boolean ended = false;
     private int[] offsets;
@@ -473,6 +475,7 @@ public class Game {
     // 11: debt
     public void collectRentFromAll(int value, int group) {
         cancelFuture();
+        turnTime += System.currentTimeMillis() - turnStartTime;
         paymentConfirmationCount = 0;
         paidPlayers.clear();
         if (value <= 0) {
@@ -491,6 +494,7 @@ public class Game {
 
     public void collectRentFromOne(int value, int group, int order) {
         cancelFuture();
+        turnTime += System.currentTimeMillis() - turnStartTime;
         paidPlayers.clear();
         paymentConfirmationCount = gamePlayers.size() - 2; // shush
         if (value <= 0) {
@@ -521,6 +525,8 @@ public class Game {
 
     private void startTurn() {
         currentCard = null;
+        turnStartTime = System.currentTimeMillis();
+        turnTime = 0;
         // tell the current player the current situation
         GamePlayer player = gamePlayers.get(currentTurn);
         String currentState = getGlobalState();
@@ -842,6 +848,11 @@ public class Game {
         if (paymentConfirmationCount == gamePlayers.size() - 1) {
             // everyone has paid
             gamePlayers.get(currentTurn).promptForCard();
+            // restart end turn timer
+
+            long time = getTurnWait() * 1000 - turnTime;
+            schedule(gamePlayers.get(currentTurn)::endTurn, time);
+            turnStartTime = System.currentTimeMillis();
         }
         return true;
     }
