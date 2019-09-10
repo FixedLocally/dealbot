@@ -156,6 +156,7 @@ public class GamePlayer {
 
     public void startTurn() {
         game.schedule(this::endTurn, 1000 * game.getTurnWait());
+        game.execute(new DeleteMessage(tgid, stateMessageId));
         stateMessageId = 0; // make it resend the self state message every turn
         actionCount = 0;
         setDoubleRentBuff(false);
@@ -454,8 +455,9 @@ public class GamePlayer {
             for (int i = 0; i < get.size(); i++) {
                 Card card = get.get(i);
                 if (card.currencyValue() > 0) {
+                    ++k;
                     boolean contains = paymentSelectedPropertyIndices.contains(k);
-                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton((contains ? " [x]" : "") + card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
+                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton((contains ? " [x]" : "") + card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k))});
                     if (contains) {
                         total += card.currencyValue();
                     }
@@ -568,9 +570,9 @@ public class GamePlayer {
                 // enough amount so confirm payment
                 if (game.confirmPayment(payment, tgid)) {
                     confirmPayment();
-                }
-                if (future != null) {
-                    future.cancel(true);
+                    if (future != null) {
+                        future.cancel(true);
+                    }
                 }
                 break;
             case "pay_reject":
