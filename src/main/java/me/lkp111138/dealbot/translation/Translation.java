@@ -176,6 +176,78 @@ public class Translation {
     public String PASS() {
         return "Pass";
     }
+    public String MANAGE_CARD_MENU() {
+        return "Manage wildcards and buildings";
+    }
+    public String CHOOSE_AN_ACTION(int remaining) {
+        return String.format("Choose an action (%d remaining)", remaining);
+    }
+    public String SELF_CURRENCY_DECK(int count, int total) {
+        return String.format("Currency deck (%d / $ %dM): ", count, total);
+    }
+    public String JUST_SAY_NO_BTN(long count) {
+        return "Just Say No! (You have " + count + ")";
+    }
+    public String NO() {
+        return "No";
+    }
+    public String PAYMENT_COLLECTION_MESSAGE_SAY_NO(int group, String collector, int amount) {
+        if (group < 10) {
+            return String.format("%s is collecting $ %dM as rent for group %d from you! Do you want to Just Say No?",
+                    collector, amount, group);
+        }
+        if (group == 10) {
+            return String.format("%s is collecting $ %dM as their birthday present from you! Do you want to Just Say No?",
+                    collector, amount);
+        }
+        if (group == 11) {
+            return String.format("%s is collecting your debt of $ %dM owed to them from you! Do you want to Just Say No?",
+                    collector, amount);
+        }
+        return "";
+    }
+    public String PAYMENT_COLLECTION_MESSAGE(int group, String collector, int amount, int secs) {
+        if (group < 10) {
+            return String.format("%s is collecting $ %dM as rent for group %d from you! You have %d seconds to choose how to pay.",
+                    collector, amount, group, secs);
+        }
+        if (group == 10) {
+            return String.format("%s is collecting $ %dM as their birthday present from you! You have %d seconds to choose how to pay.",
+                    collector, amount, secs);
+        }
+        if (group == 11) {
+            return String.format("%s is collecting your debt of $ %dM owed to them from you! You have %d seconds to choose how to pay.",
+                    collector, amount, secs);
+        }
+        return "";
+    }
+    public String PAY(int value) {
+        return String.format("Pay ( %dM)", value);
+    }
+    public String CHOOSE_CARD_TO_MANAGE() {
+        return "Choose a card to manage:";
+    }
+    public String CHOOSE_RELOCATE() {
+        return "Choose a group to relocate this card:";
+    }
+    public String GROUP_FULL() {
+        return "This group is full";
+    }
+    public String PAYMENT_TOO_LOW() {
+        return "The amount you paid is too low";
+    }
+    public String SAID_NO() {
+        return "You have used Just Say No!";
+    }
+    public String SAID_YES() {
+        return "You didn't use Just Say No!";
+    }
+    public String PAYMENT_THX() {
+        return "Thank you for you payment - ";
+    }
+    public String DISPOSE_CARD(int remaining) {
+        return String.format("Dispose some cards to keep you at 7 cards (%d remaining)", remaining);
+    }
     public String PLAYED_ANNOUNCEMENT(String card) {
         return "%s played " + card;
     }

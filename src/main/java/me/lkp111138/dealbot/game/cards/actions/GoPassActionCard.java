@@ -7,7 +7,7 @@ import me.lkp111138.dealbot.game.cards.Card;
 import me.lkp111138.dealbot.translation.Translation;
 
 public class GoPassActionCard extends ActionCard {
-    protected GoPassActionCard(Translation translation) {
+    public GoPassActionCard(Translation translation) {
         super(translation);
     }
 

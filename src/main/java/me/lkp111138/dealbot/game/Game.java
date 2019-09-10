@@ -318,49 +318,49 @@ public class Game {
 
         // action mainDeck
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new ItsMyBirthdayActionCard(translation.ITS_MY_BDAY()));
+            mainDeck.add(new ItsMyBirthdayActionCard(translation));
         }
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new DebtCollectorCard(translation.DEBT_COLLECTOR()));
+            mainDeck.add(new DebtCollectorCard(translation));
         }
         for (int i = 0; i < 10; i++) {
-            mainDeck.add(new GoPassActionCard(translation.GO_PASS()));
+            mainDeck.add(new GoPassActionCard(translation));
         }
         for (int i = 0; i < 2; i++) {
-            mainDeck.add(new DoubleRentActionCard(translation.DBL_RENT()));
+            mainDeck.add(new DoubleRentActionCard(translation));
         }
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new JustSayNoCard(translation.JUST_SAY_NO()));
+            mainDeck.add(new JustSayNoCard(translation));
         }
         for (int i = 0; i < 2; i++) {
-            mainDeck.add(new DealBreakerActionCard(translation.DEAL_BREAKER()));
+            mainDeck.add(new DealBreakerActionCard(translation));
         }
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new SlyDealActionCard(translation.SLY_DEAL()));
+            mainDeck.add(new SlyDealActionCard(translation));
         }
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new HouseActionCard(translation.HOUSE()));
+            mainDeck.add(new HouseActionCard(translation));
         }
         for (int i = 0; i < 2; i++) {
-            mainDeck.add(new HotelActionCard(translation.HOTEL()));
+            mainDeck.add(new HotelActionCard(translation));
         }
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new ForcedDealActionCard(translation.FORCED_DEAL()));
+            mainDeck.add(new ForcedDealActionCard(translation));
         }
 
         // rent mainDeck
-        mainDeck.add(new RentActionCard(new int[]{0, 1}, translation.WILDCARD_RENT(0, 1)));
-        mainDeck.add(new RentActionCard(new int[]{0, 1}, translation.WILDCARD_RENT(0, 1)));
-        mainDeck.add(new RentActionCard(new int[]{2, 3}, translation.WILDCARD_RENT(2, 3)));
-        mainDeck.add(new RentActionCard(new int[]{2, 3}, translation.WILDCARD_RENT(2, 3)));
-        mainDeck.add(new RentActionCard(new int[]{4, 5}, translation.WILDCARD_RENT(4, 5)));
-        mainDeck.add(new RentActionCard(new int[]{4, 5}, translation.WILDCARD_RENT(4, 5)));
-        mainDeck.add(new RentActionCard(new int[]{6, 7}, translation.WILDCARD_RENT(6, 7)));
-        mainDeck.add(new RentActionCard(new int[]{6, 7}, translation.WILDCARD_RENT(6, 7)));
-        mainDeck.add(new RentActionCard(new int[]{8, 9}, translation.WILDCARD_RENT(8, 9)));
-        mainDeck.add(new RentActionCard(new int[]{8, 9}, translation.WILDCARD_RENT(8, 9)));
+        mainDeck.add(new RentActionCard(new int[]{0, 1}, translation));
+        mainDeck.add(new RentActionCard(new int[]{0, 1}, translation));
+        mainDeck.add(new RentActionCard(new int[]{2, 3}, translation));
+        mainDeck.add(new RentActionCard(new int[]{2, 3}, translation));
+        mainDeck.add(new RentActionCard(new int[]{4, 5}, translation));
+        mainDeck.add(new RentActionCard(new int[]{4, 5}, translation));
+        mainDeck.add(new RentActionCard(new int[]{6, 7}, translation));
+        mainDeck.add(new RentActionCard(new int[]{6, 7}, translation));
+        mainDeck.add(new RentActionCard(new int[]{8, 9}, translation));
+        mainDeck.add(new RentActionCard(new int[]{8, 9}, translation));
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, translation.RAINBOW_RENT()));
+            mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, translation));
         }
 
         // currency mainDeck

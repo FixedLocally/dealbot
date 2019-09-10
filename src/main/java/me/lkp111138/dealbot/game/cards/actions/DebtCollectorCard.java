@@ -11,7 +11,7 @@ import me.lkp111138.dealbot.translation.Translation;
 import java.util.List;
 
 public class DebtCollectorCard extends ActionCard {
-    protected DebtCollectorCard(Translation translation) {
+    public DebtCollectorCard(Translation translation) {
         super(translation);
     }
 

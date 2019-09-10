@@ -3,7 +3,7 @@ package me.lkp111138.dealbot.game.cards.actions;
 import me.lkp111138.dealbot.translation.Translation;
 
 public class HotelActionCard extends BuildingActionCard {
-    protected HotelActionCard(Translation translation) {
+    public HotelActionCard(Translation translation) {
         super(translation);
     }
 

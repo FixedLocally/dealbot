@@ -7,7 +7,7 @@ import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.translation.Translation;
 
 public class ItsMyBirthdayActionCard extends ActionCard {
-    protected ItsMyBirthdayActionCard(Translation translation) {
+    public ItsMyBirthdayActionCard(Translation translation) {
         super(translation);
     }
 

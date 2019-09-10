@@ -18,7 +18,7 @@ import java.util.List;
  * The 'Deal Breaker' card. Takes one complete set of property from an opponent.
  */
 public class ForcedDealActionCard extends ActionCard {
-    protected ForcedDealActionCard(Translation translation) {
+    public ForcedDealActionCard(Translation translation) {
         super(translation);
     }
 

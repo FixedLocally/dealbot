@@ -15,6 +15,7 @@ import me.lkp111138.dealbot.game.cards.JustSayNoCard;
 import me.lkp111138.dealbot.game.cards.PropertyCard;
 import me.lkp111138.dealbot.game.cards.WildcardPropertyCard;
 import me.lkp111138.dealbot.game.cards.actions.BuildingActionCard;
+import me.lkp111138.dealbot.translation.Translation;
 
 import java.io.IOException;
 import java.util.*;
@@ -30,6 +31,7 @@ public class GamePlayer {
     private final long gid;
     private final Game game;
     private final User user;
+    private final Translation translation;
 
     private boolean doubleRentBuff = false;
 
@@ -61,6 +63,7 @@ public class GamePlayer {
         this.gid = gid;
         this.game = game;
         this.user = user;
+        this.translation = game.getTranslation();
     }
 
     public void removeHand(Card card) {
@@ -178,9 +181,9 @@ public class GamePlayer {
                 buttons[hand.size()][0] = new InlineKeyboardButton("End turn").callbackData(nonce + ":end_turn");
             }
             if (hasWildcardsOrBuildings) {
-                buttons[hand.size() + (actionCount > 0 ? 1 : 0)][0] = new InlineKeyboardButton("Manage wildcards and buildings").callbackData(nonce + ":wildcard_menu");
+                buttons[hand.size() + (actionCount > 0 ? 1 : 0)][0] = new InlineKeyboardButton(translation.MANAGE_CARD_MENU()).callbackData(nonce + ":wildcard_menu");
             }
-            String msg = String.format("Choose an action (%d remaining)", 3 - actionCount);
+            String msg = translation.CHOOSE_AN_ACTION(3 - actionCount);
             if (messageId == 0) {
                 SendMessage send = new SendMessage(tgid, msg);
                 send.replyMarkup(new InlineKeyboardMarkup(buttons));
@@ -240,25 +243,25 @@ public class GamePlayer {
     }
 
     public String getMyState() {
-        StringBuilder state = new StringBuilder("Cards in hand: ");
+        StringBuilder state = new StringBuilder(translation.CARDS_IN_HAND());
         state.append(handCount()).append("\n");
         for (Card card : hand) {
             state.append("- ").append(card.getCardTitle()).append("\n");
         }
         int total = currencyDeck.stream().mapToInt(Card::currencyValue).sum();
-        state.append("Currency deck (").append(currencyDeck.size()).append(" / $ ").append(total).append("M): ");
+        state.append(translation.SELF_CURRENCY_DECK(currencyDeck.size(), total));
         for (Card card : currencyDeck) {
             state.append("$ ").append(card.currencyValue()).append("M, ");
         }
         state.setLength(state.length() - 2);
 
-        state.append("\nProperties:\n");
+        state.append("\n").append(translation.PROPERTIES()).append("\n");
         for (Integer group : propertyDecks.keySet()) {
             List<Card> props = propertyDecks.get(group);
             if (props.isEmpty()) {
                 continue;
             }
-            state.append("Group ").append(group).append(" ").append(props.size()).append("/")
+            state.append(translation.PROPERTY_GROUP(group)).append(" ").append(props.size()).append("/")
                     .append(PropertyCard.propertySetCounts[group]).append(" ($ ")
                     .append(PropertyCard.getRent(group, props))
                     .append("M) ").append("\n");
@@ -296,10 +299,10 @@ public class GamePlayer {
         long sayNos = hand.stream().filter(x -> x instanceof JustSayNoCard).count();
         InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1 + (sayNos > 0 ? 1 : 0)][1];
         if (sayNos > 0) {
-            buttons[0][0] = new InlineKeyboardButton("Just Say No! (You have " + sayNos + ")").callbackData(nonce + ":say_no:y");
-            buttons[1][0] = new InlineKeyboardButton("No").callbackData(nonce + ":say_no:n");
+            buttons[0][0] = new InlineKeyboardButton(translation.JUST_SAY_NO_BTN(sayNos)).callbackData(nonce + ":say_no:y");
+            buttons[1][0] = new InlineKeyboardButton(translation.NO()).callbackData(nonce + ":say_no:n");
         } else {
-            buttons[0][0] = new InlineKeyboardButton("No").callbackData(nonce + ":say_no:n");
+            buttons[0][0] = new InlineKeyboardButton(translation.NO()).callbackData(nonce + ":say_no:n");
         }
         send.replyMarkup(new InlineKeyboardMarkup(buttons));
         savedActionIfNotObjected = actionIfApproved;
@@ -340,18 +343,7 @@ public class GamePlayer {
     }
 
     public void collectRent(int value, int group, GamePlayer collector) {
-        if (group < 10) {
-            paymentMessage = String.format("%s is collecting $ %dM as rent for group %d from you! Do you want to Just Say No?",
-                    collector.getName(), value, group);
-        }
-        if (group == 10) {
-            paymentMessage = String.format("%s is collecting $ %dM as their birthday present from you! Do you want to Just Say No?",
-                    collector.getName(), value);
-        }
-        if (group == 11) {
-            paymentMessage = String.format("%s is collecting your debt of $ %dM owed to them from you! Do you want to Just Say No?",
-                    collector.getName(), value);
-        }
+        paymentMessage = translation.PAYMENT_COLLECTION_MESSAGE_SAY_NO(group, collector.getName(), value);
         promptSayNo(paymentMessage, () -> realCollectRent(value, group, collector), () -> {
             // tell the sender its objected
             game.log("Objection!");
@@ -368,18 +360,7 @@ public class GamePlayer {
         paymentValue = value;
         paymentSelectedIndices.clear();
         int nonce = game.nextNonce();
-        if (group < 10) {
-            paymentMessage = String.format("%s is collecting $ %dM as rent for group %d from you! You have %d seconds to choose how to pay.",
-                    collector.getName(), value, group, game.getTurnWait());
-        }
-        if (group == 10) {
-            paymentMessage = String.format("%s is collecting $ %dM as their birthday present from you! You have %d seconds to choose how to pay.",
-                    collector.getName(), value, game.getTurnWait());
-        }
-        if (group == 11) {
-            paymentMessage = String.format("%s is collecting your debt of $ %dM owed to them from you! You have %d seconds to choose how to pay.",
-                    collector.getName(), value, game.getTurnWait());
-        }
+        paymentMessage = translation.PAYMENT_COLLECTION_MESSAGE(group, collector.getName(), value, game.getTurnWait());
         // the currency deck can cover this
         SendMessage send = new SendMessage(tgid, paymentMessage);
         List<InlineKeyboardButton[]> buttons = new ArrayList<>();
@@ -396,7 +377,7 @@ public class GamePlayer {
                 }
             }
         }
-        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Pay ($ 0M)").callbackData(nonce + ":pay_done")});
+        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.PAY(0)).callbackData(nonce + ":pay_done")});
         send.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
         game.execute(send, new Callback<SendMessage, SendResponse>() {
             @Override
@@ -460,8 +441,8 @@ public class GamePlayer {
                     }
                 }
             }
-            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Cancel").callbackData(nonce + ":wildcard_menu:cancel")});
-            EditMessageText edit = new EditMessageText(tgid, messageId, "Choose a card to manage:");
+            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":wildcard_menu:cancel")});
+            EditMessageText edit = new EditMessageText(tgid, messageId, translation.CHOOSE_CARD_TO_MANAGE());
             edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
             game.execute(edit);
         }
@@ -480,11 +461,11 @@ public class GamePlayer {
                 int _group = groups[i];
                 int count = propertyDecks.getOrDefault(_group, new ArrayList<>()).size();
                 int total = PropertyCard.propertySetCounts[_group];
-                buttons[i][0] = new InlineKeyboardButton("Group " + _group + " (" + count + "/" + total + ")")
+                buttons[i][0] = new InlineKeyboardButton(translation.PROPERTY_GROUP(_group) + " (" + count + "/" + total + ")")
                         .callbackData(nonce + ":wildcard_menu:" + group + ":" + index + ":" + _group);
             }
-            buttons[groups.length][0] = new InlineKeyboardButton("Cancel").callbackData(nonce + ":wildcard_menu:cancel");
-            EditMessageText edit = new EditMessageText(tgid, messageId, "Choose a group to relocate this card:");
+            buttons[groups.length][0] = new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":wildcard_menu:cancel");
+            EditMessageText edit = new EditMessageText(tgid, messageId, translation.CHOOSE_RELOCATE());
             edit.replyMarkup(new InlineKeyboardMarkup(buttons));
             game.execute(edit);
         }
@@ -501,7 +482,7 @@ public class GamePlayer {
                 promptForCard();
             } else {
                 answer.showAlert(true);
-                answer.text("That group is full.");
+                answer.text(translation.GROUP_FULL());
                 promptForCard();
             }
         }
@@ -550,7 +531,7 @@ public class GamePlayer {
                     }
                 }
 
-                buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Pay ($ " + total + "M)").callbackData(nonce + ":pay_confirm")});
+                buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.PAY(total)).callbackData(nonce + ":pay_confirm")});
                 edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
                 game.execute(edit);
                 break;
@@ -560,7 +541,7 @@ public class GamePlayer {
                 if (total < paymentValue && payment.size() < currencyCount()) {
                     // not enough and didnt do their best
                     AnswerCallbackQuery answer = new AnswerCallbackQuery(id);
-                    answer.text("The amount you paid is too low");
+                    answer.text(translation.PAYMENT_TOO_LOW());
                     answer.showAlert(true);
                     game.execute(answer);
                     return;
@@ -611,13 +592,13 @@ public class GamePlayer {
                 if (removed) {
                     // did say no, notify sender
                     savedActionIfObjected.run();
-                    game.execute(new EditMessageText(tgid, mid, "You have used Just Say No!"));
+                    game.execute(new EditMessageText(tgid, mid, translation.SAID_NO()));
                     break;
                 }
                 // pass thru if not removed
             case "n":
                 savedActionIfNotObjected.run();
-                game.execute(new EditMessageText(tgid, mid, "You didn't use Just Say No!"));
+                game.execute(new EditMessageText(tgid, mid, translation.SAID_YES()));
                 break;
         }
         game.execute(new AnswerCallbackQuery(id));
@@ -646,7 +627,7 @@ public class GamePlayer {
         currencyDeck.removeAll(payment);
         if (payment.size() > 0) {
             String paymentStr = payment.stream().map(x -> !(x instanceof PropertyCard) ? "$ " + x.currencyValue() + "M" : x.getCardTitle()).collect(Collectors.joining(", "));
-            EditMessageText edit = new EditMessageText(tgid, paymentMessageId, "Thank you for your payment - " + paymentStr);
+            EditMessageText edit = new EditMessageText(tgid, paymentMessageId, translation.PAYMENT_THX() + paymentStr);
             game.execute(edit);
         }
         paymentMessageId = 0;
@@ -668,7 +649,7 @@ public class GamePlayer {
             for (int i = 0; i < hand.size(); i++) {
                 buttons[i][0] = new InlineKeyboardButton(hand.get(i).getCardTitle()).callbackData(nonce + ":dispose_card:" + i);
             }
-            String msg = String.format("Dispose some cards to keep you at 7 cards (%d remaining)", handCount() - 7);
+            String msg = translation.DISPOSE_CARD(handCount() - 7);
             if (disposeMessageId == 0) {
                 SendMessage send = new SendMessage(tgid, msg);
                 send.replyMarkup(new InlineKeyboardMarkup(buttons));

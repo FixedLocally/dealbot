@@ -182,6 +182,78 @@ public class TraditionalChinese extends Translation {
     public String PASS() {
         return "結束回合";
     }
+    public String MANAGE_CARD_MENU() {
+        return "管理多功能物業牌和建築物";
+    }
+    public String CHOOSE_AN_ACTION(int remaining) {
+        return String.format("選擇一個行動（尚餘 %d 個）", remaining);
+    }
+    public String SELF_CURRENCY_DECK(int count, int total) {
+        return String.format("貨幣堆 （%d / $ %dM）：", count, total);
+    }
+    public String JUST_SAY_NO_BTN(long count) {
+        return "作出反對（你有 " + count + " 張）";
+    }
+    public String NO() {
+        return "不了";
+    }
+    public String PAYMENT_COLLECTION_MESSAGE_SAY_NO(int group, String collector, int amount) {
+        if (group < 10) {
+            return String.format("%s 正向你收集 $ %dM 作為 %s 的租金！你要使用作出反對嗎？",
+                    collector, amount, PROPERTY_GROUP(group));
+        }
+        if (group == 10) {
+            return String.format("%s 正向你收集 $ %dM 作為生日禮物！你要使用作出反對嗎？",
+                    collector, amount);
+        }
+        if (group == 11) {
+            return String.format("%s 正向你收集 $ %dM 的債務！你要使用作出反對嗎？",
+                    collector, amount);
+        }
+        return "";
+    }
+    public String PAYMENT_COLLECTION_MESSAGE(int group, String collector, int amount, int secs) {
+        if (group < 10) {
+            return String.format("%s 正向你收集 $ %dM 作為 %s 的租金！你有 %d 秒選擇如何繳付。",
+                    collector, amount, PROPERTY_GROUP(group), secs);
+        }
+        if (group == 10) {
+            return String.format("%s 正向你收集 $ %dM 作為生日禮物！你有 %d 秒選擇如何繳付。",
+                    collector, amount, secs);
+        }
+        if (group == 11) {
+            return String.format("%s 正向你收集 $ %dM 作為生日禮物！你有 %d 秒選擇如何繳付。",
+                    collector, amount, secs);
+        }
+        return "";
+    }
+    public String PAY(int value) {
+        return String.format("繳付（ %dM）", value);
+    }
+    public String CHOOSE_CARD_TO_MANAGE() {
+        return "選擇要管理的卡牌：";
+    }
+    public String CHOOSE_RELOCATE() {
+        return "選擇擺放此卡的位置：";
+    }
+    public String GROUP_FULL() {
+        return "這組物業已滿";
+    }
+    public String PAYMENT_TOO_LOW() {
+        return "你繳付的金額太低";
+    }
+    public String SAID_NO() {
+        return "你使用了作出反對";
+    }
+    public String SAID_YES() {
+        return "你沒有使用作出反對";
+    }
+    public String PAYMENT_THX() {
+        return "感謝繳付 - ";
+    }
+    public String DISPOSE_CARD(int remaining) {
+        return String.format("請棄置一些卡牌 (尚餘 %d 張)", remaining);
+    }
     @Override
     public String PASS_ANNOUNCEMENT() {
         return "%s 選擇結束回合";

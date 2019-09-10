@@ -6,7 +6,7 @@ import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.translation.Translation;
 
 public class DoubleRentActionCard extends ActionCard {
-    protected DoubleRentActionCard(Translation translation) {
+    public DoubleRentActionCard(Translation translation) {
         super(translation);
     }
 
