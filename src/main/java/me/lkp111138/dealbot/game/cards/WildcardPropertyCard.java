@@ -43,7 +43,14 @@ public class WildcardPropertyCard extends PropertyCard {
     @Override
     public void execute(GamePlayer player, String[] args) {
         if (args.length > 0) {
-            player.addProperty(this, Integer.parseInt(args[0]));
+            if (!player.addProperty(this, Integer.parseInt(args[0]))) {
+                player.addHand(this);
+                player.addMove();
+                SendMessage send = new SendMessage(player.getTgid(), translation.GROUP_FULL());
+                player.getGame().execute(send);
+                player.promptForCard();
+                return;
+            }
             player.promptForCard();
             SendMessage send = new SendMessage(player.getTgid(), translation.YOU_PLACED_PROP_AS(getCardTitle(), Integer.parseInt(args[0])));
             player.getGame().execute(send);
