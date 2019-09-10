@@ -557,17 +557,37 @@ public class Game {
             currentState.append(translation.CARDS_IN_CURRENCY_DECK()).append(player.currencyCount()).append("\n");
             currentState.append(translation.PROPERTIES()).append(":\n");
             Map<Integer, List<Card>> propertyDecks = player.getPropertyDecks();
-            for (Integer group : propertyDecks.keySet()) {
+            List<Integer> groups = new ArrayList<>(propertyDecks.keySet());
+            groups.sort((o1, o2) -> {
+                List<Card> props1 = propertyDecks.get(o1);
+                List<Card> props2 = propertyDecks.get(o2);
+                int count1 = PropertyCard.realCount(props1);
+                int total1 = PropertyCard.propertySetCounts[o1];
+                int count2 = PropertyCard.realCount(props2);
+                int total2 = PropertyCard.propertySetCounts[o2];
+                double ratio1 = count1 / (double) total1;
+                double ratio2 = count2 / (double) total2;
+                return Double.compare(ratio2, ratio1);
+            });
+            for (Integer group : groups) {
                 List<Card> props = propertyDecks.get(group);
                 if (props.isEmpty()) {
                     continue;
                 }
-                currentState.append(translation.PROPERTY_GROUP(group)).append(" (").append(props.size()).append("/")
-                        .append(PropertyCard.propertySetCounts[group]).append("): ");
+                int count = PropertyCard.realCount(props);
+                int total = PropertyCard.propertySetCounts[group];
+                if (count >= total) {
+                    currentState.append("**");
+                }
+                currentState.append(translation.PROPERTY_GROUP(group)).append(" (").append(count).append("/")
+                        .append(total).append("): ");
                 for (Card prop : props) {
                     currentState.append(prop.getCardTitle()).append(", ");
                 }
                 currentState.setLength(currentState.length() - 2);
+                if (count >= total) {
+                    currentState.append("**");
+                }
             }
             currentState.append("\n");
         }
@@ -580,7 +600,7 @@ public class Game {
         if (player.checkWinCondition()) {
             // won
             String msg = translation.WON_ANNOUNCEMENT(player.getTgid(), player.getName());
-            execute(new SendMessage(gid, getGlobalState()));
+            execute(new SendMessage(gid, getGlobalState()).parseMode(ParseMode.Markdown));
             this.execute(new SendMessage(gid, msg).parseMode(ParseMode.HTML));
             this.kill(false);
             return;

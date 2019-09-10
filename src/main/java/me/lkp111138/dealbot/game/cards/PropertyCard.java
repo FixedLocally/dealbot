@@ -29,6 +29,10 @@ public class PropertyCard implements Card {
             {1, 2}
     };
 
+    public static int realCount(List<Card> props) {
+        return (int) props.stream().filter(x -> x instanceof PropertyCard).count();
+    }
+
     public static int getRent(int group, List<Card> props) {
         int count = 0;
         int realCount = 0;
