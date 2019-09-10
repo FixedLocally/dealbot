@@ -700,11 +700,9 @@ public class Game {
             case "use_as":
                 if (args[1].equals("money")) {
                     player.addCurrency(this.currentCard);
-                    SendMessage send = new SendMessage(player.getTgid(), "You have deposited " +
-                            this.currentCard.getCardTitle() + " into your bank.");
+                    SendMessage send = new SendMessage(player.getTgid(), translation.YOU_DEPOSITED(this.currentCard.getCardTitle()));
                     player.getGame().execute(send);
-                    send = new SendMessage(gid, player.getName() + " have deposited " +
-                            this.currentCard.getCardTitle() + " into their bank.");
+                    send = new SendMessage(gid, translation.SOMEONE_DEPOSITED(player.getName(), this.currentCard.getCardTitle()));
                     player.getGame().execute(send);
                     player.promptForCard();
                 } else {
