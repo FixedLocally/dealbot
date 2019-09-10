@@ -538,6 +538,12 @@ public class Game {
     }
 
     public Card draw() {
+        if (mainDeck.isEmpty()) {
+            // the deck is exhausted, shuffle the used deck
+            Collections.shuffle(usedDeck);
+            mainDeck.addAll(usedDeck);
+            usedDeck.clear();
+        }
         return mainDeck.remove(0);
     }
 
