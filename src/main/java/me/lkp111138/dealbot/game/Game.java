@@ -597,8 +597,8 @@ public class Game {
                 if (count >= total) {
                     currentState.append("**");
                 }
+                currentState.append("\n");
             }
-            currentState.append("\n");
         }
         return currentState.toString();
     }
