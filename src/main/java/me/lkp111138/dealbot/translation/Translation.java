@@ -174,7 +174,7 @@ public class Translation {
         return "This card can be used to neutralize an action against you, including another Just Say No.";
     }
     public String PASS() {
-        return "Pass";
+        return "End Turn";
     }
     public String MANAGE_CARD_MENU() {
         return "Manage wildcards and buildings";

@@ -428,9 +428,6 @@ public class Game {
             } else {
                 this.execute(new EditMessageText(players.get(currentTurn).id(), currentMsgid, this.translation.GAME_ENDED()));
             }
-            for (int i = 0; i < 4; ++i) {
-                this.execute(new EditMessageReplyMarkup(players.get(i).id(), deckMsgid[i]));
-            }
         }
         cancelFuture();
         // remove this game instance
