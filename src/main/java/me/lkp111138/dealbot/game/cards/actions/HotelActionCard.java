@@ -14,7 +14,7 @@ public class HotelActionCard extends BuildingActionCard {
 
     @Override
     public String getDescription() {
-        return "Builds a hotel on top of your complete set of properties so its rent will be increased by $ 4M";
+        return translation.BUILDING_DESC(getCardFunctionalTitle(), 4);
     }
 
     @Override

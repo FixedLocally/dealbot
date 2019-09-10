@@ -14,11 +14,11 @@ public class HouseActionCard extends BuildingActionCard {
 
     @Override
     public String getDescription() {
-        return "Builds a house on top of your complete set of properties so its rent will be increased by $ 3M";
+        return translation.BUILDING_DESC(getCardFunctionalTitle(), 3);
     }
 
     @Override
     public String getCardFunctionalTitle() {
-        return null;
+        return translation.HOUSE();
     }
 }

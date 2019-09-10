@@ -20,11 +20,11 @@ public class ItsMyBirthdayActionCard extends ActionCard {
     public void use(GamePlayer player, String[] args) {
         player.getGame().collectRentFromAll(2, 10);
         EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
-                "Collecting birthday present from everyone");
+                translation.COLLECTING_BDAY());
         player.getGame().execute(edit);
-        SendMessage send = new SendMessage(player.getTgid(), "You have used " + getCardFunctionalTitle());
+        SendMessage send = new SendMessage(player.getTgid(), translation.YOU_HAVE_USED(getCardFunctionalTitle()));
         player.getGame().execute(send);
-        send = new SendMessage(player.getGame().getGid(), player.getName() + " has used " + getCardFunctionalTitle());
+        send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_HAVE_USED(player.getName(), getCardFunctionalTitle()));
         player.getGame().execute(send);
     }
 
@@ -35,7 +35,7 @@ public class ItsMyBirthdayActionCard extends ActionCard {
 
     @Override
     public String getDescription() {
-        return "It's your birthday! Everyone pays you $ 2M as a gift.";
+        return translation.BDAY_DESC();
     }
 
     @Override

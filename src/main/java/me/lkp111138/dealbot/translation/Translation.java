@@ -269,6 +269,9 @@ public class Translation {
     public String YOU_HAVE_USED_AGAINST(String card, String against) {
         return "You have used " + card + " against " + against;
     }
+    public String YOU_HAVE_USED(String card) {
+        return "You have used " + card;
+    }
     public String SOMEONE_HAVE_USED_AGAINST(String user, String card, String against) {
         return user + " has used " + card + " against " + against;
     }
@@ -310,6 +313,15 @@ public class Translation {
     }
     public String YOU_HAVE_DRAWN() {
         return "You have drawn the following cards from the deck:\n";
+    }
+    public String BUILDING_DESC(String name, int amt) {
+        return String.format("Builds a %s on top of your complete set of properties so its rent will be increased by $ %dM", name, amt);
+    }
+    public String COLLECTING_BDAY() {
+        return "Collecting birthday present from everyone";
+    }
+    public String BDAY_DESC() {
+        return "It's your birthday! Everyone pays you $ 2M as a gift.";
     }
     public String PASS_ANNOUNCEMENT() {
         return "%s ended their turn";

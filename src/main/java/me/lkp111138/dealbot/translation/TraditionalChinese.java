@@ -275,6 +275,9 @@ public class TraditionalChinese extends Translation {
     public String YOU_HAVE_USED_AGAINST(String card, String against) {
         return "你對 " + against + " 使用了 " + card;
     }
+    public String YOU_HAVE_USED(String card) {
+        return "你使用了 " + card;
+    }
     public String SOMEONE_HAVE_USED_AGAINST(String user, String card, String against) {
         return user + " 對 " + against + " 使用了 " + card;
     }
@@ -316,6 +319,15 @@ public class TraditionalChinese extends Translation {
     }
     public String YOU_HAVE_DRAWN() {
         return "你從牌堆抽取以下卡牌:\n";
+    }
+    public String BUILDING_DESC(String name, int amt) {
+        return String.format("在你的一套完整物業上興建 %s 使其租金增加 $ %dM", name, amt);
+    }
+    public String COLLECTING_BDAY() {
+        return "正在對所有人收集生日禮物。";
+    }
+    public String BDAY_DESC() {
+        return "這是你的生日！所有人都將向你繳付 $ 2M 作為生日禮物。";
     }
     @Override
     public String PASS_ANNOUNCEMENT() {
