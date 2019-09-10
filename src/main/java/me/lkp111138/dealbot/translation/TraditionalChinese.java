@@ -390,7 +390,7 @@ public class TraditionalChinese extends Translation {
         return "你將 " + title + " 放置於你的 " + PROPERTY_GROUP(group) + " 物業區。";
     }
     public String SOMEONE_PLACED_PROP_AS(String name, String title, int group) {
-        return name + " 將 " + title + " 放置於你的 " + PROPERTY_GROUP(group) + " 物業區。";
+        return name + " 將 " + title + " 放置於 " + PROPERTY_GROUP(group) + " 物業區。";
     }
     public String WILDCARD_CHOOSE_GROUP() {
         return "將此卡視為哪種顏色的物業？";

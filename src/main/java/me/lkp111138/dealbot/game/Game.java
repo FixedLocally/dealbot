@@ -533,6 +533,7 @@ public class Game {
             player.addHand(mainDeck.remove(0));
             player.addHand(mainDeck.remove(0));
         }
+        cancelFuture();
         player.startTurn();
     }
 

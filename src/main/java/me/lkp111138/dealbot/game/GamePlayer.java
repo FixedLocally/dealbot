@@ -373,6 +373,7 @@ public class GamePlayer {
         // we first check if the player's currency deck can cover the rent
         paymentValue = value;
         paymentSelectedIndices.clear();
+        paymentSelectedPropertyIndices.clear();
         paymentMessage = translation.PAYMENT_COLLECTION_MESSAGE(group, collector.getName(), value, game.getPaymentWait());
         // the currency deck can cover this
         SendMessage send = new SendMessage(tgid, paymentMessage);
