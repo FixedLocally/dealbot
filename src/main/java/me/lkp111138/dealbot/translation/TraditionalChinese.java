@@ -329,6 +329,33 @@ public class TraditionalChinese extends Translation {
     public String BDAY_DESC() {
         return "這是你的生日！所有人都將向你繳付 $ 2M 作為生日禮物。";
     }
+    public String RENT_CARD_DESC(int g1, int g2) {
+        return String.format("向所有玩家收取 %s 或 %s 的租金。", PROPERTY_GROUP(g1), PROPERTY_GROUP(g2));
+    }
+    public String RAINBOW_RENT_CARD_DESC() {
+        return "向一名玩家收取任意一組物業的租金";
+    }
+    public String YOU_HAVE_USED_RENT_FOR(String card, int group) {
+        return String.format("你使用了 %s 收取 %s 的租金。", card, PROPERTY_GROUP(group));
+    }
+    public String SOMEONE_HAVE_USED_RENT_FOR(String name, String card, int group) {
+        return String.format("%s 你使用了 %s 收取 %s 的租金。", name, card, PROPERTY_GROUP(group));
+    }
+    public String YOU_HAVE_USED_RENT_FOR_AGAINST(String card, String victim, int group) {
+        return String.format("你使用了 %1$s 向 %3$s 收取 %2$s 的租金。", card, PROPERTY_GROUP(group), victim);
+    }
+    public String SOMEONE_HAVE_USED_RENT_FOR_AGAINST(String name, String card, String victim, int group) {
+        return String.format("%1$s 使用了 %2$s 向 %4$s 收取 %3$s 的租金。", name, card, PROPERTY_GROUP(group), victim);
+    }
+    public String COLLECTING_RENT(String from, int group) {
+        return String.format("向 %s 收取 %s 的租金。", from == null ? "everybody" : from, PROPERTY_GROUP(group));
+    }
+    public String RENT_CHOOSE_GROUP() {
+        return "選擇一組物業來收取租金：";
+    }
+    public String RENT_CHOOSE_PLAYER() {
+        return "選擇一名玩家來收取租金：";
+    }
     @Override
     public String PASS_ANNOUNCEMENT() {
         return "%s 選擇結束回合";

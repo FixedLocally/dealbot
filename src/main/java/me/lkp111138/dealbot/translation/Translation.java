@@ -323,6 +323,33 @@ public class Translation {
     public String BDAY_DESC() {
         return "It's your birthday! Everyone pays you $ 2M as a gift.";
     }
+    public String RENT_CARD_DESC(int g1, int g2) {
+        return String.format("Collect rent for %s or %s properties from all players", PROPERTY_GROUP(g1), PROPERTY_GROUP(g2));
+    }
+    public String RAINBOW_RENT_CARD_DESC() {
+        return "Collect rent for any set of properties from one player";
+    }
+    public String YOU_HAVE_USED_RENT_FOR(String card, int group) {
+        return String.format("You have used %s for group %s.", card, PROPERTY_GROUP(group));
+    }
+    public String SOMEONE_HAVE_USED_RENT_FOR(String name, String card, int group) {
+        return String.format("%s has used %s for group %s.", name, card, PROPERTY_GROUP(group));
+    }
+    public String YOU_HAVE_USED_RENT_FOR_AGAINST(String card, String victim, int group) {
+        return String.format("You have used %s for group %s against %s.", card, PROPERTY_GROUP(group), victim);
+    }
+    public String SOMEONE_HAVE_USED_RENT_FOR_AGAINST(String name, String card, String victim, int group) {
+        return String.format("%s has used %s for group %s against %s.", name, card, PROPERTY_GROUP(group), victim);
+    }
+    public String COLLECTING_RENT(String from, int group) {
+        return String.format("Collecting rent from %s for %s", from == null ? "everybody" : from, PROPERTY_GROUP(group));
+    }
+    public String RENT_CHOOSE_GROUP() {
+        return "Choose a group to collect rent for:";
+    }
+    public String RENT_CHOOSE_PLAYER() {
+        return "Choose a player to collect this rent:";
+    }
     public String PASS_ANNOUNCEMENT() {
         return "%s ended their turn";
     }
