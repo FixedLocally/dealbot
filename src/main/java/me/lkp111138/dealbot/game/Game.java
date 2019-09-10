@@ -555,7 +555,6 @@ public class Game {
             currentState.append(i + 1).append(". ").append(player.getName()).append("\n");
             currentState.append(translation.CARDS_IN_HAND()).append(player.handCount()).append("\n");
             currentState.append(translation.CARDS_IN_CURRENCY_DECK()).append(player.currencyCount()).append("\n");
-            currentState.append(translation.PROPERTIES()).append(":\n");
             Map<Integer, List<Card>> propertyDecks = player.getPropertyDecks();
             List<Integer> groups = new ArrayList<>(propertyDecks.keySet());
             groups.sort((o1, o2) -> {
@@ -569,6 +568,16 @@ public class Game {
                 double ratio2 = count2 / (double) total2;
                 return Double.compare(ratio2, ratio1);
             });
+            int sets = 0;
+            for (Integer group : groups) {
+                List<Card> props = propertyDecks.get(group);
+                int count = PropertyCard.realCount(props);
+                int total = PropertyCard.propertySetCounts[group];
+                if (count >= total) {
+                    sets++;
+                }
+            }
+            currentState.append(translation.PROPERTIES()).append(translation.NO_OF_FULL_SETS(sets)).append(":\n");
             for (Integer group : groups) {
                 List<Card> props = propertyDecks.get(group);
                 if (props.isEmpty()) {

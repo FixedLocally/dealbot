@@ -94,6 +94,9 @@ public class Translation {
         }
         return "";
     }
+    public String NO_OF_FULL_SETS(int sets) {
+        return String.format(" (%d full sets)", sets);
+    }
     public String WILD_CARD() {
         return "Rainbow Wild Card";
     }

@@ -35,7 +35,8 @@ public class TraditionalChinese extends Translation {
     @Override
     public String EXTENDED_ANNOUNCEMENT() {
         return "加入時間已延長30秒，尚餘 %d 秒。 /join";
-    }public String GAME_STARTING_ANNOUNCEMENT() {
+    }
+    public String GAME_STARTING_ANNOUNCEMENT() {
         return "The game is starting, please wait...";
     }
     public String PROPERTY_NAME(int index) {
@@ -98,6 +99,9 @@ public class TraditionalChinese extends Translation {
                 return "水務處";
         }
         return "";
+    }
+    public String NO_OF_FULL_SETS(int sets) {
+        return String.format("（%d 套完整物業）", sets);
     }
     public String WILD_CARD() {
         return "多功能物業牌";
