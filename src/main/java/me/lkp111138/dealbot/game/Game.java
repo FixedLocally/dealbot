@@ -607,6 +607,14 @@ public class Game {
         return turnWait;
     }
 
+    public int getPaymentWait() {
+        return groupInfo.payTime;
+    }
+
+    public int getObjectionWait() {
+        return groupInfo.sayNoTime;
+    }
+
     public void log(Object o) {
         String date = sdf.format(new Date());
         System.out.printf("[%s][Game %d] %s\n", date, id, o);

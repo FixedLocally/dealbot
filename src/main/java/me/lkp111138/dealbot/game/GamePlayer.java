@@ -310,7 +310,19 @@ public class GamePlayer {
         send.replyMarkup(new InlineKeyboardMarkup(buttons));
         savedActionIfNotObjected = actionIfApproved;
         savedActionIfObjected = actionIfObjected;
-        game.execute(send);
+        game.execute(send, new Callback<SendMessage, SendResponse>() {
+            @Override
+            public void onResponse(SendMessage request, SendResponse response) {
+                future = executor.schedule(() -> {
+                    sayNoCallback(new String[]{"say_no", "n"}, "", response.message().messageId());
+                }, game.getObjectionWait(), TimeUnit.SECONDS);
+            }
+
+            @Override
+            public void onFailure(SendMessage request, IOException e) {
+
+            }
+        });
     }
 
     public void sendGlobalState(String s) {
@@ -362,7 +374,7 @@ public class GamePlayer {
         // we first check if the player's currency deck can cover the rent
         paymentValue = value;
         paymentSelectedIndices.clear();
-        paymentMessage = translation.PAYMENT_COLLECTION_MESSAGE(group, collector.getName(), value, game.getTurnWait());
+        paymentMessage = translation.PAYMENT_COLLECTION_MESSAGE(group, collector.getName(), value, game.getPaymentWait());
         // the currency deck can cover this
         SendMessage send = new SendMessage(tgid, paymentMessage);
         List<InlineKeyboardButton[]> buttons = generatePaymentButtons();
@@ -409,7 +421,7 @@ public class GamePlayer {
             if (game.confirmPayment(getPaymentCurrencyCards(), tgid)) {
                 confirmPayment();
             }
-        }, game.getTurnWait(), TimeUnit.SECONDS);
+        }, game.getPaymentWait(), TimeUnit.SECONDS);
     }
 
     private List<InlineKeyboardButton[]> generatePaymentButtons() {
@@ -668,6 +680,7 @@ public class GamePlayer {
         } else {
             if (disposeMessageId > 0) {
                 game.execute(new DeleteMessage(tgid, disposeMessageId));
+                disposeMessageId = 0;
             }
             game.nextTurn();
         }
