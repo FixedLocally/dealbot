@@ -345,7 +345,7 @@ public class Game {
             mainDeck.add(new HotelActionCard());
         }
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new BlankActionCard());
+            mainDeck.add(new ForcedDealActionCard());
         }
 
         // rent mainDeck
@@ -392,7 +392,7 @@ public class Game {
             mainDeck.add(new PropertyCard(1, "Peng Chau", 1));
         }
         for (int i = 0; i < 35; i++) {
-            mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+            mainDeck.add(new ForcedDealActionCard());
         }
         for (int i = 0; i < 36; i++) {
             mainDeck.add(new JustSayNoCard());
