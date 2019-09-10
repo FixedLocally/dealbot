@@ -157,7 +157,9 @@ public class GamePlayer {
     public void startTurn() {
         game.schedule(this::endTurn, 1000 * game.getTurnWait());
         game.execute(new DeleteMessage(tgid, stateMessageId));
+        game.execute(new DeleteMessage(tgid, globalStateMessageId));
         stateMessageId = 0; // make it resend the self state message every turn
+        globalStateMessageId = 0; // make it resend the self state message every turn
         actionCount = 0;
         setDoubleRentBuff(false);
         // tell the player that its their turn now
