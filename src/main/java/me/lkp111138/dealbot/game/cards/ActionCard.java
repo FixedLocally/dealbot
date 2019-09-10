@@ -43,12 +43,12 @@ public abstract class ActionCard implements Card {
     @Override
     public final void execute(GamePlayer player, String[] args) {
         // use as $ or action card?
-        EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), String.format("Use as %s currency or an action?\nCard description: %s", this.getCardTitle(), this.getDescription()));
+        EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.ACTION_CARD_DESC(this.getCardTitle(), this.getDescription()));
         InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][1];
         int nonce = player.getGame().nextNonce();
-        buttons[0][0] = new InlineKeyboardButton("As currency").callbackData(nonce + ":use_as:money");
-        buttons[1][0] = new InlineKeyboardButton("As action").callbackData(nonce + ":use_as:action");
-        buttons[2][0] = new InlineKeyboardButton("Cancel").callbackData(nonce + ":use_cancel");
+        buttons[0][0] = new InlineKeyboardButton(translation.AS_CURRENCY()).callbackData(nonce + ":use_as:money");
+        buttons[1][0] = new InlineKeyboardButton(translation.AS_ACTION()).callbackData(nonce + ":use_as:action");
+        buttons[2][0] = new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel");
         edit.replyMarkup(new InlineKeyboardMarkup(buttons));
         player.getGame().execute(edit);
     }

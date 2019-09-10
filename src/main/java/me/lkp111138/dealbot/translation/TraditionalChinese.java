@@ -356,6 +356,45 @@ public class TraditionalChinese extends Translation {
     public String RENT_CHOOSE_PLAYER() {
         return "選擇一名玩家來收取租金：";
     }
+    public String SLY_DEAL_DESC() {
+        return "盜取一名玩家的一項物業。不得為完整物業之一。";
+    }
+    public String SLY_DEAL_CHOOSE_PLAYER() {
+        return "你要盜取誰的物業？";
+    }
+    public String SLY_DEAL_SAY_NO_PROMPT(String name, int group, String target) {
+        return String.format("%s 對你使用盜取，想要你 %s 物業中的 %s. 你要作出反對嗎？", name, PROPERTY_GROUP(group), target);
+    }
+    public String ACTION_CARD_DESC(String title, String desc) {
+        return String.format("將 %s 存入銀行還是作為行動？\n卡牌描述：%s", title, desc);
+    }
+    public String AS_CURRENCY() {
+        return "存入銀行";
+    }
+    public String AS_ACTION() {
+        return "作為行動";
+    }
+    public String YOU_DEPOSITED(String title) {
+        return "你將 " + title + " 存入銀行。";
+    }
+    public String SOMEONE_DEPOSITED(String name, String title) {
+        return name + " 將 " + title + " 存入銀行。";
+    }
+    public String YOU_PLACED_PROP(String title) {
+        return "你將 " + title + " 放置於你的物業區。";
+    }
+    public String SOMEONE_PLACED_PROP(String name, String title) {
+        return name + " 將 " + title + " 放置於物業區。";
+    }
+    public String YOU_PLACED_PROP_AS(String title, int group) {
+        return "你將 " + title + " 放置於你的 " + PROPERTY_GROUP(group) + " 物業區。";
+    }
+    public String SOMEONE_PLACED_PROP_AS(String name, String title, int group) {
+        return name + " 將 " + title + " 放置於你的 " + PROPERTY_GROUP(group) + " 物業區。";
+    }
+    public String WILDCARD_CHOOSE_GROUP() {
+        return "將此卡視為哪種顏色的物業？";
+    }
     @Override
     public String PASS_ANNOUNCEMENT() {
         return "%s 選擇結束回合";

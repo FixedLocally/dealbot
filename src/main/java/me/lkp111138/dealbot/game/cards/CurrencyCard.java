@@ -2,14 +2,17 @@ package me.lkp111138.dealbot.game.cards;
 
 import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
+import me.lkp111138.dealbot.translation.Translation;
 
 public class CurrencyCard implements Card {
     private final int currencyValue;
     private final String title;
+    private final Translation translation;
 
-    public CurrencyCard(int currencyValue, String title) {
+    public CurrencyCard(int currencyValue, String title, Translation translation) {
         this.currencyValue = currencyValue;
         this.title = title;
+        this.translation = translation;
     }
 
     @Override
@@ -46,11 +49,9 @@ public class CurrencyCard implements Card {
     public void execute(GamePlayer player, String[] args) {
         player.addCurrency(this);
         player.promptForCard();
-        SendMessage send = new SendMessage(player.getTgid(), "You have deposited " +
-                getCardTitle() + " into your bank.");
+        SendMessage send = new SendMessage(player.getTgid(), translation.YOU_DEPOSITED(getCardTitle()));
         player.getGame().execute(send);
-        send = new SendMessage(player.getGame().getGid(), player.getName() + " have deposited " +
-                getCardTitle() + " into their bank.");
+        send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_DEPOSITED(player.getName(), getCardTitle()));
         player.getGame().execute(send);
     }
 

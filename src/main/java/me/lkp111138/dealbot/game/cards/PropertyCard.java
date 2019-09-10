@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.actions.HotelActionCard;
 import me.lkp111138.dealbot.game.cards.actions.HouseActionCard;
+import me.lkp111138.dealbot.translation.Translation;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class PropertyCard implements Card {
     protected final int currencyValue;
     protected final String title;
     protected int group;
+    protected final Translation translation;
 
     // there are currently 10 groups of properties
     public static final int[] propertySetCounts = {2, 3, 3, 3, 3, 3, 3, 2, 4, 2};
@@ -59,10 +61,11 @@ public class PropertyCard implements Card {
         return propertyRents[group][count - 1];
     }
 
-    public PropertyCard(int currencyValue, String title, int group) {
+    public PropertyCard(int currencyValue, String title, int group, Translation translation) {
         this.currencyValue = currencyValue;
         this.title = title;
         this.group = group;
+        this.translation = translation;
     }
 
     @Override
@@ -104,17 +107,15 @@ public class PropertyCard implements Card {
     public void execute(GamePlayer player, String[] args) {
         if (player.addProperty(this, group)) {
             player.promptForCard();
-            SendMessage send = new SendMessage(player.getTgid(), "You have placed " +
-                    getCardTitle() + " in your properties.");
+            SendMessage send = new SendMessage(player.getTgid(), translation.YOU_PLACED_PROP(getCardTitle()));
             player.getGame().execute(send);
-            send = new SendMessage(player.getGame().getGid(), player.getName() + " have placed " +
-                    getCardTitle() + " in their properties.");
+            send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_PLACED_PROP(player.getName(), getCardTitle()));
             player.getGame().execute(send);
         } else {
             // deck full
             player.addHand(this);
             player.addMove();
-            SendMessage send = new SendMessage(player.getTgid(), "This group is full!");
+            SendMessage send = new SendMessage(player.getTgid(), translation.GROUP_FULL());
             player.getGame().execute(send);
         }
     }

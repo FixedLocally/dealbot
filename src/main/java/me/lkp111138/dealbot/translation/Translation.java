@@ -350,6 +350,45 @@ public class Translation {
     public String RENT_CHOOSE_PLAYER() {
         return "Choose a player to collect this rent:";
     }
+    public String SLY_DEAL_DESC() {
+        return "Takes a property from a player that is not a part of a full set.";
+    }
+    public String SLY_DEAL_CHOOSE_PLAYER() {
+        return "Who's going to participate in this Sly Deal?";
+    }
+    public String SLY_DEAL_SAY_NO_PROMPT(String name, int group, String target) {
+        return String.format("%s has used Sly Deal against your %s in group %s. Would you like to say no?", name, target, PROPERTY_GROUP(group));
+    }
+    public String ACTION_CARD_DESC(String title, String desc) {
+        return String.format("Use as %s currency or an action?\nCard description: %s", title, desc);
+    }
+    public String AS_CURRENCY() {
+        return "As currency";
+    }
+    public String AS_ACTION() {
+        return "As action";
+    }
+    public String YOU_DEPOSITED(String title) {
+        return "You have deposited " + title + " into your bank.";
+    }
+    public String SOMEONE_DEPOSITED(String name, String title) {
+        return name + " have deposited " + title + " into their bank.";
+    }
+    public String YOU_PLACED_PROP(String title) {
+        return "You have placed " + title + " in your properties.";
+    }
+    public String SOMEONE_PLACED_PROP(String name, String title) {
+        return name + " have placed " + title + " in their properties.";
+    }
+    public String YOU_PLACED_PROP_AS(String title, int group) {
+        return "You have placed " + title + " in your properties as group " + PROPERTY_GROUP(group);
+    }
+    public String SOMEONE_PLACED_PROP_AS(String name, String title, int group) {
+        return name + " have placed " + title + " in their properties as " + PROPERTY_GROUP(group);
+    }
+    public String WILDCARD_CHOOSE_GROUP() {
+        return "Use this card on which group?";
+    }
     public String PASS_ANNOUNCEMENT() {
         return "%s ended their turn";
     }
