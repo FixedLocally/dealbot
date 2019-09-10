@@ -8,6 +8,7 @@ import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.game.cards.Card;
 import me.lkp111138.dealbot.game.cards.PropertyCard;
+import me.lkp111138.dealbot.translation.Translation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,19 +17,23 @@ import java.util.List;
  * The 'Deal Breaker' card. Takes one complete set of property from an opponent.
  */
 public class DealBreakerActionCard extends ActionCard {
+    protected DealBreakerActionCard(Translation translation) {
+        super(translation);
+    }
+
     @Override
     public int currencyValue() {
         return 5;
     }
 
     @Override
-    public String getCardFunctionalTitle() {
-        return "Deal Breaker";
+    public String getDescription() {
+        return "Takes a complete set of property from a player, including any buildings.";
     }
 
     @Override
-    public String getDescription() {
-        return "Takes a complete set of property from a player, including any buildings.";
+    public String getCardFunctionalTitle() {
+        return translation.DEAL_BREAKER();
     }
 
     @Override

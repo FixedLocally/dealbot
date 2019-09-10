@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Translation {
     public String BOT_NAME() {
-        return "jokebig2bot";
+        return "jokedealbot";
     }
     public String ERROR() {
         return "An error occurred: ";
@@ -27,38 +27,166 @@ public class Translation {
     public String EXTENDED_ANNOUNCEMENT() {
         return "Extended for 30 seconds. %d seconds left to /join";
     }
+    public String GAME_STARTING_ANNOUNCEMENT() {
+        return "The game is starting, please wait...";
+    }
+    public String PROPERTY_NAME(int index) {
+        switch (index) {
+            case 0:
+                return "Chek Lap Kok";
+            case 1:
+                return "Mui Wo";
+            case 2:
+                return "Peng Chau";
+            case 3:
+                return "Cheung Chau";
+            case 4:
+                return "Lamma Island";
+            case 5:
+                return "Lo Wu";
+            case 6:
+                return "Yuen Long";
+            case 7:
+                return "Sham Cheng";
+            case 8:
+                return "Kwai Chung";
+            case 9:
+                return "Sha Tin";
+            case 10:
+                return "Sai Kung";
+            case 11:
+                return "Lei Yue Mun";
+            case 12:
+                return "Wong Tai Sin";
+            case 13:
+                return "Kowloon Tong";
+            case 14:
+                return "Sham Shui Po";
+            case 15:
+                return "Mong Kok";
+            case 16:
+                return "Tsim Sha Tsui";
+            case 17:
+                return "Causeway Bay";
+            case 18:
+                return "Happy Valley";
+            case 19:
+                return "Central";
+            case 20:
+                return "Repulse Bay";
+            case 21:
+                return "Victoria Peak";
+            case 22:
+                return "Airport Station";
+            case 23:
+                return "Tsing Yi Station";
+            case 24:
+                return "Kowloon Station";
+            case 25:
+                return "Hong Kong Station";
+            case 26:
+                return "Hong Kong Electric";
+            case 27:
+                return "Water Works";
+        }
+        return "";
+    }
+    public String WILD_CARD() {
+        return "Rainbow Wild Card";
+    }
+    public String WILD_CARD(int g1, int g2) {
+        return "Wild Card [" + g1 + " / " + g2 + "]";
+    }
+    public String ITS_MY_BDAY() {
+        return "It's my Birthday!";
+    }
+    public String DEBT_COLLECTOR() {
+        return "Debt Collector";
+    }
+    public String GO_PASS() {
+        return "GO Pass";
+    }
+    public String DBL_RENT() {
+        return "Double Rent";
+    }
+    public String JUST_SAY_NO() {
+        return "Just Say No!";
+    }
+    public String DEAL_BREAKER() {
+        return "Deal Breaker";
+    }
+    public String SLY_DEAL() {
+        return "Sly Deal";
+    }
+    public String HOUSE() {
+        return "House";
+    }
+    public String HOTEL() {
+        return "Hotel";
+    }
+    public String FORCED_DEAL() {
+        return "Forced Deal";
+    }
+    public String WILDCARD_RENT(int g1, int g2) {
+        return String.format("Rent [%d / %d]", g1, g2);
+    }
+    public String RAINBOW_RENT() {
+        return "Wildcard Rent";
+    }
+    public String CURRENT_STATE() {
+        return "Current State:";
+    }
+    public String CARDS_IN_HAND() {
+        return "Cards in hand: ";
+    }
+    public String CARDS_IN_CURRENCY_DECK() {
+        return "Cards in currency deck: ";
+    }
+    public String PROPERTIES() {
+        return "Properties";
+    }
+    public String PROPERTY_GROUP(int group) {
+        switch (group) {
+            case 0:
+                return "Brown";
+            case 1:
+                return "Light Blue";
+            case 2:
+                return "Pink";
+            case 3:
+                return "Orange";
+            case 4:
+                return "Red";
+            case 5:
+                return "Yellow";
+            case 6:
+                return "Green";
+            case 7:
+                return "Blue";
+            case 8:
+                return "Railway Works";
+            case 9:
+                return "Public Utilities";
+        }
+        return "";
+    }
+    public String JUST_SAY_NO_DESC() {
+        return "This card can be used to neutralize an action against you, including another Just Say No.";
+    }
     public String PASS() {
         return "Pass";
     }
-    public String PASS_ON_EMPTY() {
-        return "The desk is empty, you are free to play any valid combination";
-    }
-    public String PASS_ON_FIRST() {
-        return "It's the first turn, your hand must include \u2666\ufe0f 3";
-    }
-    public String NO_D3_ON_FIRST() {
-        return "You must play \u2666\ufe0f 3 in the first turn";
-    }
-    public String PLAYED_ANNOUNCEMENT_LINK() {
-        return "<a href=\"https://t.me/%s\">%s</a> played ";
-    }
-    public String PLAYED_ANNOUNCEMENT() {
-        return "%s played ";
+    public String PLAYED_ANNOUNCEMENT(String card) {
+        return "%s played " + card;
     }
     public String PASS_ANNOUNCEMENT() {
-        return "%s passed";
-    }
-    public String PASS_ANNOUNCEMENT_LINK() {
-        return "<a href=\"https://t.me/%s\">%s</a> passed";
+        return "%s ended their turn";
     }
     public String INVALID_HAND() {
         return "Invalid combination, please try again";
     }
-    public String SMALL_HAND() {
-        return "Hand too small, please try again";
-    }
-    public String WON_ANNOUNCEMENT() {
-        return "<a href=\"tg://user?id=%d\">%s</a> Won!\n\n";
+    public String WON_ANNOUNCEMENT(int tgid, String name) {
+        return String.format("<a href=\"tg://user?id=%1$s\">%2$s</a> has successfully gathered 3 full sets of properties and won!", tgid, name);
     }
     public String NEW_GAME_PROMPT() {
         return "\nType /play to start a new game";
@@ -69,38 +197,14 @@ public class Translation {
     public String GAME_ENDED_ANNOUNCEMENT() {
         return "Game ended. /play to start a new one";
     }
-    public String YOUR_DECK() {
-        return "Your deck:\n";
-    }
-    public String STARTING_DECK() {
-        return "Starting deck:\n";
-    }
-    public String YOUR_TURN_PROMPT() {
-        return "It's your turn!\nOn the desk";
-    }
-    public String THERE_IS_NOTHING() {
-        return " there is nothing";
-    }
-    public String TIMES_UP() {
-        return "Time's up!";
-    }
     public String AFK_KILL() {
         return "Looks like everybody is away, stopping game!";
-    }
-    public String ON_DESK_LINK() {
-        return "\nOn the desk: %s by <a href=\"https://t.me/%s\">%s</a>\n";
-    }
-    public String ON_DESK() {
-        return "\nOn the desk: %s by %s\n";
     }
     public String YOUR_TURN_ANNOUNCEMENT() {
         return "It's your turn, <a href=\"tg://user?id=%d\">%s</a>, you have %d seconds to play your cards!";
     }
     public String PICK_CARDS() {
         return "Pick your cards";
-    }
-    public String CHOOSE_SOME_CARDS() {
-        return "\u23eb Choose some cards \u23eb";
     }
     public String JOIN_PROMPT() {
         return "You have %d seconds left to /join";

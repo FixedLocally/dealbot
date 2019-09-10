@@ -6,11 +6,13 @@ import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
+import me.lkp111138.dealbot.translation.Translation;
 
 import java.util.List;
 
 public class DebtCollectorCard extends ActionCard {
-    public DebtCollectorCard() {
+    protected DebtCollectorCard(Translation translation) {
+        super(translation);
     }
 
     @Override
@@ -19,13 +21,13 @@ public class DebtCollectorCard extends ActionCard {
     }
 
     @Override
-    public String getCardFunctionalTitle() {
-        return "Debt Collector";
+    public String getDescription() {
+        return "Collect $ 5M from one player.";
     }
 
     @Override
-    public String getDescription() {
-        return "Collect $ 5M from one player.";
+    public String getCardFunctionalTitle() {
+        return translation.DEBT_COLLECTOR();
     }
 
     @Override

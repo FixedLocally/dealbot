@@ -259,108 +259,108 @@ public class Game {
      */
     private void start() {
         // tell them the game is starting
-        SendMessage send = new SendMessage(gid, "The game is starting, please wait...");
+        SendMessage send = new SendMessage(gid, translation.GAME_STARTING_ANNOUNCEMENT());
         started = true;
         this.execute(send);
         //*
         // construct mainDeck
         // properties
-        mainDeck.add(new PropertyCard(1, "Chek Lap Kok", 0));
-        mainDeck.add(new PropertyCard(1, "Mui Wo", 0));
+        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(0), 0));
+        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(1), 0));
 
-        mainDeck.add(new PropertyCard(1, "Peng Chau", 1));
-        mainDeck.add(new PropertyCard(1, "Cheung Chau", 1));
-        mainDeck.add(new PropertyCard(1, "Lamma Island", 1));
+        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(2), 1));
+        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(3), 1));
+        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(4), 1));
 
-        mainDeck.add(new PropertyCard(2, "Lo Wu", 2));
-        mainDeck.add(new PropertyCard(2, "Yuen Long", 2));
-        mainDeck.add(new PropertyCard(2, "Sham Cheng", 2));
+        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(5), 2));
+        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(6), 2));
+        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(7), 2));
 
-        mainDeck.add(new PropertyCard(2, "Kwai Chung", 3));
-        mainDeck.add(new PropertyCard(2, "Sha Tin", 3));
-        mainDeck.add(new PropertyCard(2, "Sai Kung", 3));
+        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(8), 3));
+        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(9), 3));
+        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(10), 3));
 
-        mainDeck.add(new PropertyCard(3, "Lei Yue Mun", 4));
-        mainDeck.add(new PropertyCard(3, "Wong Tai Sin", 4));
-        mainDeck.add(new PropertyCard(3, "Kowloon Tong", 4));
+        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(11), 4));
+        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(12), 4));
+        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(13), 4));
 
-        mainDeck.add(new PropertyCard(3, "Sham Shui Po", 5));
-        mainDeck.add(new PropertyCard(3, "Mong Kok", 5));
-        mainDeck.add(new PropertyCard(3, "Tsim Sha Tsui", 5));
+        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(14), 5));
+        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(15), 5));
+        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(16), 5));
 
-        mainDeck.add(new PropertyCard(4, "Causeway Bay", 6));
-        mainDeck.add(new PropertyCard(4, "Happy Valley", 6));
-        mainDeck.add(new PropertyCard(4, "Central", 6));
+        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(17), 6));
+        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(18), 6));
+        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(19), 6));
 
-        mainDeck.add(new PropertyCard(4, "Repulse Bay", 7));
-        mainDeck.add(new PropertyCard(4, "Victoria Peak", 7));
+        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(20), 7));
+        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(21), 7));
 
-        mainDeck.add(new PropertyCard(2, "Airport Station", 8));
-        mainDeck.add(new PropertyCard(2, "Tsing Yi Station", 8));
-        mainDeck.add(new PropertyCard(2, "Kowloon Station", 8));
-        mainDeck.add(new PropertyCard(2, "Hong Kong Station", 8));
+        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(22), 8));
+        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(23), 8));
+        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(24), 8));
+        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(25), 8));
 
-        mainDeck.add(new PropertyCard(2, "Hong Kong Electric", 9));
-        mainDeck.add(new PropertyCard(2, "Water Works", 9));
+        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(26), 9));
+        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(27), 9));
 
         // wildcard properties
-        mainDeck.add(new WildcardPropertyCard(3, "Wild Card", new int[]{4, 5}));
-        mainDeck.add(new WildcardPropertyCard(3, "Wild Card", new int[]{4, 5}));
-        mainDeck.add(new WildcardPropertyCard(4, "Wild Card", new int[]{6, 7}));
-        mainDeck.add(new WildcardPropertyCard(1, "Wild Card", new int[]{0, 1}));
-        mainDeck.add(new WildcardPropertyCard(2, "Wild Card", new int[]{2, 3}));
-        mainDeck.add(new WildcardPropertyCard(2, "Wild Card", new int[]{2, 3}));
-        mainDeck.add(new WildcardPropertyCard(4, "Wild Card", new int[]{6, 8}));
-        mainDeck.add(new WildcardPropertyCard(4, "Wild Card", new int[]{1, 8}));
-        mainDeck.add(new WildcardPropertyCard(2, "Wild Card", new int[]{8, 9}));
-        mainDeck.add(new WildcardPropertyCard(0, "Wild Card", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
-        mainDeck.add(new WildcardPropertyCard(0, "Wild Card", new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+        mainDeck.add(new WildcardPropertyCard(3, translation.WILD_CARD(4, 5), new int[]{4, 5}));
+        mainDeck.add(new WildcardPropertyCard(3, translation.WILD_CARD(4, 5), new int[]{4, 5}));
+        mainDeck.add(new WildcardPropertyCard(4, translation.WILD_CARD(6, 7), new int[]{6, 7}));
+        mainDeck.add(new WildcardPropertyCard(1, translation.WILD_CARD(0, 1), new int[]{0, 1}));
+        mainDeck.add(new WildcardPropertyCard(2, translation.WILD_CARD(2, 3), new int[]{2, 3}));
+        mainDeck.add(new WildcardPropertyCard(2, translation.WILD_CARD(2, 3), new int[]{2, 3}));
+        mainDeck.add(new WildcardPropertyCard(4, translation.WILD_CARD(6, 8), new int[]{6, 8}));
+        mainDeck.add(new WildcardPropertyCard(4, translation.WILD_CARD(1, 8), new int[]{1, 8}));
+        mainDeck.add(new WildcardPropertyCard(2, translation.WILD_CARD(8, 9), new int[]{8, 9}));
+        mainDeck.add(new WildcardPropertyCard(0, translation.WILD_CARD(), new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+        mainDeck.add(new WildcardPropertyCard(0, translation.WILD_CARD(), new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
 
         // action mainDeck
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new ItsMyBirthdayActionCard());
+            mainDeck.add(new ItsMyBirthdayActionCard(translation.ITS_MY_BDAY()));
         }
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new DebtCollectorCard());
+            mainDeck.add(new DebtCollectorCard(translation.DEBT_COLLECTOR()));
         }
         for (int i = 0; i < 10; i++) {
-            mainDeck.add(new GoPassActionCard());
+            mainDeck.add(new GoPassActionCard(translation.GO_PASS()));
         }
         for (int i = 0; i < 2; i++) {
-            mainDeck.add(new DoubleRentActionCard());
+            mainDeck.add(new DoubleRentActionCard(translation.DBL_RENT()));
         }
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new JustSayNoCard());
+            mainDeck.add(new JustSayNoCard(translation.JUST_SAY_NO()));
         }
         for (int i = 0; i < 2; i++) {
-            mainDeck.add(new DealBreakerActionCard());
+            mainDeck.add(new DealBreakerActionCard(translation.DEAL_BREAKER()));
         }
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new SlyDealActionCard());
+            mainDeck.add(new SlyDealActionCard(translation.SLY_DEAL()));
         }
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new HouseActionCard());
+            mainDeck.add(new HouseActionCard(translation.HOUSE()));
         }
         for (int i = 0; i < 2; i++) {
-            mainDeck.add(new HotelActionCard());
+            mainDeck.add(new HotelActionCard(translation.HOTEL()));
         }
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new ForcedDealActionCard());
+            mainDeck.add(new ForcedDealActionCard(translation.FORCED_DEAL()));
         }
 
         // rent mainDeck
-        mainDeck.add(new RentActionCard(new int[]{0, 1}));
-        mainDeck.add(new RentActionCard(new int[]{0, 1}));
-        mainDeck.add(new RentActionCard(new int[]{2, 3}));
-        mainDeck.add(new RentActionCard(new int[]{2, 3}));
-        mainDeck.add(new RentActionCard(new int[]{4, 5}));
-        mainDeck.add(new RentActionCard(new int[]{4, 5}));
-        mainDeck.add(new RentActionCard(new int[]{6, 7}));
-        mainDeck.add(new RentActionCard(new int[]{6, 7}));
-        mainDeck.add(new RentActionCard(new int[]{8, 9}));
-        mainDeck.add(new RentActionCard(new int[]{8, 9}));
+        mainDeck.add(new RentActionCard(new int[]{0, 1}, translation.WILDCARD_RENT(0, 1)));
+        mainDeck.add(new RentActionCard(new int[]{0, 1}, translation.WILDCARD_RENT(0, 1)));
+        mainDeck.add(new RentActionCard(new int[]{2, 3}, translation.WILDCARD_RENT(2, 3)));
+        mainDeck.add(new RentActionCard(new int[]{2, 3}, translation.WILDCARD_RENT(2, 3)));
+        mainDeck.add(new RentActionCard(new int[]{4, 5}, translation.WILDCARD_RENT(4, 5)));
+        mainDeck.add(new RentActionCard(new int[]{4, 5}, translation.WILDCARD_RENT(4, 5)));
+        mainDeck.add(new RentActionCard(new int[]{6, 7}, translation.WILDCARD_RENT(6, 7)));
+        mainDeck.add(new RentActionCard(new int[]{6, 7}, translation.WILDCARD_RENT(6, 7)));
+        mainDeck.add(new RentActionCard(new int[]{8, 9}, translation.WILDCARD_RENT(8, 9)));
+        mainDeck.add(new RentActionCard(new int[]{8, 9}, translation.WILDCARD_RENT(8, 9)));
         for (int i = 0; i < 3; i++) {
-            mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+            mainDeck.add(new RentActionCard(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, translation.RAINBOW_RENT()));
         }
 
         // currency mainDeck
@@ -540,21 +540,21 @@ public class Game {
     }
 
     private String getGlobalState() {
-        StringBuilder currentState = new StringBuilder("Current State:\n");
+        StringBuilder currentState = new StringBuilder(translation.CURRENT_STATE()).append("\n");
         for (int i = 0; i < gamePlayers.size(); i++) {
             int index = (i + currentTurn) % gamePlayers.size();
             GamePlayer player = gamePlayers.get(index);
             currentState.append(i + 1).append(". ").append(player.getName()).append("\n");
-            currentState.append("Cards in hand: ").append(player.handCount()).append("\n");
-            currentState.append("Cards in currency deck: ").append(player.currencyCount()).append("\n");
-            currentState.append("Properties:\n");
+            currentState.append(translation.CARDS_IN_HAND()).append(player.handCount()).append("\n");
+            currentState.append(translation.CARDS_IN_CURRENCY_DECK()).append(player.currencyCount()).append("\n");
+            currentState.append(translation.PROPERTIES()).append(":\n");
             Map<Integer, List<Card>> propertyDecks = player.getPropertyDecks();
             for (Integer group : propertyDecks.keySet()) {
                 List<Card> props = propertyDecks.get(group);
                 if (props.isEmpty()) {
                     continue;
                 }
-                currentState.append("Group ").append(group).append(": ").append(props.size()).append("/")
+                currentState.append(translation.PROPERTY_GROUP(group)).append(": ").append(props.size()).append("/")
                         .append(PropertyCard.propertySetCounts[group]).append("\n");
                 for (Card prop : props) {
                     currentState.append("- ").append(prop.getCardTitle()).append("\n");
@@ -570,7 +570,7 @@ public class Game {
         GamePlayer player = gamePlayers.get(currentTurn);
         if (player.checkWinCondition()) {
             // won
-            String msg = String.format("<a href=\"tg://user?id=%1$s\">%2$s</a> has successfully gathered 3 full sets of properties and won!", player.getTgid(), player.getName());
+            String msg = translation.WON_ANNOUNCEMENT(player.getTgid(), player.getName());
             execute(new SendMessage(gid, getGlobalState()));
             this.execute(new SendMessage(gid, msg).parseMode(ParseMode.HTML));
             this.kill(false);

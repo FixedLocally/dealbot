@@ -6,11 +6,16 @@ import com.pengrad.telegrambot.request.EditMessageText;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.game.cards.PropertyCard;
+import me.lkp111138.dealbot.translation.Translation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BuildingActionCard extends ActionCard {
+    protected BuildingActionCard(Translation translation) {
+        super(translation);
+    }
+
     @Override
     public final void use(GamePlayer player, String[] args) {
         if (args.length == 0) {

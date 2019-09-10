@@ -9,6 +9,7 @@ import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.game.cards.Card;
 import me.lkp111138.dealbot.game.cards.PropertyCard;
 import me.lkp111138.dealbot.game.cards.WildcardPropertyCard;
+import me.lkp111138.dealbot.translation.Translation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +18,22 @@ import java.util.List;
  * The 'Deal Breaker' card. Takes one complete set of property from an opponent.
  */
 public class ForcedDealActionCard extends ActionCard {
-    @Override
+    protected ForcedDealActionCard(Translation translation) {
+        super(translation);
+    }
+
     public int currencyValue() {
         return 3;
     }
 
     @Override
-    public String getCardFunctionalTitle() {
-        return "Forced Deal";
+    public String getDescription() {
+        return "Takes a property from a player that is not a part of a full set, in exchange of one of your own.";
     }
 
     @Override
-    public String getDescription() {
-        return "Takes a property from a player that is not a part of a full set, in exchange of one of your own.";
+    public String getCardFunctionalTitle() {
+        return translation.FORCED_DEAL();
     }
 
     @Override

@@ -4,8 +4,15 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
 import me.lkp111138.dealbot.game.GamePlayer;
+import me.lkp111138.dealbot.translation.Translation;
 
 public abstract class ActionCard implements Card {
+    protected final Translation translation;
+
+    protected ActionCard(Translation translation) {
+        this.translation = translation;
+    }
+
     @Override
     public final boolean isObjectable() {
         return true;

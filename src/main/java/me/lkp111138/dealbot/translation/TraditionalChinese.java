@@ -3,7 +3,7 @@ package me.lkp111138.dealbot.translation;
 public class TraditionalChinese extends Translation {
     @Override
     public String BOT_NAME() {
-        return "j0kebig2bot";
+        return "jokedealbot";
     }
     @Override
     public String ERROR() {
@@ -32,50 +32,163 @@ public class TraditionalChinese extends Translation {
     @Override
     public String EXTENDED_ANNOUNCEMENT() {
         return "加入時間已延長30秒，尚餘 %d 秒。 /join";
+    }public String GAME_STARTING_ANNOUNCEMENT() {
+        return "The game is starting, please wait...";
+    }
+    public String PROPERTY_NAME(int index) {
+        switch (index) {
+            case 0:
+                return "赤臘角";
+            case 1:
+                return "梅窩";
+            case 2:
+                return "坪洲";
+            case 3:
+                return "長洲";
+            case 4:
+                return "南丫島";
+            case 5:
+                return "羅湖";
+            case 6:
+                return "元朗";
+            case 7:
+                return "深井";
+            case 8:
+                return "葵涌";
+            case 9:
+                return "沙田";
+            case 10:
+                return "西貢";
+            case 11:
+                return "鯉魚門";
+            case 12:
+                return "黃大仙";
+            case 13:
+                return "九龍塘";
+            case 14:
+                return "深水埗";
+            case 15:
+                return "旺角";
+            case 16:
+                return "尖沙嘴";
+            case 17:
+                return "銅鑼灣";
+            case 18:
+                return "跑馬地";
+            case 19:
+                return "中環";
+            case 20:
+                return "淺水灣";
+            case 21:
+                return "山頂";
+            case 22:
+                return "機場站";
+            case 23:
+                return "青衣站";
+            case 24:
+                return "九龍站";
+            case 25:
+                return "香港站";
+            case 26:
+                return "香港電燈";
+            case 27:
+                return "水務處";
+        }
+        return "";
+    }
+    public String WILD_CARD() {
+        return "多功能物業牌";
+    }
+    public String WILD_CARD(int g1, int g2) {
+        return "多功能物業牌 [" + g1 + " / " + g2 + "]";
+    }
+    public String ITS_MY_BDAY() {
+        return "我的生日";
+    }
+    public String DEBT_COLLECTOR() {
+        return "收取債務";
+    }
+    public String GO_PASS() {
+        return "通行證";
+    }
+    public String DBL_RENT() {
+        return "雙倍租金";
+    }
+    public String JUST_SAY_NO() {
+        return "做出反對";
+    }
+    public String DEAL_BREAKER() {
+        return "物業接管";
+    }
+    public String SLY_DEAL() {
+        return "盜取";
+    }
+    public String HOUSE() {
+        return "房子";
+    }
+    public String HOTEL() {
+        return "酒店";
+    }
+    public String FORCED_DEAL() {
+        return "強制交易";
+    }
+    public String WILDCARD_RENT(int g1, int g2) {
+        return String.format("租金 [%d / %d]", g1, g2);
+    }
+    public String RAINBOW_RENT() {
+        return "多功能租金牌";
+    }
+    public String CURRENT_STATE() {
+        return "目前情況：";
+    }
+    public String CARDS_IN_HAND() {
+        return "手牌數: ";
+    }
+    public String CARDS_IN_CURRENCY_DECK() {
+        return "貨幣牌數：";
+    }
+    public String PROPERTIES() {
+        return "物業";
+    }
+    public String PROPERTY_GROUP(int group) {
+        switch (group) {
+            case 0:
+                return "啡色";
+            case 1:
+                return "淺藍色";
+            case 2:
+                return "粉紅色";
+            case 3:
+                return "橙色";
+            case 4:
+                return "紅色";
+            case 5:
+                return "黃色";
+            case 6:
+                return "綠色";
+            case 7:
+                return "藍色";
+            case 8:
+                return "鐵路事業";
+            case 9:
+                return "公共事業";
+        }
+        return "";
+    }
+    public String JUST_SAY_NO_DESC() {
+        return "此卡可以抵銷一個針對你的行動，包括其他作出反對。";
     }
     @Override
     public String PASS() {
-        return "Pass";
-    }
-    @Override
-    public String PASS_ON_EMPTY() {
-        return "桌面什麼也沒有，你可打出任何有效組合";
-    }
-    @Override
-    public String PASS_ON_FIRST() {
-        return "這是第一輪，你必須打出 \u2666\ufe0f 3";
-    }
-    @Override
-    public String NO_D3_ON_FIRST() {
-        return "這是第一輪，你必須打出 \u2666\ufe0f 3";
-    }
-    @Override
-    public String PLAYED_ANNOUNCEMENT_LINK() {
-        return "<a href=\"https://t.me/%s\">%s</a> 打出 ";
-    }
-    @Override
-    public String PLAYED_ANNOUNCEMENT() {
-        return "%s 打出 ";
-    }
-    @Override
-    public String PASS_ANNOUNCEMENT_LINK() {
-        return "<a href=\"https://t.me/%s\">%s</a> 選擇 Pass";
+        return "結束回合";
     }
     @Override
     public String PASS_ANNOUNCEMENT() {
-        return "%s 選擇 Pass";
+        return "%s 選擇結束回合";
     }
     @Override
     public String INVALID_HAND() {
         return "組合無效，請再試";
-    }
-    @Override
-    public String SMALL_HAND() {
-        return "組合太小，請再試";
-    }
-    @Override
-    public String WON_ANNOUNCEMENT() {
-        return "<a href=\"tg://user?id=%d\">%s</a> 獲勝！\n\n";
     }
     @Override
     public String NEW_GAME_PROMPT() {
@@ -90,36 +203,8 @@ public class TraditionalChinese extends Translation {
         return "遊戲結束。按 /play 來開始新遊戲";
     }
     @Override
-    public String YOUR_DECK() {
-        return "你的手牌：\n";
-    }
-    @Override
-    public String STARTING_DECK() {
-        return "起始手牌：\n";
-    }
-    @Override
-    public String YOUR_TURN_PROMPT() {
-        return "輪到你！\n桌上";
-    }
-    @Override
-    public String THERE_IS_NOTHING() {
-        return "什麼也沒有";
-    }
-    @Override
-    public String TIMES_UP() {
-        return "時間到！";
-    }
-    @Override
     public String AFK_KILL() {
         return "看來所有人都已離開，停止遊戲！";
-    }
-    @Override
-    public String ON_DESK_LINK() {
-        return "\n目前桌上有：<a href=\"https://t.me/%2$s\">%3$s</a> 打出的 %1$s\n";
-    }
-    @Override
-    public String ON_DESK() {
-        return "\n目前桌上有：%2$s 打出的 %1$s\n";
     }
     @Override
     public String YOUR_TURN_ANNOUNCEMENT() {
@@ -128,10 +213,6 @@ public class TraditionalChinese extends Translation {
     @Override
     public String PICK_CARDS() {
         return "按此選牌";
-    }
-    @Override
-    public String CHOOSE_SOME_CARDS() {
-        return "\u23eb 請先選牌 \u23eb";
     }
     @Override
     public String JOIN_PROMPT() {

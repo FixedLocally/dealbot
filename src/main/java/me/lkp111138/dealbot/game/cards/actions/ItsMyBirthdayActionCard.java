@@ -4,11 +4,16 @@ import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
+import me.lkp111138.dealbot.translation.Translation;
 
 public class ItsMyBirthdayActionCard extends ActionCard {
+    protected ItsMyBirthdayActionCard(Translation translation) {
+        super(translation);
+    }
+
     @Override
     public String getCardFunctionalTitle() {
-        return "It's my birthday!";
+        return translation.ITS_MY_BDAY();
     }
 
     @Override

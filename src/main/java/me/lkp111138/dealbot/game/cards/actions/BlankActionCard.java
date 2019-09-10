@@ -2,8 +2,13 @@ package me.lkp111138.dealbot.game.cards.actions;
 
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
+import me.lkp111138.dealbot.translation.Translation;
 
 public class BlankActionCard extends ActionCard {
+    protected BlankActionCard(Translation translation) {
+        super(translation);
+    }
+
     @Override
     public int currencyValue() {
         return 1;
@@ -11,7 +16,7 @@ public class BlankActionCard extends ActionCard {
 
     @Override
     public String getCardFunctionalTitle() {
-        return "Blank Action Card";
+        return "Blank Action card";
     }
 
     @Override

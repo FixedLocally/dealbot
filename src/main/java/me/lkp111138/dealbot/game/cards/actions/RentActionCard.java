@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
+import me.lkp111138.dealbot.translation.Translation;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,22 +14,14 @@ import java.util.List;
 public class RentActionCard extends ActionCard {
     private final int[] groups;
 
-    public RentActionCard(int[] groups) {
+    public RentActionCard(int[] groups, Translation translation) {
+        super(translation);
         this.groups = groups;
     }
 
     @Override
     public int currencyValue() {
         return this.groups.length > 2 ? 3 : 1;
-    }
-
-    @Override
-    public String getCardFunctionalTitle() {
-        String _groups = "Rainbow";
-        if (groups.length == 2) {
-            _groups = groups[0] + " / " + groups[1];
-        }
-        return "Action Card - Rent [" + _groups + "]";
     }
 
     @Override
@@ -39,6 +32,15 @@ public class RentActionCard extends ActionCard {
             _groups = "group " + groups[0] + " or " + groups[1];
         }
         return "Collect rent for " + _groups + " from " + players;
+    }
+
+    @Override
+    public String getCardFunctionalTitle() {
+        if (groups.length == 2) {
+            return translation.WILDCARD_RENT(groups[0], groups[1]);
+        } else {
+            return translation.RAINBOW_RENT();
+        }
     }
 
     @Override

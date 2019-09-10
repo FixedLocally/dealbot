@@ -3,7 +3,7 @@ package me.lkp111138.dealbot.translation;
 public class HongKongChinese extends Translation {
     @Override
     public String BOT_NAME() {
-        return "jokebig2bot";
+        return "jokedealbot";
     }
     @Override
     public String ERROR() {
@@ -38,44 +38,12 @@ public class HongKongChinese extends Translation {
         return "Pass";
     }
     @Override
-    public String PASS_ON_EMPTY() {
-        return "檯面上乜都冇，你可以出任何有效嘅組合";
-    }
-    @Override
-    public String PASS_ON_FIRST() {
-        return "而家係第一輪，你一定要出 \u2666\ufe0f 3";
-    }
-    @Override
-    public String NO_D3_ON_FIRST() {
-        return "而家係第一輪，你一定要出 \u2666\ufe0f 3";
-    }
-    @Override
-    public String PLAYED_ANNOUNCEMENT_LINK() {
-        return "<a href=\"https://t.me/%s\">%s</a> 出咗 ";
-    }
-    @Override
-    public String PLAYED_ANNOUNCEMENT() {
-        return "%s 出咗 ";
-    }
-    @Override
-    public String PASS_ANNOUNCEMENT_LINK() {
-        return "<a href=\"https://t.me/%s\">%s</a> 揀咗 Pass";
-    }
-    @Override
     public String PASS_ANNOUNCEMENT() {
         return "%s 揀咗 Pass";
     }
     @Override
     public String INVALID_HAND() {
         return "組合無效，試多次";
-    }
-    @Override
-    public String SMALL_HAND() {
-        return "組合大唔到上家，試多次";
-    }
-    @Override
-    public String WON_ANNOUNCEMENT() {
-        return "<a href=\"tg://user?id=%d\">%s</a> 贏咗！\n\n";
     }
     @Override
     public String NEW_GAME_PROMPT() {
@@ -90,36 +58,8 @@ public class HongKongChinese extends Translation {
         return "遊戲完咗。撳 /play 嚟開新遊戲";
     }
     @Override
-    public String YOUR_DECK() {
-        return "你嘅手牌：\n";
-    }
-    @Override
-    public String STARTING_DECK() {
-        return "起始手牌：\n";
-    }
-    @Override
-    public String YOUR_TURN_PROMPT() {
-        return "輪到你！\n檯上";
-    }
-    @Override
-    public String THERE_IS_NOTHING() {
-        return "乜都冇";
-    }
-    @Override
-    public String TIMES_UP() {
-        return "夠鐘！";
-    }
-    @Override
     public String AFK_KILL() {
         return "好似所有人都忙緊，遊戲結束！";
-    }
-    @Override
-    public String ON_DESK_LINK() {
-        return "\n而家檯上面：<a href=\"https://t.me/%2$s\">%3$s</a> 打出嘅 %1$s\n";
-    }
-    @Override
-    public String ON_DESK() {
-        return "\n而家檯上面：%2$s 打出嘅 %1$s\n";
     }
     @Override
     public String YOUR_TURN_ANNOUNCEMENT() {
@@ -128,10 +68,6 @@ public class HongKongChinese extends Translation {
     @Override
     public String PICK_CARDS() {
         return "撳呢度揀牌";
-    }
-    @Override
-    public String CHOOSE_SOME_CARDS() {
-        return "\u23eb 揀牌先 \u23eb";
     }
     @Override
     public String JOIN_PROMPT() {

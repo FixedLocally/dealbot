@@ -9,6 +9,7 @@ import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.game.cards.Card;
 import me.lkp111138.dealbot.game.cards.PropertyCard;
 import me.lkp111138.dealbot.game.cards.WildcardPropertyCard;
+import me.lkp111138.dealbot.translation.Translation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +18,23 @@ import java.util.List;
  * The 'Deal Breaker' card. Takes one complete set of property from an opponent.
  */
 public class SlyDealActionCard extends ActionCard {
+    protected SlyDealActionCard(Translation translation) {
+        super(translation);
+    }
+
     @Override
     public int currencyValue() {
         return 3;
     }
 
     @Override
-    public String getCardFunctionalTitle() {
-        return "Sly Deal";
+    public String getDescription() {
+        return "Takes a property from a player that is not a part of a full set.";
     }
 
     @Override
-    public String getDescription() {
-        return "Takes a property from a player that is not a part of a full set.";
+    public String getCardFunctionalTitle() {
+        return translation.SLY_DEAL();
     }
 
     @Override

@@ -1,8 +1,17 @@
 package me.lkp111138.dealbot.game.cards;
 
 import me.lkp111138.dealbot.game.GamePlayer;
+import me.lkp111138.dealbot.translation.Translation;
 
 public class JustSayNoCard implements Card {
+    private final String title;
+    private final Translation translation;
+
+    public JustSayNoCard(Translation translation) {
+        this.translation = translation;
+        this.title = translation.JUST_SAY_NO();
+    }
+
     @Override
     public boolean isObjectable() {
         return true;
@@ -30,7 +39,7 @@ public class JustSayNoCard implements Card {
 
     @Override
     public String getCardTitle() {
-        return "Just Say No!";
+        return title;
     }
 
     @Override
@@ -42,6 +51,6 @@ public class JustSayNoCard implements Card {
 
     @Override
     public String getDescription() {
-        return "This card can be used to neutralize an action against you, including another Just Say No.";
+        return translation.JUST_SAY_NO_DESC();
     }
 }

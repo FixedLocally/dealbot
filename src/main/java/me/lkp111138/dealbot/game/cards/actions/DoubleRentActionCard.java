@@ -3,11 +3,16 @@ package me.lkp111138.dealbot.game.cards.actions;
 import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
+import me.lkp111138.dealbot.translation.Translation;
 
 public class DoubleRentActionCard extends ActionCard {
+    protected DoubleRentActionCard(Translation translation) {
+        super(translation);
+    }
+
     @Override
     public String getCardFunctionalTitle() {
-        return "Double Rent";
+        return translation.DBL_RENT();
     }
 
     @Override

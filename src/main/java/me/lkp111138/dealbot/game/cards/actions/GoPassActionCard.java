@@ -4,11 +4,16 @@ import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.game.cards.Card;
+import me.lkp111138.dealbot.translation.Translation;
 
 public class GoPassActionCard extends ActionCard {
+    protected GoPassActionCard(Translation translation) {
+        super(translation);
+    }
+
     @Override
     public String getCardFunctionalTitle() {
-        return "GO Pass";
+        return translation.GO_PASS();
     }
 
     @Override
