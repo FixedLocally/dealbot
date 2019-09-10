@@ -188,6 +188,10 @@ public class Game {
                         int count = playerCount();
                         Game.this.execute(new SendMessage(msg.chat().id(), String.format(Game.this.translation.JOINED_ANNOUNCEMENT(), msg.from().id(), msg.from().firstName(), count)).parseMode(ParseMode.HTML), new EmptyCallback<>());
 //                        Game.this.logf("%d / 4 players joined", count);
+                        if (count == 5) {
+                            // game full
+                            start();
+                        }
                     } else {
                         // for some reason we cant deliver the msg to the user, so we ask them to start me in the group
                         Game.this.execute(new SendMessage(msg.chat().id(), Game.this.translation.START_ME_FIRST())

@@ -42,10 +42,6 @@ public class HongKongChinese extends Translation {
         return "%s 揀咗 Pass";
     }
     @Override
-    public String INVALID_HAND() {
-        return "組合無效，試多次";
-    }
-    @Override
     public String NEW_GAME_PROMPT() {
         return "\n撳 /play 嚟開新遊戲";
     }
