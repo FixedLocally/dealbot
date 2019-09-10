@@ -97,11 +97,16 @@ public class GamePlayer {
             // this deck is full
             return false;
         }
-        deck.add(card);
-        if (card instanceof WildcardPropertyCard) {
-            ((WildcardPropertyCard) card).setGroup(group);
+        if (!deck.contains(card)) {
+            deck.add(card);
+            if (card instanceof WildcardPropertyCard) {
+                ((WildcardPropertyCard) card).setGroup(group);
+            }
+            propertyDecks.put(group, deck);
+        } else {
+            System.out.printf("%s already in %s", card, deck);
+            Thread.dumpStack();
         }
-        propertyDecks.put(group, deck);
         return true;
     }
 
