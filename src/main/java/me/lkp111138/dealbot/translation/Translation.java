@@ -389,6 +389,12 @@ public class Translation {
     public String WILDCARD_CHOOSE_GROUP() {
         return "Use this card on which group?";
     }
+    public String SB_PAID_YOU(String name, String payment) {
+        return name + " paid you " + payment;
+    }
+    public String SB_PAID_SB(String name, String payee, String payment) {
+        return name + " paid " + payee + " " + payment;
+    }
     public String PASS_ANNOUNCEMENT() {
         return "%s ended their turn";
     }

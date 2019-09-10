@@ -312,6 +312,9 @@ public class GamePlayer {
         game.execute(send, new Callback<SendMessage, SendResponse>() {
             @Override
             public void onResponse(SendMessage request, SendResponse response) {
+                if (future != null) {
+                    future.cancel(true);
+                }
                 future = executor.schedule(() -> {
                     sayNoCallback(new String[]{"say_no", "n"}, "", response.message().messageId());
                 }, game.getObjectionWait(), TimeUnit.SECONDS);
@@ -391,6 +394,9 @@ public class GamePlayer {
             }
         });
         // if not paid in a round's time, random pay
+        if (future != null) {
+            future.cancel(true);
+        }
         if (future != null) {
             future.cancel(true);
         }
@@ -607,7 +613,9 @@ public class GamePlayer {
                 game.execute(new EditMessageText(tgid, mid, translation.SAID_YES()));
                 break;
         }
-        game.execute(new AnswerCallbackQuery(id));
+        if (id.length() > 0) {
+            game.execute(new AnswerCallbackQuery(id));
+        }
     }
 
     public List<Card> getPaymentCurrencyCards() {

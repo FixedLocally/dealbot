@@ -787,10 +787,12 @@ public class Game {
                     gamePlayers.get(currentTurn).addCurrency(card);
                 }
             }
-            SendMessage send = new SendMessage(id, name + " paid you " + paymentStr);
+            SendMessage send = new SendMessage(id, translation.SB_PAID_YOU(name, paymentStr));
+            execute(send);
+            send = new SendMessage(id, translation.SB_PAID_SB(name, gamePlayers.get(currentTurn).getName(), paymentStr));
             execute(send);
         } else {
-            SendMessage send = new SendMessage(id, name + " used Just Say No!");
+            SendMessage send = new SendMessage(id, translation.VICTIM_SAID_NO(name));
             execute(send);
         }
         if (paymentConfirmationCount == gamePlayers.size() - 1) {

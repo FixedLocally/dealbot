@@ -395,6 +395,12 @@ public class TraditionalChinese extends Translation {
     public String WILDCARD_CHOOSE_GROUP() {
         return "將此卡視為哪種顏色的物業？";
     }
+    public String SB_PAID_YOU(String name, String payment) {
+        return name + " 向你支付了 " + payment;
+    }
+    public String SB_PAID_SB(String name, String payee, String payment) {
+        return name + " 向 " + payee + " 支付了 " + payment;
+    }
     @Override
     public String PASS_ANNOUNCEMENT() {
         return "%s 選擇結束回合";
