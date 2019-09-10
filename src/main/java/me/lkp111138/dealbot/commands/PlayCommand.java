@@ -27,14 +27,18 @@ public class PlayCommand implements Command {
             Game g = Game.byGroup(msg.chat().id());
             if (g == null) {
                 try (Connection conn = Main.getConnection()) {
-                    PreparedStatement stmt = conn.prepareStatement("SELECT wait_time, turn_wait_time, lang, protest_mode FROM `groups` WHERE gid=?");
+                    PreparedStatement stmt = conn.prepareStatement("SELECT wait_time, turn_wait_time, lang, protest_mode, pay_time, say_no_time FROM `groups` WHERE gid=?");
                     stmt.setLong(1, msg.chat().id());
                     ResultSet rs = stmt.executeQuery();
                     GroupInfo info;
-                    int turn_wait = 45;
+                    int turnWait = 45;
                     int wait = 120;
+                    int payTime = 20;
+                    int sayNoTime = 10;
                     if (rs.next()) {
-                        turn_wait = rs.getInt(2);
+                        turnWait = rs.getInt(2);
+                        payTime = rs.getInt(5);
+                        sayNoTime = rs.getInt(6);
                         wait = rs.getInt(1);
                         if (rs.getInt(4) > 0) {
                             bot.execute(new SendMessage(msg.chat().id(), Translation.get(DealBot.lang(msg.chat().id())).JOIN_69_PROTEST()).replyToMessageId(msg.messageId()));
@@ -47,7 +51,7 @@ public class PlayCommand implements Command {
                         stmt1.execute();
                         stmt1.close();
                     }
-                    info = new GroupInfo(turn_wait);
+                    info = new GroupInfo(turnWait, payTime, sayNoTime);
                     try {
                         new Game(msg, wait, info);
                     } catch (ConcurrentGameException e) {
