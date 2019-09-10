@@ -156,6 +156,7 @@ public class GamePlayer {
 
     public void startTurn() {
         game.schedule(this::endTurn, 1000 * game.getTurnWait());
+        stateMessageId = 0; // make it resend the self state message every turn
         actionCount = 0;
         setDoubleRentBuff(false);
         // tell the player that its their turn now
@@ -314,7 +315,10 @@ public class GamePlayer {
             buttons[0][0] = new InlineKeyboardButton(translation.NO()).callbackData(nonce + ":say_no:n");
         }
         send.replyMarkup(new InlineKeyboardMarkup(buttons));
-        savedActionIfNotObjected = actionIfApproved;
+        savedActionIfNotObjected = () -> {
+            actionIfApproved.run();
+            sendState();
+        };
         savedActionIfObjected = actionIfObjected;
         game.execute(send, new Callback<SendMessage, SendResponse>() {
             @Override
@@ -655,6 +659,7 @@ public class GamePlayer {
             game.execute(edit);
         }
         paymentMessageId = 0;
+        sendState();
     }
 
     public void addMove() {
