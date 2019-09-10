@@ -556,11 +556,12 @@ public class Game {
                 if (props.isEmpty()) {
                     continue;
                 }
-                currentState.append(translation.PROPERTY_GROUP(group)).append(": ").append(props.size()).append("/")
-                        .append(PropertyCard.propertySetCounts[group]).append("\n");
+                currentState.append(translation.PROPERTY_GROUP(group)).append(" (").append(props.size()).append("/")
+                        .append(PropertyCard.propertySetCounts[group]).append("): ");
                 for (Card prop : props) {
-                    currentState.append("- ").append(prop.getCardTitle()).append("\n");
+                    currentState.append(prop.getCardTitle()).append(", ");
                 }
+                currentState.setLength(currentState.length() - 2);
             }
             currentState.append("\n");
         }

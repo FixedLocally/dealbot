@@ -271,10 +271,11 @@ public class GamePlayer {
             state.append(translation.PROPERTY_GROUP(group)).append(" ").append(props.size()).append("/")
                     .append(PropertyCard.propertySetCounts[group]).append(" ($ ")
                     .append(PropertyCard.getRent(group, props))
-                    .append("M) ").append("\n");
+                    .append("M) ").append(": ");
             for (Card prop : props) {
-                state.append("- ").append(prop.getCardTitle()).append("\n");
+                state.append("- ").append(prop.getCardTitle()).append(", ");
             }
+            state.setLength(state.length() - 2);
             state.append("\n");
         }
         return state.toString();
