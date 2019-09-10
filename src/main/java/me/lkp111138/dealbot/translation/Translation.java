@@ -98,7 +98,7 @@ public class Translation {
         return "Rainbow Wild Card";
     }
     public String WILD_CARD(int g1, int g2) {
-        return "Wild Card [" + g1 + " / " + g2 + "]";
+        return "Wild Card";
     }
     public String ITS_MY_BDAY() {
         return "It's my Birthday!";

@@ -29,7 +29,7 @@ public class WildcardPropertyCard extends PropertyCard {
     @Override
     public String getCardTitle() {
         if (groups.length == 2) {
-            return "[" + groups[0] + " / " + groups[1] + "] " + title;
+            return "[" + translation.PROPERTY_GROUP(groups[0]) + " / " + translation.PROPERTY_GROUP(groups[1]) + "] " + title;
         } else {
             return title;
         }

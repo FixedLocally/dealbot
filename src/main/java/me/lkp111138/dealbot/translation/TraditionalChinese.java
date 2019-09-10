@@ -103,7 +103,7 @@ public class TraditionalChinese extends Translation {
         return "多功能物業牌";
     }
     public String WILD_CARD(int g1, int g2) {
-        return "多功能物業牌 [" + g1 + " / " + g2 + "]";
+        return "多功能物業牌";
     }
     public String ITS_MY_BDAY() {
         return "我的生日";
