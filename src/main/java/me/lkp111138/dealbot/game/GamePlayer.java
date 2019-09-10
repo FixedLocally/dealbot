@@ -619,6 +619,7 @@ public class GamePlayer {
         // deduct the currencies
         List<Card> payment = getPaymentCurrencyCards();
         currencyDeck.removeAll(payment);
+        propertyDecks.values().forEach(x -> x.removeAll(payment));
         if (payment.size() > 0) {
             String paymentStr = payment.stream().map(x -> !(x instanceof PropertyCard) ? "$ " + x.currencyValue() + "M" : x.getCardTitle()).collect(Collectors.joining(", "));
             EditMessageText edit = new EditMessageText(tgid, paymentMessageId, translation.PAYMENT_THX() + paymentStr);
