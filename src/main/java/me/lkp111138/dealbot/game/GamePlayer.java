@@ -412,8 +412,13 @@ public class GamePlayer {
     private List<InlineKeyboardButton[]> generatePaymentButtons() {
         List<InlineKeyboardButton[]> buttons = new ArrayList<>();
         int nonce = game.nextNonce();
+        int total = 0;
         for (int i = 0; i < currencyDeck.size(); i++) {
-            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("$ " + currencyDeck.get(i).currencyValue() + "M").callbackData(nonce + ":pay_choose:" + i)});
+            boolean contains = paymentSelectedIndices.contains(i);
+            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton((contains ? " [x]" : "") + "$ " + currencyDeck.get(i).currencyValue() + "M").callbackData(nonce + ":pay_choose:" + i)});
+            if (contains) {
+                total += currencyDeck.get(i).currencyValue();
+            }
         }
         int k = 0;
         for (Integer grp : propertyDecks.keySet()) {
@@ -421,7 +426,11 @@ public class GamePlayer {
             for (int i = 0; i < get.size(); i++) {
                 Card card = get.get(i);
                 if (card.currencyValue() > 0) {
-                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
+                    boolean contains = paymentSelectedPropertyIndices.contains(i);
+                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton((contains ? " [x]" : "") + card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
+                    if (contains) {
+                        total += card.currencyValue();
+                    }
                 }
             }
         }

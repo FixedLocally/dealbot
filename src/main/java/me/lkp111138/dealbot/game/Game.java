@@ -643,7 +643,8 @@ public class Game {
                 if (callback != null) {
                     callback.onFailure(request, e);
                 }
-                Game.this.logf("HTTP Error: %s %s\n%s\n", e.getClass().toString(), e.getMessage(), e.getStackTrace()[0]);
+                Game.this.logf("HTTP Error: %s %s\n", e.getClass().toString(), e.getMessage());
+                e.printStackTrace();
                 if (failCount < 5) { // linear backoff, max 5 retries
                     new Thread(() -> {
                         try {
