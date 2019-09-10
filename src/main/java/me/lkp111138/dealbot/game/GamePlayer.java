@@ -168,7 +168,6 @@ public class GamePlayer {
             return;
         }
         if (actionCount < 3) {
-            game.schedule(this::endTurn, game.getTurnWait() * 1000);
             boolean hasWildcardsOrBuildings = propertyDecks.values().stream().anyMatch(x -> x.stream().anyMatch(xx -> xx instanceof WildcardPropertyCard || xx instanceof BuildingActionCard));
             // do prompt
             int size = hand.size() + (hasWildcardsOrBuildings ? 2 : 1);
