@@ -448,6 +448,9 @@ public class Game {
     }
 
     public void tryStart() {
+        if (started) {
+            return;
+        }
         // see if theres enough players to start the game
         if (playerCount() > 1) {
             cancelFuture();
