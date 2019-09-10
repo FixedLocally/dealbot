@@ -352,7 +352,7 @@ public class TraditionalChinese extends Translation {
         return String.format("%1$s 使用了 %2$s 向 %4$s 收取 %3$s 的租金。", name, card, PROPERTY_GROUP(group), victim);
     }
     public String COLLECTING_RENT(String from, int group) {
-        return String.format("向 %s 收取 %s 的租金。", from == null ? "everybody" : from, PROPERTY_GROUP(group));
+        return String.format("向 %s 收取 %s 的租金。", from == null ? "所有人" : from, PROPERTY_GROUP(group));
     }
     public String RENT_CHOOSE_GROUP() {
         return "選擇一組物業來收取租金：";
