@@ -24,13 +24,13 @@ public abstract class BuildingActionCard extends ActionCard {
             int nonce = player.getGame().nextNonce();
             for (Integer group : player.getPropertyDecks().keySet()) {
                 if (player.getPropertyDecks().get(group).size() >= PropertyCard.propertySetCounts[group]) {
-                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Group " + group)
+                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.PROPERTY_GROUP(group))
                             .callbackData(nonce + ":card_arg:" + group)});
                 }
             }
-            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Cancel")
+            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.CANCEL())
                     .callbackData(nonce + ":use_cancel")});
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Build this" + getCardFunctionalTitle() + " on which group?");
+            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.BUILD_THIS_ON(getCardFunctionalTitle()));
             edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
             player.getGame().execute(edit);
         }

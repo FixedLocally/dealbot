@@ -28,7 +28,7 @@ public class DealBreakerActionCard extends ActionCard {
 
     @Override
     public String getDescription() {
-        return "Takes a complete set of property from a player, including any buildings.";
+        return translation.DEAL_BREAKER_DESC();
     }
 
     @Override
@@ -51,8 +51,8 @@ public class DealBreakerActionCard extends ActionCard {
                 }
                 buttons[i++][0] = new InlineKeyboardButton(gamePlayer.getName()).callbackData(nonce + ":card_arg:" + j);
             }
-            buttons[i][0] = new InlineKeyboardButton("Cancel").callbackData(nonce + ":use_cancel");
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Whose deal to break?");
+            buttons[i][0] = new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel");
+            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.WHOSE_DEAL_TO_BREAK());
             edit.replyMarkup(new InlineKeyboardMarkup(buttons));
             player.getGame().execute(edit);
         }
@@ -68,8 +68,8 @@ public class DealBreakerActionCard extends ActionCard {
                             .callbackData(nonce + ":card_arg:" + index + ":" + group)});
                 }
             }
-            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Cancel").callbackData(nonce + ":use_cancel")});
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Which deal to break?");
+            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel")});
+            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.WHOSE_DEAL_TO_BREAK());
             edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
             player.getGame().execute(edit);
         }
@@ -78,9 +78,9 @@ public class DealBreakerActionCard extends ActionCard {
             int index = Integer.parseInt(args[0]);
             int group = Integer.parseInt(args[1]);
             GamePlayer victim = player.getGame().getGamePlayers().get(index);
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "You have used Deal breaker against " + victim.getName());
+            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.YOU_HAVE_USED_AGAINST(getCardFunctionalTitle(), victim.getName()));
             player.getGame().execute(edit);
-            victim.promptSayNo(String.format("%s has used Deal Breaker against your group %s property. Would you like to say no?", player.getName(), group), () -> {
+            victim.promptSayNo(translation.DEAL_BREAKER_SAY_NO_PROMPT(player.getName(), group), () -> {
                 List<Card> cards = victim.getPropertyDecks().get(group);
                 List<Card> props = player.getPropertyDecks().getOrDefault(group, new ArrayList<>());
                 props.addAll(cards);
@@ -90,9 +90,7 @@ public class DealBreakerActionCard extends ActionCard {
             }, () -> {
                 // tell the sender its objected
                 player.getGame().log("Objection!");
-                SendMessage send = new SendMessage(player.getTgid(),  victim.getName() + " has used Just Say No!");
-                player.getGame().execute(send);
-                send = new SendMessage(player.getTgid(), victim.getName() + " has used Just Say No!");
+                SendMessage send = new SendMessage(player.getTgid(), translation.VICTIM_SAID_NO(victim.getName()));
                 player.getGame().execute(send);
                 player.promptForCard();
             });

@@ -1,5 +1,8 @@
 package me.lkp111138.dealbot.translation;
 
+import me.lkp111138.dealbot.game.GamePlayer;
+import me.lkp111138.dealbot.game.cards.Card;
+
 public class TraditionalChinese extends Translation {
     @Override
     public String BOT_NAME() {
@@ -254,13 +257,69 @@ public class TraditionalChinese extends Translation {
     public String DISPOSE_CARD(int remaining) {
         return String.format("請棄置一些卡牌 (尚餘 %d 張)", remaining);
     }
+    public String BUILD_THIS_ON(String name) {
+        return String.format("將此 %s 放置於哪一組物業？", name);
+    }
+    public String DEAL_BREAKER_DESC() {
+        return "從一名玩家取去一套完整物業，包括任何建築物";
+    }
+    public String WHOSE_DEAL_TO_BREAK() {
+        return "要接管誰的物業？";
+    }
+    public String VICTIM_SAID_NO(String name) {
+        return name + " 使用了作出反對！";
+    }
+    public String DEAL_BREAKER_SAY_NO_PROMPT(String name, int group) {
+        return String.format("%s 對你使用物業接管，打算接管你的 %s 物業。你要使用作出反對嗎？", name, PROPERTY_GROUP(group));
+    }
+    public String YOU_HAVE_USED_AGAINST(String card, String against) {
+        return "你對 " + against + " 使用了 " + card;
+    }
+    public String SOMEONE_HAVE_USED_AGAINST(String user, String card, String against) {
+        return user + " 對 " + against + " 使用了 " + card;
+    }
+    public String SOMEONE_HAVE_USED(String user, String card) {
+        return user + " 使用了 " + card;
+    }
+    public String DEBT_COLLECTOR_PROMPT(String victim) {
+        return String.format("正在對 %s 收取 $ 5M 的債務", victim);
+    }
+    public String DEBT_COLLECTOR_CHOOSE_PROMPT() {
+        return "選擇一名玩家來支付此債務。";
+    }
+    public String DEBT_COLLECTOR_DESC() {
+        return "從一名玩家收取 $ 5M。";
+    }
+    public String DBL_RENT_DESC() {
+        return "下次收取租金時，金額將作雙倍計算。";
+    }
+    public String DBL_RENT_MSG() {
+        return "本輪下一次收取租金時，金額將作雙倍計算。";
+    }
+    public String FORCED_DEAL_DESC() {
+        return "以自己一項強制換取另一名玩家的一項物業。不得為完整一套物業之一。";
+    }
+    public String FORCED_DEAL_TARGET() {
+        return "你要和誰強制交易？";
+    }
+    public String FORCED_DEAL_CHOOSE_TARGET() {
+        return "你想要哪張卡？";
+    }
+    public String FORCED_DEAL_CHOOSE_GIVE() {
+        return "你要用哪張卡來交易？";
+    }
+    public String FORCED_DEAL_SAY_NO_PROMPT(GamePlayer player, Card card, int group, Card selfCard) {
+        return String.format("%s 對你使用了強制交易，打算用你 %s 物業內的 %s 交易 %s。你要作出反對嗎？", player.getName(), card.getCardTitle(), PROPERTY_GROUP(group), selfCard.getCardTitle());
+    }
+    public String GO_PASS_DESC() {
+        return "從牌堆取兩張卡";
+    }
+    public String YOU_HAVE_DRAWN() {
+        return "你從牌堆抽取以下卡牌:\n";
+    }
     @Override
     public String PASS_ANNOUNCEMENT() {
         return "%s 選擇結束回合";
-    }
-    @Override
-    public String INVALID_HAND() {
-        return "組合無效，請再試";
     }
     @Override
     public String NEW_GAME_PROMPT() {

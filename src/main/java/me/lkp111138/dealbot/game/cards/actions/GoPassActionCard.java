@@ -23,10 +23,10 @@ public class GoPassActionCard extends ActionCard {
         cards[1] = player.getGame().draw();
         player.addHand(cards[0]);
         player.addHand(cards[1]);
-        SendMessage send = new SendMessage(player.getTgid(), "You have drawn the following cards from the deck:\n" +
+        SendMessage send = new SendMessage(player.getTgid(), translation.YOU_HAVE_DRAWN() +
                 cards[0].getCardTitle() + "\n" + cards[1].getCardTitle());
         player.getGame().execute(send);
-        send = new SendMessage(player.getGame().getGid(), player.getName() + " has used " + getCardFunctionalTitle());
+        send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_HAVE_USED(player.getName(), getCardFunctionalTitle()));
         player.getGame().execute(send);
         player.promptForCard();
     }
@@ -38,7 +38,7 @@ public class GoPassActionCard extends ActionCard {
 
     @Override
     public String getDescription() {
-        return "Draw two cards from the deck";
+        return translation.GO_PASS_DESC();
     }
 
     @Override

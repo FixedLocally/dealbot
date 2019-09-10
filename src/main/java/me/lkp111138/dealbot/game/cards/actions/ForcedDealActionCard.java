@@ -28,7 +28,7 @@ public class ForcedDealActionCard extends ActionCard {
 
     @Override
     public String getDescription() {
-        return "Takes a property from a player that is not a part of a full set, in exchange of one of your own.";
+        return translation.FORCED_DEAL_DESC();
     }
 
     @Override
@@ -51,8 +51,8 @@ public class ForcedDealActionCard extends ActionCard {
                 }
                 buttons[i++][0] = new InlineKeyboardButton(gamePlayer.getName()).callbackData(nonce + ":card_arg:" + j);
             }
-            buttons[i][0] = new InlineKeyboardButton("Cancel").callbackData(nonce + ":use_cancel");
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Who's going to participate in this Forced Deal?");
+            buttons[i][0] = new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel");
+            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.FORCED_DEAL_TARGET());
             edit.replyMarkup(new InlineKeyboardMarkup(buttons));
             player.getGame().execute(edit);
         }
@@ -78,8 +78,8 @@ public class ForcedDealActionCard extends ActionCard {
                     }
                 }
             }
-            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Cancel").callbackData(nonce + ":use_cancel")});
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Which card do you want?");
+            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel")});
+            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.FORCED_DEAL_CHOOSE_TARGET());
             edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
             player.getGame().execute(edit);
         }
@@ -104,8 +104,8 @@ public class ForcedDealActionCard extends ActionCard {
                     }
                 }
             }
-            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Cancel").callbackData(nonce + ":use_cancel")});
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Which card do you to give away?");
+            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel")});
+            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.FORCED_DEAL_CHOOSE_GIVE());
             edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
             player.getGame().execute(edit);
         }
@@ -119,9 +119,9 @@ public class ForcedDealActionCard extends ActionCard {
             GamePlayer victim = player.getGame().getGamePlayers().get(index);
             Card card = victim.getPropertyDecks().get(group).get(order);
             Card selfCard = player.getPropertyDecks().get(selfGroup).get(selfOrder);
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "You have used Forced Deal against " + victim.getName());
+            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.YOU_HAVE_USED_AGAINST(getCardFunctionalTitle(), victim.getName()));
             player.getGame().execute(edit);
-            victim.promptSayNo(String.format("%s has used Sly Deal against your %s in group %s for %s. Would you like to say no?", player.getName(), card.getCardTitle(), group, selfCard.getCardTitle()), () -> {
+            victim.promptSayNo(translation.FORCED_DEAL_SAY_NO_PROMPT(player, card, group, selfCard), () -> {
                 List<Card> props = player.getPropertyDecks().getOrDefault(group, new ArrayList<>());
                 props.add(card);
                 player.getPropertyDecks().put(group, props);
@@ -132,9 +132,7 @@ public class ForcedDealActionCard extends ActionCard {
             }, () -> {
                 // tell the sender its objected
                 player.getGame().log("Objection!");
-                SendMessage send = new SendMessage(player.getTgid(),  victim.getName() + " has used Just Say No!");
-                player.getGame().execute(send);
-                send = new SendMessage(player.getTgid(), victim.getName() + " has used Just Say No!");
+                SendMessage send = new SendMessage(player.getTgid(),  translation.VICTIM_SAID_NO(victim.getName()));
                 player.getGame().execute(send);
                 player.promptForCard();
             });

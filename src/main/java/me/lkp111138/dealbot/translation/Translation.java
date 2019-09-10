@@ -1,5 +1,8 @@
 package me.lkp111138.dealbot.translation;
 
+import me.lkp111138.dealbot.game.GamePlayer;
+import me.lkp111138.dealbot.game.cards.Card;
+
 import java.util.HashMap;
 
 public class Translation {
@@ -248,14 +251,68 @@ public class Translation {
     public String DISPOSE_CARD(int remaining) {
         return String.format("Dispose some cards to keep you at 7 cards (%d remaining)", remaining);
     }
-    public String PLAYED_ANNOUNCEMENT(String card) {
-        return "%s played " + card;
+    public String BUILD_THIS_ON(String name) {
+        return String.format("Build this %s on which group?", name);
+    }
+    public String DEAL_BREAKER_DESC() {
+        return "Takes a complete set of property from a player, including any buildings.";
+    }
+    public String WHOSE_DEAL_TO_BREAK() {
+        return "Whose deal to break?";
+    }
+    public String VICTIM_SAID_NO(String name) {
+        return name + " has used Just Say No!";
+    }
+    public String DEAL_BREAKER_SAY_NO_PROMPT(String name, int group) {
+        return String.format("%s has used Deal Breaker against your %s property. Would you like to say no?", name, PROPERTY_GROUP(group));
+    }
+    public String YOU_HAVE_USED_AGAINST(String card, String against) {
+        return "You have used " + card + " against " + against;
+    }
+    public String SOMEONE_HAVE_USED_AGAINST(String user, String card, String against) {
+        return user + " has used " + card + " against " + against;
+    }
+    public String SOMEONE_HAVE_USED(String user, String card) {
+        return user + " has used " + card;
+    }
+    public String DEBT_COLLECTOR_PROMPT(String victim) {
+        return "Collecting debt of $ 5M from " + victim;
+    }
+    public String DEBT_COLLECTOR_CHOOSE_PROMPT() {
+        return "Choose a player to collect your debt";
+    }
+    public String DEBT_COLLECTOR_DESC() {
+        return "Collect $ 5M from one player.";
+    }
+    public String DBL_RENT_DESC() {
+        return "Doubles the next rent you collect.";
+    }
+    public String DBL_RENT_MSG() {
+        return "The next rent you collect in this turn will be doubled.";
+    }
+    public String FORCED_DEAL_DESC() {
+        return "Takes a property from a player that is not a part of a full set, in exchange of one of your own.";
+    }
+    public String FORCED_DEAL_TARGET() {
+        return "Who's going to participate in this Forced Deal?";
+    }
+    public String FORCED_DEAL_CHOOSE_TARGET() {
+        return "Which card do you want?";
+    }
+    public String FORCED_DEAL_CHOOSE_GIVE() {
+        return "Which card do you to give away?";
+    }
+    public String FORCED_DEAL_SAY_NO_PROMPT(GamePlayer player, Card card, int group, Card selfCard) {
+        return String.format("%s has used Forced Deal against your %s in %s for %s. Would you like to say no?", player.getName(), card.getCardTitle(), PROPERTY_GROUP(group), selfCard.getCardTitle());
+    }
+    public String GO_PASS_DESC() {
+        return "Draw two cards from the deck";
+    }
+    public String YOU_HAVE_DRAWN() {
+        return "You have drawn the following cards from the deck:\n";
     }
     public String PASS_ANNOUNCEMENT() {
         return "%s ended their turn";
-    }
-    public String INVALID_HAND() {
-        return "Invalid combination, please try again";
     }
     public String WON_ANNOUNCEMENT(int tgid, String name) {
         return String.format("<a href=\"tg://user?id=%1$s\">%2$s</a> has successfully gathered 3 full sets of properties and won!", tgid, name);

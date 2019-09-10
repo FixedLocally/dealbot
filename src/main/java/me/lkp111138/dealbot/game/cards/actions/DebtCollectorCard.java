@@ -22,7 +22,7 @@ public class DebtCollectorCard extends ActionCard {
 
     @Override
     public String getDescription() {
-        return "Collect $ 5M from one player.";
+        return translation.DEBT_COLLECTOR_DESC();
     }
 
     @Override
@@ -41,12 +41,12 @@ public class DebtCollectorCard extends ActionCard {
             player.getGame().collectRentFromOne(5, 11, order);
             String victim = players.get(order).getName();
             EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
-                    "Collecting debt of $ 5M from " + victim);
+                    translation.DEBT_COLLECTOR_PROMPT(victim));
             player.getGame().execute(edit);
-            String msg = String.format("You have used %s against %s.", getCardFunctionalTitle(), victim);
+            String msg = translation.YOU_HAVE_USED_AGAINST(getCardFunctionalTitle(), victim);
             SendMessage send = new SendMessage(player.getTgid(), msg);
             player.getGame().execute(send);
-            msg = String.format("%s have used %s against %s.", player.getName(), getCardFunctionalTitle(), victim);
+            msg = translation.SOMEONE_HAVE_USED_AGAINST(player.getName(), getCardFunctionalTitle(), victim);
             send = new SendMessage(player.getGame().getGid(), msg);
             player.getGame().execute(send);
         } else {
@@ -60,8 +60,8 @@ public class DebtCollectorCard extends ActionCard {
                 }
                 buttons[j++][0] = new InlineKeyboardButton(user.getName()).callbackData(nonce + ":card_arg:" + i);
             }
-            buttons[players.size() - 1][0] = new InlineKeyboardButton("Cancel").callbackData(nonce + ":use_cancel");
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), "Choose a player to collect your debt");
+            buttons[players.size() - 1][0] = new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel");
+            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.DEBT_COLLECTOR_CHOOSE_PROMPT());
             edit.replyMarkup(new InlineKeyboardMarkup(buttons));
             player.getGame().execute(edit);
         }
