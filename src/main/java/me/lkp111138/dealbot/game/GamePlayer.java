@@ -426,7 +426,7 @@ public class GamePlayer {
             for (int i = 0; i < get.size(); i++) {
                 Card card = get.get(i);
                 if (card.currencyValue() > 0) {
-                    boolean contains = paymentSelectedPropertyIndices.contains(i);
+                    boolean contains = paymentSelectedPropertyIndices.contains(k);
                     buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton((contains ? " [x]" : "") + card.getCardTitle() + " [$ " + card.currencyValue() + "M]").callbackData(nonce + ":pay_choose:p:" + (k++))});
                     if (contains) {
                         total += card.currencyValue();
@@ -434,7 +434,7 @@ public class GamePlayer {
                 }
             }
         }
-        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.PAY(0)).callbackData(nonce + ":pay_done")});
+        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.PAY(total)).callbackData(nonce + ":pay_confirm")});
         return buttons;
     }
 
@@ -504,7 +504,6 @@ public class GamePlayer {
     }
 
     public void payCallback(String[] args, String id) {
-        int nonce = game.nextNonce();
         switch (args[0]) {
             case "pay_choose":
                 if (args[1].equals("p")) {
