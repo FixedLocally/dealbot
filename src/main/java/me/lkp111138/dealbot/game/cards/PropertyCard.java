@@ -115,6 +115,7 @@ public class PropertyCard implements Card {
             // deck full
             player.addHand(this);
             player.addMove();
+            player.getGame().removeFromUsed(this);
             SendMessage send = new SendMessage(player.getTgid(), translation.GROUP_FULL());
             player.getGame().execute(send);
         }

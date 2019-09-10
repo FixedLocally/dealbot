@@ -46,6 +46,7 @@ public class JustSayNoCard implements Card {
     public void execute(GamePlayer player, String[] args) {
         player.addMove();
         player.addHand(this);
+        player.getGame().removeFromUsed(this);
         player.promptForCard();
     }
 

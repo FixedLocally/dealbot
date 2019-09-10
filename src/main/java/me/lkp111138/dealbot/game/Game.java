@@ -692,8 +692,8 @@ public class Game {
             case "play_card":
                 this.currentCard = player.handCardAt(Integer.parseInt(args[1]));
                 player.removeHand(this.currentCard);
-                player.play(this.currentCard);
                 usedDeck.add(this.currentCard);
+                player.play(this.currentCard);
                 return true;
             case "end_turn":
                 player.endTurn();
@@ -721,6 +721,7 @@ public class Game {
                 return true;
             case "use_cancel":
                 player.addHand(this.currentCard);
+                usedDeck.remove(this.currentCard);
                 this.currentCard = null;
                 player.addMove();
                 player.promptForCard();
@@ -762,6 +763,10 @@ public class Game {
                 return true;
         }
         return false;
+    }
+
+    public void removeFromUsed(Card card) {
+        usedDeck.remove(card);
     }
 
     public boolean confirmPayment(List<Card> payment, int tgid) {

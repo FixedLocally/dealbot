@@ -45,6 +45,7 @@ public class WildcardPropertyCard extends PropertyCard {
         if (args.length > 0) {
             if (!player.addProperty(this, Integer.parseInt(args[0]))) {
                 player.addHand(this);
+                player.getGame().removeFromUsed(this);
                 player.addMove();
                 SendMessage send = new SendMessage(player.getTgid(), translation.GROUP_FULL());
                 player.getGame().execute(send);
