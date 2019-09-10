@@ -155,6 +155,7 @@ public class GamePlayer {
     }
 
     public void startTurn() {
+        game.schedule(this::endTurn, 1000 * game.getTurnWait());
         actionCount = 0;
         setDoubleRentBuff(false);
         // tell the player that its their turn now
