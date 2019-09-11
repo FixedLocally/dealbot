@@ -608,6 +608,7 @@ public class Game {
                 }
                 currentState.append("\n");
             }
+            currentState.append("\n");
         }
         return currentState.toString();
     }
