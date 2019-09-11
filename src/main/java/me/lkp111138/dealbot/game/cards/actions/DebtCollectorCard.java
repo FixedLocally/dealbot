@@ -48,9 +48,6 @@ public class DebtCollectorCard extends ActionCard {
             String msg = translation.YOU_HAVE_USED_AGAINST(getCardFunctionalTitle(), victim);
             send = new SendMessage(player.getTgid(), msg);
             player.getGame().execute(send);
-            msg = translation.SOMEONE_HAVE_USED_AGAINST(player.getName(), getCardFunctionalTitle(), victim);
-            send = new SendMessage(player.getGame().getGid(), msg);
-            player.getGame().execute(send);
         } else {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[players.size()][1];
             int nonce = player.getGame().nextNonce();
