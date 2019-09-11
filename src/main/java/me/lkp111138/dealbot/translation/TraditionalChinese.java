@@ -441,6 +441,9 @@ public class TraditionalChinese extends Translation {
     public String YOUR_TURN_ANNOUNCEMENT() {
         return "輪到你了， <a href=\"tg://user?id=%d\">%s</a>，你有 %d 秒出牌！";
     }
+    public String ME_CMD_PMED() {
+        return "我已經私下告訴你。";
+    }
     @Override
     public String PICK_CARDS() {
         return "按此選牌";

@@ -326,6 +326,15 @@ public class GamePlayer {
         }
     }
 
+    public void sendStateForce() {
+        // del old and send new
+        if (stateMessageId != 0) {
+            game.execute(new DeleteMessage(tgid, stateMessageId));
+            stateMessageId = 0;
+        }
+        sendState();
+    }
+
     public void promptSayNo(String msg, Runnable actionIfApproved, Runnable actionIfObjected) {
         int nonce = game.nextNonce();
         SendMessage send = new SendMessage(tgid, msg);
@@ -548,7 +557,7 @@ public class GamePlayer {
             game.execute(edit);
         }
         if (args.length == 4) {
-            // move and deduct action
+            // move
             int group = Integer.parseInt(args[1]);
             int index = Integer.parseInt(args[2]);
             int newGroup = Integer.parseInt(args[3]);
@@ -709,10 +718,12 @@ public class GamePlayer {
     }
 
     public void endTurnTimeout() {
+        game.logf("turn timeout for %s", tgid);
         endTurn(false);
     }
 
     public void endTurnVoluntary() {
+        game.logf("turn ended for %s", tgid);
         endTurn(true);
     }
 
@@ -742,7 +753,7 @@ public class GamePlayer {
 
                     @Override
                     public void onFailure(SendMessage request, IOException e) {
-
+                        e.printStackTrace();
                     }
                 });
                 game.schedule(this::randomDispose, 15000);

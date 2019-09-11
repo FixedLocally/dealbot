@@ -59,6 +59,8 @@ public class DealBot {
         commands.put("fs", commands.get("forcestart"));
         commands.put("donate", new DonateCommand());
         commands.put("nextgame", new NextGameCommand());
+        commands.put("me", new MeCommand());
+        commands.put("state", commands.get("me"));
 
         // achievements
 //        Achievement.registerAchievement(new FirstGameAchievement());

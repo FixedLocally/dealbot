@@ -428,6 +428,9 @@ public class Translation {
     public String YOUR_TURN_ANNOUNCEMENT() {
         return "It's your turn, <a href=\"tg://user?id=%d\">%s</a>, you have %d seconds to play your cards!";
     }
+    public String ME_CMD_PMED() {
+        return "I've sent you your state in private.";
+    }
     public String PICK_CARDS() {
         return "Pick your cards";
     }
