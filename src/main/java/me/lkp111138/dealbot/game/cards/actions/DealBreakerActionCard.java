@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
+import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.game.cards.Card;
@@ -82,6 +83,7 @@ public class DealBreakerActionCard extends ActionCard {
             player.getGame().execute(edit);
             SendMessage send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_HAVE_USED_AGAINST(player.getName(), getCardFunctionalTitle(), victim.getName()));
             player.getGame().execute(send);
+            DealBot.triggerAchievement(victim.getTgid(), DealBot.Achievement.YOUR_PROPERTY_ISNT_YOURS);
             victim.promptSayNo(translation.DEAL_BREAKER_SAY_NO_PROMPT(player.getName(), group), () -> {
                 List<Card> cards = victim.getPropertyDecks().get(group);
                 List<Card> props = player.getPropertyDecks().getOrDefault(group, new ArrayList<>());

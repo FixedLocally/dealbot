@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
+import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.game.cards.Card;
@@ -90,6 +91,7 @@ public class SlyDealActionCard extends ActionCard {
             int group = Integer.parseInt(args[1]);
             int order = Integer.parseInt(args[2]);
             GamePlayer victim = player.getGame().getGamePlayers().get(index);
+            DealBot.triggerAchievement(victim.getTgid(), DealBot.Achievement.WHERE_DID_IT_GO);
             Card card = victim.getPropertyDecks().get(group).get(order);
             EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.YOU_HAVE_USED_AGAINST(getCardFunctionalTitle(), victim.getName()));
             player.getGame().execute(edit);

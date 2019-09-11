@@ -528,17 +528,22 @@ public class Game {
         turnTime += System.currentTimeMillis() - turnStartTime;
         paymentConfirmationCount = 0;
         paidPlayers.clear();
+        GamePlayer gamePlayer = gamePlayers.get(currentTurn);
         if (value <= 0) {
             // nothing to collect
-            gamePlayers.get(currentTurn).promptForCard();
+            gamePlayer.promptForCard();
             return;
         }
         for (GamePlayer player : gamePlayers) {
-            if (player == gamePlayers.get(currentTurn)) {
+            if (player == gamePlayer) {
                 // dont collect from yourself
                 continue;
             }
-            player.collectRent(value, group, gamePlayers.get(currentTurn));
+            player.collectRent(value, group, gamePlayer);
+        }
+        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.RENT_COLLECTOR);
+        if (value >= 20) {
+            DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.THANK_YOU);
         }
     }
 
@@ -547,12 +552,17 @@ public class Game {
         turnTime += System.currentTimeMillis() - turnStartTime;
         paidPlayers.clear();
         paymentConfirmationCount = gamePlayers.size() - 2; // shush
+        GamePlayer gamePlayer = gamePlayers.get(currentTurn);
         if (value <= 0) {
             // nothing to collect
-            gamePlayers.get(currentTurn).promptForCard();
+            gamePlayer.promptForCard();
             return;
         }
-        gamePlayers.get(order).collectRent(value, group, gamePlayers.get(currentTurn));
+        gamePlayers.get(order).collectRent(value, group, gamePlayer);
+        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.RENT_COLLECTOR);
+        if (value >= 20) {
+            DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.THANK_YOU);
+        }
     }
 
     private void remind() {

@@ -10,6 +10,7 @@ import com.pengrad.telegrambot.request.DeleteMessage;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
+import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.game.cards.Card;
 import me.lkp111138.dealbot.game.cards.JustSayNoCard;
 import me.lkp111138.dealbot.game.cards.PropertyCard;
@@ -414,6 +415,7 @@ public class GamePlayer {
     }
 
     public void collectRent(int value, int group, GamePlayer collector) {
+        DealBot.triggerAchievement(tgid, DealBot.Achievement.WELCOME_HOME);
         paymentMessage = translation.PAYMENT_COLLECTION_MESSAGE_SAY_NO(group, collector.getName(), value);
         promptSayNo(paymentMessage, () -> realCollectRent(value, group, collector), () -> {
             // tell the sender its objected
@@ -428,6 +430,9 @@ public class GamePlayer {
 
     private void realCollectRent(int value, int group, GamePlayer collector) {
         game.logf("collecting rent of %s from %s for", value, tgid, collector.tgid);
+        if (value >= 20) {
+            DealBot.triggerAchievement(tgid, DealBot.Achievement.SHOCK_BILL);
+        }
         paymentValue = value;
         paymentSelectedIndices.clear();
         paymentSelectedPropertyIndices.clear();

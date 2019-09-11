@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
+import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.translation.Translation;
@@ -40,6 +41,7 @@ public class DebtCollectorCard extends ActionCard {
             // send them a huge debt!
             player.getGame().collectRentFromOne(5, 11, order);
             String victim = players.get(order).getName();
+            DealBot.triggerAchievement(players.get(order).getTgid(), DealBot.Achievement.WHAT_WAS_THIS_DEBT);
             EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
                     translation.DEBT_COLLECTOR_PROMPT(victim));
             player.getGame().execute(edit);

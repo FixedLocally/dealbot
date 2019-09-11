@@ -3,6 +3,7 @@ package me.lkp111138.dealbot.game.cards.actions;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
+import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.game.cards.PropertyCard;
@@ -18,6 +19,12 @@ public abstract class BuildingActionCard extends ActionCard {
 
     @Override
     public final void use(GamePlayer player, String[] args) {
+        if (this instanceof HouseActionCard) {
+            DealBot.triggerAchievement(player.getTgid(), DealBot.Achievement.MANSION);
+        }
+        if (this instanceof HotelActionCard) {
+            DealBot.triggerAchievement(player.getTgid(), DealBot.Achievement.HOTEL_MANAGER);
+        }
         if (args.length == 0) {
             // choose group
             List<InlineKeyboardButton[]> buttons = new ArrayList<>();

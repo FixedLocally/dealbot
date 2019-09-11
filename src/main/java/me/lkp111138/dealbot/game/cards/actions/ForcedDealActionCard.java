@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
+import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.ActionCard;
 import me.lkp111138.dealbot.game.cards.Card;
@@ -123,6 +124,7 @@ public class ForcedDealActionCard extends ActionCard {
             player.getGame().execute(edit);
             SendMessage send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_HAVE_USED_AGAINST(player.getName(), getCardFunctionalTitle(), victim.getName()));
             player.getGame().execute(send);
+            DealBot.triggerAchievement(victim.getTgid(), DealBot.Achievement.NICE_DEAL_WITH_U);
             victim.promptSayNo(translation.FORCED_DEAL_SAY_NO_PROMPT(player, card, group, selfCard), () -> {
                 System.out.println("running forced deal");
                 List<Card> props = player.getPropertyDecks().getOrDefault(group, new ArrayList<>());
