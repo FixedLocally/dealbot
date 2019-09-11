@@ -177,49 +177,47 @@ public class GamePlayer {
             endTurn(); // the game will take care of the announcement
             return;
         }
+        boolean hasWildcardsOrBuildings = propertyDecks.values().stream().anyMatch(x -> x.stream().anyMatch(xx -> xx instanceof WildcardPropertyCard || xx instanceof BuildingActionCard));
+        // do prompt
+        List<InlineKeyboardButton[]> buttons = new ArrayList<>();
+        int nonce = game.nextNonce();
         if (actionCount < 3) {
-            boolean hasWildcardsOrBuildings = propertyDecks.values().stream().anyMatch(x -> x.stream().anyMatch(xx -> xx instanceof WildcardPropertyCard || xx instanceof BuildingActionCard));
-            // do prompt
-            int size = hand.size() + (hasWildcardsOrBuildings ? 2 : 1);
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[size][1];
-            int nonce = game.nextNonce();
             for (int i = 0; i < hand.size(); i++) {
-                buttons[i][0] = new InlineKeyboardButton(hand.get(i).getCardTitle()).callbackData(nonce + ":play_card:" + i);
+                buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(hand.get(i).getCardTitle()).callbackData(nonce + ":play_card:" + i)});
             }
-            if (actionCount > -1) {
-                buttons[hand.size()][0] = new InlineKeyboardButton(translation.PASS()).callbackData(nonce + ":end_turn");
-            }
-            if (hasWildcardsOrBuildings) {
-                buttons[hand.size() + 1][0] = new InlineKeyboardButton(translation.MANAGE_CARD_MENU()).callbackData(nonce + ":wildcard_menu");
-            }
-            String msg = translation.CHOOSE_AN_ACTION(3 - actionCount);
-            if (messageId == 0) {
-                SendMessage send = new SendMessage(tgid, msg);
-                send.replyMarkup(new InlineKeyboardMarkup(buttons));
-                game.execute(send, new Callback<SendMessage, SendResponse>() {
-                    @Override
-                    public void onResponse(SendMessage request, SendResponse response) {
-                        if (!response.isOk()) {
-                            System.out.println(response.description());
-                        }
-                        messageId = response.message().messageId();
-                    }
-
-                    @Override
-                    public void onFailure(SendMessage request, IOException e) {
-
-                    }
-                });
-            } else {
-                EditMessageText edit = new EditMessageText(tgid, messageId, msg);
-                edit.replyMarkup(new InlineKeyboardMarkup(buttons));
-                game.execute(edit);
-            }
-            ++actionCount;
-        } else {
-            // end turn
-            endTurn();
         }
+        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.PASS()).callbackData(nonce + ":end_turn")});
+        if (hasWildcardsOrBuildings) {
+            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.MANAGE_CARD_MENU()).callbackData(nonce + ":wildcard_menu")});
+        } else if (actionCount >= 3) {
+            // if the player is out of actions and got nothing to manage, end them
+            endTurn();
+            return;
+        }
+        String msg = translation.CHOOSE_AN_ACTION(3 - actionCount);
+        if (messageId == 0) {
+            SendMessage send = new SendMessage(tgid, msg);
+            send.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
+            game.execute(send, new Callback<SendMessage, SendResponse>() {
+                @Override
+                public void onResponse(SendMessage request, SendResponse response) {
+                    if (!response.isOk()) {
+                        System.out.println(response.description());
+                    }
+                    messageId = response.message().messageId();
+                }
+
+                @Override
+                public void onFailure(SendMessage request, IOException e) {
+
+                }
+            });
+        } else {
+            EditMessageText edit = new EditMessageText(tgid, messageId, msg);
+            edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
+            game.execute(edit);
+        }
+        ++actionCount;
     }
 
     public int getTgid() {
