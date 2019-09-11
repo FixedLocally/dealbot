@@ -20,18 +20,17 @@ public class StatCommand implements Command {
             target = msg.replyToMessage().from();
         }
         try (Connection conn = Main.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT chips, won_cards, won_count, game_count, lost_cards FROM tg_users WHERE tgid=?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT won_count, game_count, game_minutes, cards_played, currency_collected, properties_collected FROM tg_users WHERE tgid=?");
             stmt.setInt(1, target.id());
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 if (rs.getInt(4) > 0) {
                     String sb = String.format("Statistics for <a href=\"tg://user?id=%d\">%s</a>\n", target.id(), target.firstName()) +
-                            String.format("Won cards: %d\n", rs.getInt(2)) +
-                            String.format("Lost cards: %d\n", rs.getInt(5)) +
-                            String.format("Won/Total games: %d / %d (%.2f%%)\n", rs.getInt(3), rs.getInt(4), 100.0 * rs.getInt(3) / rs.getInt(4)) +
-                            String.format("Won/Lost cards: %d / %d (%.2f%%)\n", rs.getInt(2), rs.getInt(5), 100.0 * rs.getInt(2) / rs.getInt(5)) +
-                            String.format("Chips: %d\n", rs.getInt(1)) +
-                            String.format("Chips per game: %.1f", (rs.getInt(1) - 2000.0) / rs.getInt(4));
+                            String.format("Won/Total games: %d / %d (%.2f%%)\n", rs.getInt(1), rs.getInt(2), 100.0 * rs.getInt(3) / rs.getInt(4)) +
+                            String.format("Total in game minutes: %d\n", rs.getInt(3)) +
+                            String.format("Number of cards played: %d\n", rs.getInt(4)) +
+                            String.format("Currency collected: $ %dM\n", rs.getInt(5)) +
+                            String.format("Properties collected: %d\n", rs.getInt(6));
                     bot.execute(new SendMessage(msg.chat().id(), sb).replyToMessageId(msg.messageId()).parseMode(ParseMode.HTML));
                 } else {
                     bot.execute(new SendMessage(msg.chat().id(), "You haven't played a game yet!").replyToMessageId(msg.messageId()).parseMode(ParseMode.HTML));

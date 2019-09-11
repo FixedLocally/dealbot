@@ -47,7 +47,7 @@ public class DealBot {
         commands.put("stats", new StatCommand());
         commands.put("killgame", new KillGameCommand());
         commands.put("extend", new ExtendCommand());
-        commands.put("config", new ConfigCommand());
+//        commands.put("config", new ConfigCommand());
         commands.put("maintmode", new MaintModeCommand());
 //        commands.put("runinfo", new RunInfoCommand());
         commands.put("setlang", new SetLangCommand());
