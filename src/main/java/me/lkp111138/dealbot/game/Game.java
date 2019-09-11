@@ -533,7 +533,7 @@ public class Game {
         for (GamePlayer gamePlayer : gamePlayers) {
             gamePlayer.sendGlobalState(currentState);
         }
-        execute(new SendMessage(gid, currentState));
+        execute(new SendMessage(gid, currentState).parseMode(ParseMode.HTML));
         player.addHand(mainDeck.remove(0));
         player.addHand(mainDeck.remove(0));
         // draw 5 if starting with 0
