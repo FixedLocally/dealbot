@@ -121,6 +121,8 @@ public class ForcedDealActionCard extends ActionCard {
             Card selfCard = player.getPropertyDecks().get(selfGroup).get(selfOrder);
             EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.YOU_HAVE_USED_AGAINST(getCardFunctionalTitle(), victim.getName()));
             player.getGame().execute(edit);
+            SendMessage send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_HAVE_USED_AGAINST(player.getName(), getCardFunctionalTitle(), victim.getName()));
+            player.getGame().execute(send);
             victim.promptSayNo(translation.FORCED_DEAL_SAY_NO_PROMPT(player, card, group, selfCard), () -> {
                 List<Card> props = player.getPropertyDecks().getOrDefault(group, new ArrayList<>());
                 props.add(card);
@@ -132,8 +134,8 @@ public class ForcedDealActionCard extends ActionCard {
             }, () -> {
                 // tell the sender its objected
                 player.getGame().log("Objection!");
-                SendMessage send = new SendMessage(player.getTgid(),  translation.VICTIM_SAID_NO(victim.getName()));
-                player.getGame().execute(send);
+                SendMessage _send = new SendMessage(player.getTgid(),  translation.VICTIM_SAID_NO(victim.getName()));
+                player.getGame().execute(_send);
                 player.promptForCard();
             });
         }

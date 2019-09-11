@@ -43,8 +43,10 @@ public class DebtCollectorCard extends ActionCard {
             EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
                     translation.DEBT_COLLECTOR_PROMPT(victim));
             player.getGame().execute(edit);
+            SendMessage send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_HAVE_USED_AGAINST(player.getName(), getCardFunctionalTitle(), victim));
+            player.getGame().execute(send);
             String msg = translation.YOU_HAVE_USED_AGAINST(getCardFunctionalTitle(), victim);
-            SendMessage send = new SendMessage(player.getTgid(), msg);
+            send = new SendMessage(player.getTgid(), msg);
             player.getGame().execute(send);
             msg = translation.SOMEONE_HAVE_USED_AGAINST(player.getName(), getCardFunctionalTitle(), victim);
             send = new SendMessage(player.getGame().getGid(), msg);

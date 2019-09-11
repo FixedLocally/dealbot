@@ -93,6 +93,8 @@ public class SlyDealActionCard extends ActionCard {
             Card card = victim.getPropertyDecks().get(group).get(order);
             EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.YOU_HAVE_USED_AGAINST(getCardFunctionalTitle(), victim.getName()));
             player.getGame().execute(edit);
+            SendMessage send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_HAVE_USED_AGAINST(player.getName(), getCardFunctionalTitle(), victim.getName()));
+            player.getGame().execute(send);
             victim.promptSayNo(translation.SLY_DEAL_SAY_NO_PROMPT(player.getName(), group, card.getCardTitle()), () -> {
                 List<Card> props = player.getPropertyDecks().getOrDefault(group, new ArrayList<>());
                 props.add(card);
@@ -102,10 +104,10 @@ public class SlyDealActionCard extends ActionCard {
             }, () -> {
                 // tell the sender its objected
                 player.getGame().log("Objection!");
-                SendMessage send = new SendMessage(player.getTgid(), translation.VICTIM_SAID_NO(victim.getName()));
-                player.getGame().execute(send);
-                send = new SendMessage(player.getTgid(), translation.VICTIM_SAID_NO(victim.getName()));
-                player.getGame().execute(send);
+                SendMessage _send = new SendMessage(player.getTgid(), translation.VICTIM_SAID_NO(victim.getName()));
+                player.getGame().execute(_send);
+                _send = new SendMessage(player.getTgid(), translation.VICTIM_SAID_NO(victim.getName()));
+                player.getGame().execute(_send);
                 player.promptForCard();
             });
         }
