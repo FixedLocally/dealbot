@@ -463,7 +463,7 @@ public class GamePlayer {
                 total += currencyDeck.get(i).currencyValue();
             }
         }
-        int k = 0;
+        int k = -1;
         for (Integer grp : propertyDecks.keySet()) {
             List<Card> get = propertyDecks.get(grp);
             for (int i = 0; i < get.size(); i++) {
