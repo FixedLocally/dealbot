@@ -177,7 +177,7 @@ public class GamePlayer {
     }
 
     public void startTurn() {
-        game.schedule(this::endTurn, 1000 * game.getTurnWait());
+        game.schedule(this::endTurnTimeout, 1000 * game.getTurnWait());
         game.execute(new DeleteMessage(tgid, stateMessageId));
         game.execute(new DeleteMessage(tgid, globalStateMessageId));
         stateMessageId = 0; // make it resend the self state message every turn
@@ -196,7 +196,7 @@ public class GamePlayer {
         sendState();
         // before we actually prompt for a card, check for win condition
         if (checkWinCondition()) {
-            endTurn(); // the game will take care of the announcement
+            endTurnVoluntary(); // the game will take care of the announcement
             return;
         }
         boolean hasWildcardsOrBuildings = propertyDecks.values().stream().anyMatch(x -> x.stream().anyMatch(xx -> xx instanceof WildcardPropertyCard || xx instanceof BuildingActionCard));
@@ -213,7 +213,7 @@ public class GamePlayer {
             buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.MANAGE_CARD_MENU()).callbackData(nonce + ":wildcard_menu")});
         } else if (actionCount >= 3) {
             // if the player is out of actions and got nothing to manage, end them
-            endTurn();
+            endTurnVoluntary();
             return;
         }
         String msg = translation.CHOOSE_AN_ACTION(3 - actionCount);
@@ -708,8 +708,17 @@ public class GamePlayer {
         --actionCount;
     }
 
-    public void endTurn() {
-        game.execute(new DeleteMessage(tgid, messageId));
+    public void endTurnTimeout() {
+        endTurn(false);
+    }
+
+    public void endTurnVoluntary() {
+        endTurn(true);
+    }
+
+    public void endTurn(boolean voluntary) {
+        String msg = voluntary ? translation.PASS_CLICK() : translation.PASS_TIMEOUT();
+        game.execute(new EditMessageText(tgid, messageId, msg));
         messageId = 0;
         game.cancelFuture();
         cardsPlayed += actionCount;
@@ -721,7 +730,7 @@ public class GamePlayer {
             for (int i = 0; i < hand.size(); i++) {
                 buttons[i][0] = new InlineKeyboardButton(hand.get(i).getCardTitle()).callbackData(nonce + ":dispose_card:" + i);
             }
-            String msg = translation.DISPOSE_CARD(handCount() - 7);
+            msg = translation.DISPOSE_CARD(handCount() - 7);
             if (disposeMessageId == 0) {
                 SendMessage send = new SendMessage(tgid, msg);
                 send.replyMarkup(new InlineKeyboardMarkup(buttons));
@@ -758,7 +767,7 @@ public class GamePlayer {
             removeHand(disposed);
             game.addToMainDeck(disposed);
         }
-        endTurn();
+        endTurnTimeout();
     }
 
     public int getGroupRent(int group) {

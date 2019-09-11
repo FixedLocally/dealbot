@@ -407,6 +407,12 @@ public class Translation {
     public String WON_ANNOUNCEMENT(int tgid, String name) {
         return String.format("<a href=\"tg://user?id=%1$s\">%2$s</a> has successfully gathered 3 full sets of properties and won!", tgid, name);
     }
+    public String PASS_TIMEOUT() {
+        return "Time's up!";
+    }
+    public String PASS_CLICK() {
+        return "You have ended your turn.";
+    }
     public String NEW_GAME_PROMPT() {
         return "\nType /play to start a new game";
     }

@@ -768,7 +768,7 @@ public class Game {
                 player.play(this.currentCard);
                 return true;
             case "end_turn":
-                player.endTurn();
+                player.endTurnVoluntary();
                 return true;
             case "card_arg":
                 String[] subarray = new String[args.length - 1];
@@ -803,7 +803,7 @@ public class Game {
                 Card disposed = player.handCardAt(Integer.parseInt(args[1]));
                 player.removeHand(disposed);
                 addToMainDeck(disposed);
-                player.endTurn();
+                player.endTurnVoluntary();
                 return true;
             case "pay_choose":
             case "pay_confirm":
@@ -880,7 +880,7 @@ public class Game {
             // restart end turn timer
 
             long time = getTurnWait() * 1000 - turnTime;
-            schedule(gamePlayers.get(currentTurn)::endTurn, time);
+            schedule(gamePlayers.get(currentTurn)::endTurnTimeout, time);
             turnStartTime = System.currentTimeMillis();
         }
         return true;

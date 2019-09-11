@@ -412,6 +412,15 @@ public class TraditionalChinese extends Translation {
     public String PASS_ANNOUNCEMENT() {
         return "%s 選擇結束回合";
     }
+    public String WON_ANNOUNCEMENT(int tgid, String name) {
+        return String.format("<a href=\"tg://user?id=%1$s\">%2$s</a> 成功收集三套完整物業，並勝出遊戲！", tgid, name);
+    }
+    public String PASS_TIMEOUT() {
+        return "時間到！";
+    }
+    public String PASS_CLICK() {
+        return "你結束了你的回合。";
+    }
     @Override
     public String NEW_GAME_PROMPT() {
         return "\n按 /play 來開始新遊戲";
