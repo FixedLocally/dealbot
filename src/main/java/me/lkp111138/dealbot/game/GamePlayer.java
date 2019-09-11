@@ -343,7 +343,7 @@ public class GamePlayer {
 
     public void sendGlobalState(String s) {
         if (globalStateMessageId == 0) {
-            SendMessage send = new SendMessage(tgid, s);
+            SendMessage send = new SendMessage(tgid, s).parseMode(ParseMode.HTML);
             game.execute(send, new Callback<SendMessage, SendResponse>() {
                 @Override
                 public void onResponse(SendMessage request, SendResponse response) {

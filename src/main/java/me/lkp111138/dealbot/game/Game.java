@@ -595,7 +595,7 @@ public class Game {
                 int count = PropertyCard.realCount(props);
                 int total = PropertyCard.propertySetCounts[group];
                 if (count >= total) {
-                    currentState.append("**");
+                    currentState.append("<b>");
                 }
                 currentState.append(translation.PROPERTY_GROUP(group)).append(" (").append(count).append("/")
                         .append(total).append("): ");
@@ -604,7 +604,7 @@ public class Game {
                 }
                 currentState.setLength(currentState.length() - 2);
                 if (count >= total) {
-                    currentState.append("**");
+                    currentState.append("</b>");
                 }
                 currentState.append("\n");
             }
@@ -618,7 +618,7 @@ public class Game {
         if (player.checkWinCondition()) {
             // won
             String msg = translation.WON_ANNOUNCEMENT(player.getTgid(), player.getName());
-            execute(new SendMessage(gid, getGlobalState()).parseMode(ParseMode.Markdown));
+            execute(new SendMessage(gid, getGlobalState()).parseMode(ParseMode.HTML));
             this.execute(new SendMessage(gid, msg).parseMode(ParseMode.HTML));
             this.kill(false);
             return;
