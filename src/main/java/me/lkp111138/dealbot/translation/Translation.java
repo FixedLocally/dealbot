@@ -588,34 +588,7 @@ public class Translation {
     }
 
     public String ACHIEVEMENT_TITLE(String achv_key) {
-        switch (achv_key) {
-            case "FIRST_GAME":
-                return "**Newbie**\n";
-            case "FIRST_WIN":
-                return "**I won**\n";
-            case "PLAY_WITH_MINT":
-                return "**You need a mint?**\n";
-            case "FIRST_BLOOD":
-                return "**First Game**\n";
-            case "ROOKIE":
-                return "**Rookie**\n";
-            case "FAMILIARIZED":
-                return "**Familiarized**\n";
-            case "ADDICTED":
-                return "**Addicted**\n";
-            case "AMATEUR":
-                return "**Amateur**\n";
-            case "ADEPT":
-                return "**Adept**\n";
-            case "EXPERT":
-                return "**Expert**\n";
-            case "LOSE_IT_ALL":
-                return "**Lose it all**\n";
-            case "DEEP_FRIED":
-                return "**Deep fried**\n";
-            default:
-                return achv_key;
-        }
+        return ACHV_TITLE(DealBot.Achievement.valueOf(achv_key));
     }
 
     public String ACHIEVEMENT_DESC(String achv_key) {

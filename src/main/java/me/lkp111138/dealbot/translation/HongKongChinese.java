@@ -150,38 +150,6 @@ public class HongKongChinese extends Translation {
     }
 
     @Override
-    public String ACHIEVEMENT_TITLE(String achv_key) {
-        switch (achv_key) {
-            case "FIRST_GAME":
-                return "**新手**\n";
-            case "FIRST_WIN":
-                return "**我贏了！**\n";
-            case "PLAY_WITH_MINT":
-                return "**You need a mint?**\n";
-            case "FIRST_BLOOD":
-                return "**第一滴血**\n";
-            case "ROOKIE":
-                return "**初出茅廬**\n";
-            case "FAMILIARIZED":
-                return "**熟手**\n";
-            case "ADDICTED":
-                return "**上癮**\n";
-            case "AMATEUR":
-                return "**業餘選手**\n";
-            case "ADEPT":
-                return "**老手**\n";
-            case "EXPERT":
-                return "**專家**\n";
-            case "LOSE_IT_ALL":
-                return "**一敗塗地**\n";
-            case "DEEP_FRIED":
-                return "**油炸**\n";
-            default:
-                return achv_key;
-        }
-    }
-
-    @Override
     public String ACHIEVEMENT_DESC(String achv_key) {
         switch (achv_key) {
             case "FIRST_GAME":

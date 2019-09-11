@@ -3,7 +3,6 @@ package me.lkp111138.dealbot.commands;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.User;
-import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.Main;
@@ -28,10 +27,10 @@ public class AchvCommand implements Command {
             int count = 0;
             while (rs.next()) {
                 ++count;
-                sb.append(translation.ACHIEVEMENT_TITLE(rs.getString(1)));
+                sb.append(translation.ACHIEVEMENT_TITLE(rs.getString(1))).append("\n");
             }
             sb.append(String.format(translation.A_TOTAL_OF(), count));
-            bot.execute(new SendMessage(msg.chat().id(), sb.toString()).replyToMessageId(msg.messageId()).parseMode(ParseMode.Markdown));
+            bot.execute(new SendMessage(msg.chat().id(), sb.toString()).replyToMessageId(msg.messageId()));
         } catch (SQLException e) {
             e.printStackTrace();
         }
