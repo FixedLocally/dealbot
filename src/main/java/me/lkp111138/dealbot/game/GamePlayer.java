@@ -293,14 +293,22 @@ public class GamePlayer {
             if (props.isEmpty()) {
                 continue;
             }
-            state.append(translation.PROPERTY_GROUP(group)).append(" ").append(props.size()).append("/")
-                    .append(PropertyCard.propertySetCounts[group]).append(" ($ ")
+            int possessed = PropertyCard.realCount(props);
+            int max = PropertyCard.propertySetCounts[group];
+            if (possessed >= max) {
+                state.append("<b>");
+            }
+            state.append(translation.PROPERTY_GROUP(group)).append(" ").append(possessed).append("/")
+                    .append(max).append(" ($ ")
                     .append(PropertyCard.getRent(group, props))
                     .append("M) ").append(": ");
             for (Card prop : props) {
-                state.append("- ").append(prop.getCardTitle()).append(", ");
+                state.append(prop.getCardTitle()).append(", ");
             }
             state.setLength(state.length() - 2);
+            if (possessed >= max) {
+                state.append("</b>");
+            }
             state.append("\n");
         }
         return state.toString();
@@ -308,7 +316,7 @@ public class GamePlayer {
 
     public void sendState() {
         if (stateMessageId == 0) {
-            SendMessage send = new SendMessage(tgid, getMyState());
+            SendMessage send = new SendMessage(tgid, getMyState()).parseMode(ParseMode.HTML);
             game.execute(send, new Callback<SendMessage, SendResponse>() {
                 @Override
                 public void onResponse(SendMessage request, SendResponse response) {
@@ -321,7 +329,7 @@ public class GamePlayer {
                 }
             });
         } else {
-            EditMessageText edit = new EditMessageText(tgid, stateMessageId, getMyState());
+            EditMessageText edit = new EditMessageText(tgid, stateMessageId, getMyState()).parseMode(ParseMode.HTML);
             game.execute(edit);
         }
     }
@@ -376,22 +384,20 @@ public class GamePlayer {
 
     public void sendGlobalState(String s) {
         if (globalStateMessageId == 0) {
-            SendMessage send = new SendMessage(tgid, s).parseMode(ParseMode.HTML);
-            game.execute(send, new Callback<SendMessage, SendResponse>() {
-                @Override
-                public void onResponse(SendMessage request, SendResponse response) {
-                    globalStateMessageId = response.message().messageId();
-                }
-
-                @Override
-                public void onFailure(SendMessage request, IOException e) {
-
-                }
-            });
-        } else {
-            EditMessageText edit = new EditMessageText(tgid, globalStateMessageId, s);
-            game.execute(edit);
+            game.execute(new DeleteMessage(tgid, globalStateMessageId));
         }
+        SendMessage send = new SendMessage(tgid, s).parseMode(ParseMode.HTML);
+        game.execute(send, new Callback<SendMessage, SendResponse>() {
+            @Override
+            public void onResponse(SendMessage request, SendResponse response) {
+                globalStateMessageId = response.message().messageId();
+            }
+
+            @Override
+            public void onFailure(SendMessage request, IOException e) {
+
+            }
+        });
     }
 
     public String getName() {
@@ -420,7 +426,7 @@ public class GamePlayer {
     }
 
     private void realCollectRent(int value, int group, GamePlayer collector) {
-        // we first check if the player's currency deck can cover the rent
+        game.logf("collecting rent of %s from %s for", value, tgid, collector.tgid);
         paymentValue = value;
         paymentSelectedIndices.clear();
         paymentSelectedPropertyIndices.clear();

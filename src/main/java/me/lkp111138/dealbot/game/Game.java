@@ -454,13 +454,14 @@ public class Game {
                 int actionUsed = gamePlayer.getCardsPlayed();
                 int rentCollected = gamePlayer.getRentCollected();
                 int won = i == currentTurn ? 1 : 0;
-                PreparedStatement stmt = conn.prepareStatement("update tg_users set game_minutes=game_minutes=?, game_count=game_count+1, won_count=won_count+?, cards_played=cards_played+?, currency_collected=currency_collected+?, properties_collected=properties_collected+?, rent_collected=rent_collected+?");
+                PreparedStatement stmt = conn.prepareStatement("update tg_users set game_minutes=game_minutes=?, game_count=game_count+1, won_count=won_count+?, cards_played=cards_played+?, currency_collected=currency_collected+?, properties_collected=properties_collected+?, rent_collected=rent_collected+? where tgid=?");
                 stmt.setFloat(1, gameMinutes);
                 stmt.setInt(2, won);
                 stmt.setInt(3, actionUsed);
                 stmt.setInt(4, currencyCollected);
                 stmt.setInt(5, propertiesPlayed);
                 stmt.setInt(6, rentCollected);
+                stmt.setInt(7, gamePlayer.getTgid());
                 stmt.executeUpdate();
                 stmt.close();
             }
@@ -554,9 +555,7 @@ public class Game {
         // tell the current player the current situation
         GamePlayer player = gamePlayers.get(currentTurn);
         String currentState = getGlobalState();
-        for (GamePlayer gamePlayer : gamePlayers) {
-            gamePlayer.sendGlobalState(currentState);
-        }
+        player.sendGlobalState(currentState);
         execute(new SendMessage(gid, currentState).parseMode(ParseMode.HTML));
         player.addHand(mainDeck.remove(0));
         player.addHand(mainDeck.remove(0));
@@ -878,7 +877,6 @@ public class Game {
             // everyone has paid
             gamePlayers.get(currentTurn).promptForCard();
             // restart end turn timer
-
             long time = getTurnWait() * 1000 - turnTime;
             schedule(gamePlayers.get(currentTurn)::endTurnTimeout, time);
             turnStartTime = System.currentTimeMillis();
