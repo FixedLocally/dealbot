@@ -140,7 +140,7 @@ public class TraditionalChinese extends Translation {
         return "強制交易";
     }
     public String WILDCARD_RENT(int g1, int g2) {
-        return String.format("租金 [%d / %d]", g1, g2);
+        return String.format("租金 [%s / %s]", PROPERTY_GROUP(g1), PROPERTY_GROUP(g2));
     }
     public String RAINBOW_RENT() {
         return "多功能租金牌";

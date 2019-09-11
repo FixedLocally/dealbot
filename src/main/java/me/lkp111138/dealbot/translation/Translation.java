@@ -134,7 +134,7 @@ public class Translation {
         return "Forced Deal";
     }
     public String WILDCARD_RENT(int g1, int g2) {
-        return String.format("Rent [%d / %d]", g1, g2);
+        return String.format("Rent [%s / %s]", PROPERTY_GROUP(g1), PROPERTY_GROUP(g2));
     }
     public String RAINBOW_RENT() {
         return "Wildcard Rent";
