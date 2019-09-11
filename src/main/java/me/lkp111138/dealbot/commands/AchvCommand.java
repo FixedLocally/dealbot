@@ -20,8 +20,8 @@ public class AchvCommand implements Command {
         if (msg.replyToMessage() != null) {
             target = msg.replyToMessage().from();
         }
+        Translation translation = Translation.get(DealBot.lang(msg.chat().id()));
         try (PreparedStatement stmt = Main.getConnection().prepareStatement("SELECT achv FROM achv_log WHERE tgid=?")) {
-            Translation translation = Translation.get(DealBot.lang(msg.chat().id()));
             stmt.setInt(1, target.id());
             ResultSet rs = stmt.executeQuery();
             StringBuilder sb = new StringBuilder(translation.ACHV_UNLOCKED());
