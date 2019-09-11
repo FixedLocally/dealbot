@@ -229,7 +229,7 @@ public class TraditionalChinese extends Translation {
                     collector, amount, secs);
         }
         if (group == 11) {
-            return String.format("%s 正向你收集 $ %dM 作為生日禮物！你有 %d 秒選擇如何繳付。",
+            return String.format("%s 正向你收集 $ %dM 的債務！你有 %d 秒選擇如何繳付。",
                     collector, amount, secs);
         }
         return "";
@@ -346,7 +346,7 @@ public class TraditionalChinese extends Translation {
         return String.format("你使用了 %s 收取 %s 的租金。", card, PROPERTY_GROUP(group));
     }
     public String SOMEONE_HAVE_USED_RENT_FOR(String name, String card, int group) {
-        return String.format("%s 你使用了 %s 收取 %s 的租金。", name, card, PROPERTY_GROUP(group));
+        return String.format("%s 使用了 %s 收取 %s 的租金。", name, card, PROPERTY_GROUP(group));
     }
     public String YOU_HAVE_USED_RENT_FOR_AGAINST(String card, String victim, int group) {
         return String.format("你使用了 %1$s 向 %3$s 收取 %2$s 的租金。", card, PROPERTY_GROUP(group), victim);
