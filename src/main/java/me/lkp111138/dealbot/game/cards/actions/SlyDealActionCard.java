@@ -91,13 +91,13 @@ public class SlyDealActionCard extends ActionCard {
             int group = Integer.parseInt(args[1]);
             int order = Integer.parseInt(args[2]);
             GamePlayer victim = player.getGame().getGamePlayers().get(index);
-            DealBot.triggerAchievement(victim.getTgid(), DealBot.Achievement.WHERE_DID_IT_GO);
             Card card = victim.getPropertyDecks().get(group).get(order);
             EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.YOU_HAVE_USED_AGAINST(getCardFunctionalTitle(), victim.getName()));
             player.getGame().execute(edit);
             SendMessage send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_HAVE_USED_AGAINST(player.getName(), getCardFunctionalTitle(), victim.getName()));
             player.getGame().execute(send);
             victim.promptSayNo(translation.SLY_DEAL_SAY_NO_PROMPT(player.getName(), group, card.getCardTitle()), () -> {
+                DealBot.triggerAchievement(victim.getTgid(), DealBot.Achievement.WHERE_DID_IT_GO);
                 List<Card> props = player.getPropertyDecks().getOrDefault(group, new ArrayList<>());
                 props.add(card);
                 player.getPropertyDecks().put(group, props);
