@@ -5,8 +5,10 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.*;
 import com.pengrad.telegrambot.request.AnswerCallbackQuery;
 import com.pengrad.telegrambot.request.AnswerPreCheckoutQuery;
+import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.commands.*;
 import me.lkp111138.dealbot.game.Game;
+import me.lkp111138.dealbot.translation.Translation;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -194,7 +196,16 @@ public class DealBot {
         }
     }
 
-    public static boolean triggerAchievement(int tgid, Achievement ach) {
+    public static void triggerAchievement(int tgid, Achievement ach) {
+        if (realTriggerAchievement(tgid, ach)) {
+            Game g = Game.byUser(tgid);
+            Translation translation = g.getTranslation();
+            SendMessage send = new SendMessage(tgid, translation.ACHV_MSG(ach));
+            g.execute(send);
+        }
+    }
+
+    public static boolean realTriggerAchievement(int tgid, Achievement ach) {
         try {
             Connection conn = Main.getConnection();
             PreparedStatement stmt = conn.prepareStatement("insert into achv_log values (?, ?)");

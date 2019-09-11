@@ -1,5 +1,6 @@
 package me.lkp111138.dealbot.translation;
 
+import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.Card;
 
@@ -473,6 +474,83 @@ public class Translation {
 
     public String ACHIEVEMENT_UNLOCKED() {
         return "Achievement Unlocked!\n";
+    }
+    public String ACHV_TITLE(DealBot.Achievement ach) {
+        switch (ach) {
+            case MASTER:
+                return "Master";
+            case WINNER:
+                return "Winner";
+            case ADEPTED:
+                return "Adepted";
+            case MANSION:
+                return "Mansion";
+            case ADDICTED:
+                return "Addicted";
+            case FAMILIAR:
+                return "Familiar";
+            case THANK_YOU:
+                return "Thank You!";
+            case SHOCK_BILL:
+                return "Shock Bill";
+            case WELCOME_HOME:
+                return "Welcome Home!";
+            case HOTEL_MANAGER:
+                return "Hotel Manager";
+            case RENT_COLLECTOR:
+                return "Rent Collector";
+            case GETTING_STARTED:
+                return "Getting Started";
+            case WHERE_DID_IT_GO:
+                return "Where Did It Go?";
+            case NICE_DEAL_WITH_U:
+                return "Nice Deal With You!";
+            case WHAT_WAS_THIS_DEBT:
+                return "What was this debt?";
+            case YOUR_PROPERTY_ISNT_YOURS:
+                return "Your Property Isn't Yours";
+        }
+        return "";
+    }
+    public String ACHV_DESC(DealBot.Achievement ach) {
+        switch (ach) {
+            case MASTER:
+                return "Win 50 games.";
+            case WINNER:
+                return "Win a game.";
+            case ADEPTED:
+                return "Win 10 games.";
+            case MANSION:
+                return "Build a house on your full set of properties.";
+            case ADDICTED:
+                return "Play 50 games.";
+            case FAMILIAR:
+                return "Play 10 games";
+            case THANK_YOU:
+                return "Collect a rent of $ 20M+. Must be sweet.";
+            case SHOCK_BILL:
+                return "Be collected a rent of $ 20M+. It probably hurts?";
+            case WELCOME_HOME:
+                return "Be collected rent once.";
+            case HOTEL_MANAGER:
+                return "Build a hotel on your full set of properties.";
+            case RENT_COLLECTOR:
+                return "Collect rent once.";
+            case GETTING_STARTED:
+                return "Play a game.";
+            case WHERE_DID_IT_GO:
+                return "Get something stolen by being the target of Sly Deal.";
+            case NICE_DEAL_WITH_U:
+                return "Be forced into a deal be being targeted by Forced Deal.";
+            case WHAT_WAS_THIS_DEBT:
+                return "Be forced to pay a debt.";
+            case YOUR_PROPERTY_ISNT_YOURS:
+                return "Have your hard earnt full set taken away.";
+        }
+        return "";
+    }
+    public String ACHV_MSG(DealBot.Achievement ach) {
+        return String.format("%s%s\n%s", ACHV_UNLOCKED(), ACHV_TITLE(ach), ACHV_DESC(ach));
     }
 
     public String ACHV_UNLOCKED() {

@@ -1,5 +1,6 @@
 package me.lkp111138.dealbot.translation;
 
+import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.game.cards.Card;
 
@@ -498,6 +499,80 @@ public class TraditionalChinese extends Translation {
     @Override
     public String ACHIEVEMENT_UNLOCKED() {
         return "解鎖成就！\n";
+    }
+    public String ACHV_TITLE(DealBot.Achievement ach) {
+        switch (ach) {
+            case MASTER:
+                return "大師";
+            case WINNER:
+                return "贏家";
+            case ADEPTED:
+                return "老手";
+            case MANSION:
+                return "大宅";
+            case ADDICTED:
+                return "上癮";
+            case FAMILIAR:
+                return "新手";
+            case THANK_YOU:
+                return "感謝繳付！";
+            case SHOCK_BILL:
+                return "震撼帳單";
+            case WELCOME_HOME:
+                return "歡迎回家！";
+            case HOTEL_MANAGER:
+                return "酒店經理";
+            case RENT_COLLECTOR:
+                return "收租者";
+            case GETTING_STARTED:
+                return "第一場";
+            case WHERE_DID_IT_GO:
+                return "去哪了？";
+            case NICE_DEAL_WITH_U:
+                return "十分值得！";
+            case WHAT_WAS_THIS_DEBT:
+                return "什麼債務？";
+            case YOUR_PROPERTY_ISNT_YOURS:
+                return "Y你的物業不是你的";
+        }
+        return "";
+    }
+    public String ACHV_DESC(DealBot.Achievement ach) {
+        switch (ach) {
+            case MASTER:
+                return "贏 50 場遊戲。";
+            case WINNER:
+                return "贏 1 場遊戲。";
+            case ADEPTED:
+                return "贏 10 場遊戲。";
+            case MANSION:
+                return "在你的完整物業上蓋房子。";
+            case ADDICTED:
+                return "玩 50 場遊戲。";
+            case FAMILIAR:
+                return "玩 10 場遊戲。";
+            case THANK_YOU:
+                return "收取一次 $ 20M 的租金。我是大富豪了！";
+            case SHOCK_BILL:
+                return "被收取一次 $ 20M 的租金。一夜破產的感覺如何？";
+            case WELCOME_HOME:
+                return "被收取一次租金。";
+            case HOTEL_MANAGER:
+                return "在你的完整物業上蓋酒店。";
+            case RENT_COLLECTOR:
+                return "收取一次租金。";
+            case GETTING_STARTED:
+                return "玩 1 場遊戲。";
+            case WHERE_DID_IT_GO:
+                return "被其他玩家使用 \"盜取\" 偷去物業。";
+            case NICE_DEAL_WITH_U:
+                return "被其他玩家使用 \"強制交易\"。";
+            case WHAT_WAS_THIS_DEBT:
+                return "被其他玩家使用 \"收取債務\"。";
+            case YOUR_PROPERTY_ISNT_YOURS:
+                return "被其他玩家使用 \"強制交易\"取去一整套物業。";
+        }
+        return "";
     }
     @Override
     public String ACHV_UNLOCKED() {
