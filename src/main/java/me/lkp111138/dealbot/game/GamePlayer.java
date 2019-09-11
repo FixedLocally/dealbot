@@ -364,7 +364,7 @@ public class GamePlayer {
             actionIfObjected.run();
             SendMessage _send = new SendMessage(game.getGid(), translation.SB_SAID_NO(getName()));
             game.execute(_send);
-            prompter.promptSayNo(translation.SAID_NO_PROMPT_SAY_NO(getName()), actionIfApproved, actionIfObjected, GamePlayer.this);
+            prompter.promptSayNo(translation.SAID_NO_PROMPT_SAY_NO(getName()), actionIfObjected, actionIfApproved, GamePlayer.this);
         };
         game.execute(send, new Callback<SendMessage, SendResponse>() {
             @Override
