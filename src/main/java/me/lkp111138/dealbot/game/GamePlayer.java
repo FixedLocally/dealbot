@@ -634,19 +634,20 @@ public class GamePlayer {
         switch (args[1]) {
             case "y":
                 // say no
-                boolean removed = false;
+                Card removed = null;
                 for (Card card : hand) {
                     if (card instanceof JustSayNoCard) {
                         hand.remove(card);
-                        removed = true;
+                        removed = card;
                         break;
                     }
                 }
                 System.out.println(removed);
-                if (removed) {
+                if (removed != null) {
                     // did say no, notify sender
                     savedActionIfObjected.run();
                     game.execute(new EditMessageText(tgid, mid, translation.SAID_NO()));
+                    game.addToUsedDeck(removed);
                     break;
                 }
                 // pass thru if not removed

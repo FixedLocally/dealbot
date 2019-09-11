@@ -737,7 +737,10 @@ public class Game {
             case "play_card":
                 this.currentCard = player.handCardAt(Integer.parseInt(args[1]));
                 player.removeHand(this.currentCard);
-                usedDeck.add(this.currentCard);
+                if (this.currentCard instanceof ActionCard) {
+                    // only action cards should go to the used deck
+                    usedDeck.add(this.currentCard);
+                }
                 player.play(this.currentCard);
                 return true;
             case "end_turn":
