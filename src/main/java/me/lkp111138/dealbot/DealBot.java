@@ -194,6 +194,19 @@ public class DealBot {
         }
     }
 
+    public static boolean triggerAchievement(int tgid, Achievement ach) {
+        try {
+            Connection conn = Main.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("insert into achv_log values (?, ?)");
+            stmt.setInt(1, tgid);
+            stmt.setString(2, ach.name());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
     /**
      * Query user or group ban status
      * @param tgid the id to be ueried
@@ -247,5 +260,24 @@ public class DealBot {
                     ", type='" + type + '\'' +
                     '}';
         }
+    }
+
+    public enum Achievement {
+        GETTING_STARTED,            // play 1 game
+        FAMILIAR,                   // play 10 games
+        ADDICTED,                   // play 50 games
+        WINNER,                     // win 1 game
+        ADEPTED,                    // win 10 games
+        MASTER,                     // win 50 games
+        WHAT_WAS_THIS_DEBT,         // be the target of debt collector
+        WHERE_DID_IT_GO,            // be the target of sly deal
+        NICE_DEAL_WITH_U,           // be the target of forced deal
+        YOUR_PROPERTY_ISNT_YOURS,   // be the target of deal breaker
+        RENT_COLLECTOR,             // collect rent for once
+        WELCOME_HOME,               // be collected rent
+        MANSION,                    // build a house on top of ur properties
+        HOTEL_MANAGER,              // build a hotel
+        SHOCK_BILL,                 // be collected a rent of 20M+
+        THANK_YOU;                  // collect a rent of 20M+
     }
 }

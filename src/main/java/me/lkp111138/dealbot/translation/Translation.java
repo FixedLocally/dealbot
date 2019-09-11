@@ -476,7 +476,7 @@ public class Translation {
     }
 
     public String ACHV_UNLOCKED() {
-        return "Achievements unlocked:\n";
+        return "Achievement unlocked:\n";
     }
 
     public String A_TOTAL_OF() {

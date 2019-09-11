@@ -464,6 +464,31 @@ public class Game {
                 stmt.setInt(7, gamePlayer.getTgid());
                 stmt.executeUpdate();
                 stmt.close();
+                stmt = conn.prepareStatement("select game_count, won_count from tg_users where tgid=?");
+                stmt.setInt(1, gamePlayer.getTgid());
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    int wins = rs.getInt(2);
+                    int games = rs.getInt(1);
+                    if (wins == 1) {
+                        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.WINNER);
+                    }
+                    if (wins == 10) {
+                        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.ADEPTED);
+                    }
+                    if (wins == 50) {
+                        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.MASTER);
+                    }
+                    if (games == 1) {
+                        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.GETTING_STARTED);
+                    }
+                    if (games == 10) {
+                        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.FAMILIAR);
+                    }
+                    if (games == 50) {
+                        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.ADDICTED);
+                    }
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
