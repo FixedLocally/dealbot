@@ -70,7 +70,7 @@ public class ForcedDealActionCard extends ActionCard {
                 for (int i = 0; i < get.size(); i++) {
                     Card card = get.get(i);
                     if (card instanceof WildcardPropertyCard) {
-                        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("[" + group + "] " + card.getCardTitle())
+                        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("[" + translation.PROPERTY_GROUP(group) + "] " + card.getCardTitle())
                                 .callbackData(nonce + ":card_arg:" + index + ":" + group + ":" + i)});
                     } else {
                         buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle())
@@ -96,7 +96,7 @@ public class ForcedDealActionCard extends ActionCard {
                 for (int i = 0; i < get.size(); i++) {
                     Card card = get.get(i);
                     if (card instanceof WildcardPropertyCard) {
-                        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("[" + group + "] " + card.getCardTitle())
+                        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("[" + translation.PROPERTY_GROUP(group) + "] " + card.getCardTitle())
                                 .callbackData(nonce + ":card_arg:" + index + ":" + args[1] + ":" + args[2] + ":" + group + ":" + i)});
                     } else {
                         buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle())

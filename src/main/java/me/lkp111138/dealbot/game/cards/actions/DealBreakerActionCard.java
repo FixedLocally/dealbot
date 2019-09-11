@@ -64,7 +64,7 @@ public class DealBreakerActionCard extends ActionCard {
             for (Integer group : victim.getPropertyDecks().keySet()) {
                 if (victim.getPropertyDecks().get(group).size() >= PropertyCard.propertySetCounts[group]) {
                     // is a full set
-                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("Group " + group)
+                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.PROPERTY_GROUP(group))
                             .callbackData(nonce + ":card_arg:" + index + ":" + group)});
                 }
             }

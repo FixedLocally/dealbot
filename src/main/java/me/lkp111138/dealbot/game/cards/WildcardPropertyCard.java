@@ -65,9 +65,9 @@ public class WildcardPropertyCard extends PropertyCard {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[groups.length + 1][1];
             int nonce = player.getGame().nextNonce();
             for (int i = 0; i < groups.length; i++) {
-                int possessed = player.getPropertyDecks().getOrDefault(groups[i], new ArrayList<>()).size();
+                int possessed = PropertyCard.realCount(player.getPropertyDecks().getOrDefault(groups[i], new ArrayList<>()));
                 int total = PropertyCard.propertySetCounts[groups[i]];
-                buttons[i][0] = new InlineKeyboardButton(groups[i] + " (" + possessed + "/" + total + ")").callbackData(nonce + ":card_arg:" + groups[i]);
+                buttons[i][0] = new InlineKeyboardButton(translation.PROPERTY_GROUP(groups[i]) + " (" + possessed + "/" + total + ")").callbackData(nonce + ":card_arg:" + groups[i]);
             }
             buttons[groups.length][0] = new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel");
             edit.replyMarkup(new InlineKeyboardMarkup(buttons));
