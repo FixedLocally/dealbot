@@ -99,7 +99,7 @@ public class PropertyCard implements Card {
 
     @Override
     public String getCardTitle() {
-        return "[" + group + "] " + title;
+        return "[" + translation.PROPERTY_GROUP(group) + "] " + title;
     }
 
     @Override
