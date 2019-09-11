@@ -123,6 +123,7 @@ public class PropertyCard implements Card {
             player.getGame().removeFromUsed(this);
             SendMessage send = new SendMessage(player.getTgid(), translation.GROUP_FULL());
             player.getGame().execute(send);
+            player.promptForCard();
         }
     }
 
