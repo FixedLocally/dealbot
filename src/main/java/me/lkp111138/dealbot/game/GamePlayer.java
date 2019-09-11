@@ -569,7 +569,8 @@ public class GamePlayer {
             case "pay_confirm":
                 List<Card> payment = getPaymentCurrencyCards();
                 int total = payment.stream().mapToInt(Card::currencyValue).sum();
-                if (total < paymentValue && payment.size() < currencyCount()) {
+                int totalCards = (int) (currencyCount() + propertyDecks.values().stream().mapToLong(x -> x.stream().filter(y -> y.currencyValue() > 0).count()).sum());
+                if (total < paymentValue && payment.size() < totalCards) {
                     // not enough and didnt do their best
                     AnswerCallbackQuery answer = new AnswerCallbackQuery(id);
                     answer.text(translation.PAYMENT_TOO_LOW());
