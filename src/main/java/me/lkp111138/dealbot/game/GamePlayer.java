@@ -364,7 +364,13 @@ public class GamePlayer {
             actionIfObjected.run();
             SendMessage _send = new SendMessage(game.getGid(), translation.SB_SAID_NO(getName()));
             game.execute(_send);
-            prompter.promptSayNo(translation.SAID_NO_PROMPT_SAY_NO(getName()), actionIfObjected, actionIfApproved, GamePlayer.this);
+            prompter.promptSayNo(translation.SAID_NO_PROMPT_SAY_NO(getName()), actionIfObjected, () -> {
+                // being objected again
+                // so we need to ask the victim if they will object the player's objection
+                // if the victim objects, ah here we go again
+                // in the victim approves, get beaten badly lol
+                promptSayNo(translation.SAID_NO_PROMPT_SAY_NO(prompter.getName()), actionIfApproved, actionIfObjected, prompter);
+            }, GamePlayer.this);
         };
         game.execute(send, new Callback<SendMessage, SendResponse>() {
             @Override
