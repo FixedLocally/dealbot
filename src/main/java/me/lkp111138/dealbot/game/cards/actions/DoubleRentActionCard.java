@@ -18,7 +18,7 @@ public class DoubleRentActionCard extends ActionCard {
     @Override
     public void use(GamePlayer player, String[] args) {
         player.setDoubleRentBuff(true);
-        player.getGame().execute(new SendMessage(player.getTgid(), translation.DBL_RENT_MSG()));
+        player.getGame().execute(new SendMessage(player.getTgid(), translation.DBL_RENT_MSG(player.getDoubleRentBuff())));
         player.getGame().execute(new SendMessage(player.getGame().getGid(),
                 translation.SOMEONE_HAVE_USED(player.getName(), getCardFunctionalTitle())));
         player.promptForCard();

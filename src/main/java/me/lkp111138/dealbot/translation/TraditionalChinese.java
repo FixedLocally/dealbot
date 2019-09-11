@@ -303,8 +303,8 @@ public class TraditionalChinese extends Translation {
     public String DBL_RENT_DESC() {
         return "下次收取租金時，金額將作雙倍計算。";
     }
-    public String DBL_RENT_MSG() {
-        return "本輪下一次收取租金時，金額將作雙倍計算。";
+    public String DBL_RENT_MSG(int multiplier) {
+        return String.format("本輪下一次收取租金時，金額將作 %d 倍計算。", multiplier);
     }
     public String FORCED_DEAL_DESC() {
         return "以自己一項強制換取另一名玩家的一項物業。不得為完整一套物業之一。";

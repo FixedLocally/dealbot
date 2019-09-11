@@ -296,8 +296,8 @@ public class Translation {
     public String DBL_RENT_DESC() {
         return "Doubles the next rent you collect.";
     }
-    public String DBL_RENT_MSG() {
-        return "The next rent you collect in this turn will be doubled.";
+    public String DBL_RENT_MSG(int multiplier) {
+        return String.format("The next rent you collect in this turn will be multiplied by %d.", multiplier);
     }
     public String FORCED_DEAL_DESC() {
         return "Takes a property from a player that is not a part of a full set, in exchange of one of your own.";
