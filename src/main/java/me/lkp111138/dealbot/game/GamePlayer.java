@@ -322,7 +322,11 @@ public class GamePlayer {
             actionIfApproved.run();
             sendState();
         };
-        savedActionIfObjected = actionIfObjected;
+        savedActionIfObjected = () -> {
+            actionIfObjected.run();
+            SendMessage _send = new SendMessage(game.getGid(), translation.SB_SAID_NO(getName()));
+            game.execute(_send);
+        };
         game.execute(send, new Callback<SendMessage, SendResponse>() {
             @Override
             public void onResponse(SendMessage request, SendResponse response) {

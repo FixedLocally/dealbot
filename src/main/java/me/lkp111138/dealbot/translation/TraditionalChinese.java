@@ -252,6 +252,9 @@ public class TraditionalChinese extends Translation {
     public String SAID_NO() {
         return "你使用了作出反對";
     }
+    public String SB_SAID_NO(String name) {
+        return name + " 使用了作出反對";
+    }
     public String SAID_YES() {
         return "你沒有使用作出反對";
     }

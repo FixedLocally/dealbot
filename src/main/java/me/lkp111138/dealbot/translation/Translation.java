@@ -245,6 +245,9 @@ public class Translation {
     public String SAID_NO() {
         return "You have used Just Say No!";
     }
+    public String SB_SAID_NO(String name) {
+        return name + " has used Just Say No!";
+    }
     public String SAID_YES() {
         return "You didn't use Just Say No!";
     }
