@@ -401,6 +401,9 @@ public class Translation {
     public String SB_PAID_SB(String name, String payee, String payment) {
         return name + " paid " + payee + " " + payment;
     }
+    public String SAID_NO_PROMPT_SAY_NO(String name) {
+        return name + " has used Just Say No! Do you like to use another Just Say No to counter that?";
+    }
     public String PASS_ANNOUNCEMENT() {
         return "%s ended their turn";
     }

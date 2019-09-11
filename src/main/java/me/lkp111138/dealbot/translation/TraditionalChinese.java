@@ -408,6 +408,9 @@ public class TraditionalChinese extends Translation {
     public String SB_PAID_SB(String name, String payee, String payment) {
         return name + " 向 " + payee + " 支付了 " + payment;
     }
+    public String SAID_NO_PROMPT_SAY_NO(String name) {
+        return name + " 使用了作出反對！你想用另外一張作出反對來抵銷嗎？";
+    }
     @Override
     public String PASS_ANNOUNCEMENT() {
         return "%s 選擇結束回合";

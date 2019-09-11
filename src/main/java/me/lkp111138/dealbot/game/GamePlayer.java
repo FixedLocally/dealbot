@@ -343,7 +343,7 @@ public class GamePlayer {
         sendState();
     }
 
-    public void promptSayNo(String msg, Runnable actionIfApproved, Runnable actionIfObjected) {
+    public void promptSayNo(String msg, Runnable actionIfApproved, Runnable actionIfObjected, GamePlayer prompter) {
         int nonce = game.nextNonce();
         SendMessage send = new SendMessage(tgid, msg);
         long sayNos = hand.stream().filter(x -> x instanceof JustSayNoCard).count();
@@ -363,6 +363,7 @@ public class GamePlayer {
             actionIfObjected.run();
             SendMessage _send = new SendMessage(game.getGid(), translation.SB_SAID_NO(getName()));
             game.execute(_send);
+            prompter.promptSayNo(translation.SAID_NO_PROMPT_SAY_NO(getName()), actionIfApproved, actionIfObjected, GamePlayer.this);
         };
         game.execute(send, new Callback<SendMessage, SendResponse>() {
             @Override
@@ -422,7 +423,7 @@ public class GamePlayer {
             if (game.confirmPayment(null, tgid)) {
                 confirmPayment();
             }
-        });
+        }, collector);
     }
 
     private void realCollectRent(int value, int group, GamePlayer collector) {

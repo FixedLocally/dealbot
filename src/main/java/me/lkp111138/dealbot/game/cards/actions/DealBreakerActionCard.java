@@ -95,7 +95,7 @@ public class DealBreakerActionCard extends ActionCard {
                 SendMessage _send = new SendMessage(player.getTgid(), translation.VICTIM_SAID_NO(victim.getName()));
                 player.getGame().execute(_send);
                 player.promptForCard();
-            });
+            }, player);
         }
     }
 }
