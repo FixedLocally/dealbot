@@ -41,6 +41,11 @@ public class GamePlayer {
     private int globalStateMessageId;
     private int disposeMessageId;
 
+    // stat stuff
+    private int propertiesPlayed = 0;
+    private int currencyCollected = 0;
+    private int cardsPlayed = 0;
+
     private Set<Integer> paymentSelectedIndices = new HashSet<>();
     private Set<Integer> paymentSelectedPropertyIndices = new HashSet<>();
     private int paymentMessageId;
@@ -88,6 +93,14 @@ public class GamePlayer {
     public void removeProperty(PropertyCard card, int group) {
         group = getRealCardGroup(card, group);
         propertyDecks.getOrDefault(group, new ArrayList<>()).remove(card);
+    }
+
+    public void playedProperty() {
+        ++propertiesPlayed;
+    }
+
+    public void playedCurrency(int amount) {
+        currencyCollected += amount;
     }
 
     public boolean addProperty(PropertyCard card, int group) {
@@ -693,6 +706,7 @@ public class GamePlayer {
         game.execute(new DeleteMessage(tgid, messageId));
         messageId = 0;
         game.cancelFuture();
+        cardsPlayed += actionCount;
         // dispose cards?
         if (handCount() > 7) {
             // need to dispose cards
@@ -743,5 +757,17 @@ public class GamePlayer {
 
     public int getGroupRent(int group) {
         return PropertyCard.getRent(group, propertyDecks.getOrDefault(group, new ArrayList<>()));
+    }
+
+    public int getPropertiesPlayed() {
+        return propertiesPlayed;
+    }
+
+    public int getCurrencyCollected() {
+        return currencyCollected;
+    }
+
+    public int getCardsPlayed() {
+        return cardsPlayed;
     }
 }

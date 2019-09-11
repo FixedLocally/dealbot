@@ -48,6 +48,7 @@ public class CurrencyCard implements Card {
     @Override
     public void execute(GamePlayer player, String[] args) {
         player.addCurrency(this);
+        player.playedCurrency(this.currencyValue);
         player.promptForCard();
         SendMessage send = new SendMessage(player.getTgid(), translation.YOU_DEPOSITED(getCardTitle()));
         player.getGame().execute(send);

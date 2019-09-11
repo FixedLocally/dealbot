@@ -111,6 +111,7 @@ public class PropertyCard implements Card {
     public void execute(GamePlayer player, String[] args) {
         if (player.addProperty(this, group)) {
             player.promptForCard();
+            player.playedProperty();
             SendMessage send = new SendMessage(player.getTgid(), translation.YOU_PLACED_PROP(getCardTitle()));
             player.getGame().execute(send);
             send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_PLACED_PROP(player.getName(), getCardTitle()));

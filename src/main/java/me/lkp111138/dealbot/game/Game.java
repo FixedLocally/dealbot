@@ -755,6 +755,7 @@ public class Game {
             case "use_as":
                 if (args[1].equals("money")) {
                     player.addCurrency(this.currentCard);
+                    player.playedCurrency(this.currentCard.currencyValue());
                     SendMessage send = new SendMessage(player.getTgid(), translation.YOU_DEPOSITED(this.currentCard.getCardTitle()));
                     player.getGame().execute(send);
                     send = new SendMessage(gid, translation.SOMEONE_DEPOSITED(player.getName(), this.currentCard.getCardTitle()));

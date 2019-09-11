@@ -53,6 +53,7 @@ public class WildcardPropertyCard extends PropertyCard {
                 return;
             }
             player.promptForCard();
+            player.playedProperty();
             SendMessage send = new SendMessage(player.getTgid(), translation.YOU_PLACED_PROP_AS(getCardTitle(), Integer.parseInt(args[0])));
             player.getGame().execute(send);
             send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_PLACED_PROP_AS(player.getName(), getCardTitle(), Integer.parseInt(args[0])));
