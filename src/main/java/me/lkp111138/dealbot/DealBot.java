@@ -62,20 +62,6 @@ public class DealBot {
         commands.put("me", new MeCommand());
         commands.put("state", commands.get("me"));
 
-        // achievements
-//        Achievement.registerAchievement(new FirstGameAchievement());
-//        Achievement.registerAchievement(new FirstWinAchievement());
-//        Achievement.registerAchievement(new PlayWithMintAchievement());
-//        Achievement.registerAchievement(new FirstBloodAchievement());
-//        Achievement.registerAchievement(new RookieAchievement());
-//        Achievement.registerAchievement(new FamiliarizedAchievement());
-//        Achievement.registerAchievement(new AddictedAchievement());
-//        Achievement.registerAchievement(new AmateurAchievement());
-//        Achievement.registerAchievement(new AdeptAchievement());
-//        Achievement.registerAchievement(new ExpertAchievement());
-//        Achievement.registerAchievement(new LoseItAllAchievement());
-//        Achievement.registerAchievement(new DeepFriedAchievement());
-
         // bans
         try (PreparedStatement stmt = Main.getConnection().prepareStatement("SELECT tgid, until, type from bans WHERE until>?")) {
             stmt.setInt(1, (int) (System.currentTimeMillis() / 1000));
@@ -201,6 +187,7 @@ public class DealBot {
             PreparedStatement stmt = conn.prepareStatement("update `groups` set lang=? where gid=?");
             stmt.setString(1, lang);
             stmt.setLong(2, gid);
+            stmt.executeUpdate();
             group_lang.put(gid, lang);
         } catch (SQLException e) {
             e.printStackTrace();
