@@ -45,15 +45,15 @@ public class RentActionCard extends ActionCard {
     public void use(GamePlayer player, String[] args) {
         // full wildcard: 1 payer
         // double wildcard: all pays
-        boolean doubleRentBuff = player.isDoubleRentBuff();
+        int doubleRentBuff = player.getDoubleRentBuff();
         if (args.length > 0) {
             int group = Integer.parseInt(args[0]);
             int value = player.getGroupRent(group);
             if (groups.length == 2) {
-                player.getGame().collectRentFromAll(value * (doubleRentBuff ? 2 : 1), group);
+                player.getGame().collectRentFromAll(value * doubleRentBuff, group);
                 player.setDoubleRentBuff(false);
                 EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
-                        translation.COLLECTING_RENT(null, group));
+                        translation.COLLECTING_RENT(null, group, value * doubleRentBuff));
                 player.getGame().execute(edit);
                 String msg = translation.YOU_HAVE_USED_RENT_FOR(getCardFunctionalTitle(), group);
                 SendMessage send = new SendMessage(player.getTgid(), msg);
@@ -66,11 +66,11 @@ public class RentActionCard extends ActionCard {
                 if (args.length > 1) {
                     // send them a huge rental bill!
                     int order = Integer.parseInt(args[1]);
-                    player.getGame().collectRentFromOne(value * (doubleRentBuff ? 2 : 1), group, order);
+                    player.getGame().collectRentFromOne(value * doubleRentBuff, group, order);
                     player.setDoubleRentBuff(false);
                     String victim = players.get(order).getName();
                     EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
-                            translation.COLLECTING_RENT(victim, group));
+                            translation.COLLECTING_RENT(victim, group, value * doubleRentBuff));
                     player.getGame().execute(edit);
                     String msg = translation.YOU_HAVE_USED_RENT_FOR_AGAINST(getCardFunctionalTitle(), victim, group);
                     SendMessage send = new SendMessage(player.getTgid(), msg);
@@ -102,7 +102,7 @@ public class RentActionCard extends ActionCard {
             int nonce = player.getGame().nextNonce();
             for (int i = 0; i < groups.length; i++) {
                 int group = groups[i];
-                buttons[i][0] = new InlineKeyboardButton(translation.PROPERTY_GROUP(group) + " ($ " + player.getGroupRent(group) * (doubleRentBuff ? 2 : 1) + "M)")
+                buttons[i][0] = new InlineKeyboardButton(translation.PROPERTY_GROUP(group) + " ($ " + player.getGroupRent(group) + "M x " + doubleRentBuff + ")")
                         .callbackData(nonce + ":card_arg:" + group);
             }
             buttons[groups.length][0] = new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel");

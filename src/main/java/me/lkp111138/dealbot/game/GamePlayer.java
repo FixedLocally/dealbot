@@ -33,7 +33,7 @@ public class GamePlayer {
     private final User user;
     private final Translation translation;
 
-    private boolean doubleRentBuff = false;
+    private int doubleRentBuff = 1;
 
     private int actionCount;
     private int messageId;
@@ -146,12 +146,16 @@ public class GamePlayer {
         return sets >= 3;
     }
 
-    public boolean isDoubleRentBuff() {
+    public int getDoubleRentBuff() {
         return doubleRentBuff;
     }
 
     public void setDoubleRentBuff(boolean buff) {
-        doubleRentBuff = buff;
+        if (buff) {
+            doubleRentBuff *= 2;
+        } else {
+            doubleRentBuff = 1;
+        }
     }
 
     public void startTurn() {

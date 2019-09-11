@@ -347,8 +347,8 @@ public class Translation {
     public String SOMEONE_HAVE_USED_RENT_FOR_AGAINST(String name, String card, String victim, int group) {
         return String.format("%s has used %s for group %s against %s.", name, card, PROPERTY_GROUP(group), victim);
     }
-    public String COLLECTING_RENT(String from, int group) {
-        return String.format("Collecting rent from %s for %s", from == null ? "everybody" : from, PROPERTY_GROUP(group));
+    public String COLLECTING_RENT(String from, int group, int amount) {
+        return String.format("Collecting rent of $ %dM from %s for %s", amount,  from == null ? "everybody" : from, PROPERTY_GROUP(group));
     }
     public String RENT_CHOOSE_GROUP() {
         return "Choose a group to collect rent for:";
