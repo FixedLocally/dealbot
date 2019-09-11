@@ -443,6 +443,30 @@ public class Game {
         }
         games.remove(gid);
         ended = true;
+        // save the stats
+        float gameMinutes = (System.currentTimeMillis() - startTime) / (float) 60000;
+        try {
+            Connection conn = Main.getConnection();
+            for (int i = 0; i < gamePlayers.size(); i++) {
+                GamePlayer gamePlayer = gamePlayers.get(i);
+                int propertiesPlayed = gamePlayer.getPropertiesPlayed();
+                int currencyCollected = gamePlayer.getCurrencyCollected();
+                int actionUsed = gamePlayer.getCardsPlayed();
+                int rentCollected = gamePlayer.getRentCollected();
+                int won = i == currentTurn ? 1 : 0;
+                PreparedStatement stmt = conn.prepareStatement("update tg_users set game_minutes=game_minutes=?, game_count=game_count+1, won_count=won_count+?, cards_played=cards_played+?, currency_collected=currency_collected+?, properties_collected=properties_collected+?, rent_collected=rent_collected+?");
+                stmt.setFloat(1, gameMinutes);
+                stmt.setInt(2, won);
+                stmt.setInt(3, actionUsed);
+                stmt.setInt(4, currencyCollected);
+                stmt.setInt(5, propertiesPlayed);
+                stmt.setInt(6, rentCollected);
+                stmt.executeUpdate();
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void kill() {

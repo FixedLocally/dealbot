@@ -45,6 +45,7 @@ public class GamePlayer {
     private int propertiesPlayed = 0;
     private int currencyCollected = 0;
     private int cardsPlayed = 0;
+    private int rentCollected = 0;
 
     private Set<Integer> paymentSelectedIndices = new HashSet<>();
     private Set<Integer> paymentSelectedPropertyIndices = new HashSet<>();
@@ -101,6 +102,10 @@ public class GamePlayer {
 
     public void playedCurrency(int amount) {
         currencyCollected += amount;
+    }
+
+    public void rentCollected(int amount) {
+        rentCollected += amount;
     }
 
     public boolean addProperty(PropertyCard card, int group) {
@@ -770,5 +775,9 @@ public class GamePlayer {
 
     public int getCardsPlayed() {
         return cardsPlayed;
+    }
+
+    public int getRentCollected() {
+        return rentCollected;
     }
 }
