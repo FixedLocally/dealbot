@@ -195,7 +195,7 @@ public class GamePlayer {
 
     public void promptForCard() {
         sendState();
-        game.resumeTurn();
+        long remainingTime = game.resumeTurn();
         // before we actually prompt for a card, check for win condition
         if (checkWinCondition()) {
             endTurnVoluntary(); // the game will take care of the announcement
@@ -218,7 +218,7 @@ public class GamePlayer {
             endTurnVoluntary();
             return;
         }
-        String msg = translation.CHOOSE_AN_ACTION(3 - actionCount);
+        String msg = translation.CHOOSE_AN_ACTION(3 - actionCount, (int) (remainingTime / 1000));
         if (messageId == 0) {
             SendMessage send = new SendMessage(tgid, msg);
             send.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));

@@ -430,9 +430,10 @@ public class Game {
         turnTime += System.currentTimeMillis() - turnStartTime;
     }
 
-    public void resumeTurn() {
+    public long resumeTurn() {
         cancelFuture();
         schedule(gamePlayers.get(currentTurn)::endTurnTimeout, turnWait * 1000 - turnTime);
+        return turnWait * 1000 - turnTime;
     }
 
     private void kill(boolean isError) {

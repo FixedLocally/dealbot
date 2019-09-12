@@ -193,8 +193,8 @@ public class TraditionalChinese extends Translation {
     public String MANAGE_CARD_MENU() {
         return "管理多功能物業牌和建築物";
     }
-    public String CHOOSE_AN_ACTION(int remaining) {
-        return String.format("選擇一個行動（尚餘 %d 個）", remaining);
+    public String CHOOSE_AN_ACTION(int remaining, int secs) {
+        return String.format("選擇一個行動（尚餘 %d 個），你有 %d 秒的時間！", remaining, secs);
     }
     public String SELF_CURRENCY_DECK(int count, int total) {
         return String.format("貨幣堆 （%d / $ %dM）：", count, total);

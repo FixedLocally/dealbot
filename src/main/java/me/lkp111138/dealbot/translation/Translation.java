@@ -186,8 +186,8 @@ public class Translation {
     public String MANAGE_CARD_MENU() {
         return "Manage wildcards and buildings";
     }
-    public String CHOOSE_AN_ACTION(int remaining) {
-        return String.format("Choose an action (%d remaining)", remaining);
+    public String CHOOSE_AN_ACTION(int remaining, int secs) {
+        return String.format("Choose an action (%d remaining), you have %d seconds!", remaining, secs);
     }
     public String SELF_CURRENCY_DECK(int count, int total) {
         return String.format("Currency deck (%d / $ %dM): ", count, total);
