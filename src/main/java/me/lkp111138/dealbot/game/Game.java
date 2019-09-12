@@ -16,7 +16,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.cards.*;
-import me.lkp111138.dealbot.game.cards.actions.*;
+import me.lkp111138.dealbot.game.cards.actions.ForcedDealActionCard;
 import me.lkp111138.dealbot.misc.EmptyCallback;
 import me.lkp111138.dealbot.translation.Translation;
 
@@ -455,9 +455,6 @@ public class Game {
         cancelFuture();
         // remove this game instance
         this.execute(new SendMessage(gid, this.translation.GAME_ENDED_ANNOUNCEMENT()), new EmptyCallback<>());
-        for (int i = 0; i < playerCount(); i++) {
-            uidGames.remove(players.get(i).id());
-        }
         ended = true;
         // save the stats
         float gameMinutes = (System.currentTimeMillis() - startTime) / (float) 60000;
@@ -512,6 +509,9 @@ public class Game {
             }
         }
         games.remove(gid);
+        for (int i = 0; i < playerCount(); i++) {
+            uidGames.remove(players.get(i).id());
+        }
     }
 
     public void kill() {
