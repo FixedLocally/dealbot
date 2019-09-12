@@ -194,9 +194,9 @@ public class GamePlayer {
     }
 
     public void promptForCard() {
-        game.logf("prompting %s to play card %s %s", tgid, Thread.currentThread().getStackTrace()[2], Thread.currentThread().getStackTrace()[3]);
         sendState();
         long remainingTime = game.getDelay() + 500; // round off
+        game.logf("prompting %s to play card, time=%s, actionCount=%s", tgid, remainingTime, actionCount);
         // before we actually prompt for a card, check for win condition
         if (checkWinCondition()) {
             endTurnVoluntary(); // the game will take care of the announcement
@@ -709,8 +709,6 @@ public class GamePlayer {
 
     public List<Card> getPaymentCurrencyCards() {
         List<Card> payment = new ArrayList<>();
-        System.out.println(paymentSelectedIndices);
-        System.out.println(paymentSelectedPropertyIndices);
         for (Integer index : paymentSelectedIndices) {
             payment.add(currencyDeck.get(index));
         }
@@ -762,7 +760,6 @@ public class GamePlayer {
     }
 
     public void endTurn(boolean voluntary) {
-        Thread.dumpStack();
         game.logf("executing end turn for %d", tgid);
         String msg = voluntary ? translation.PASS_CLICK() : translation.PASS_TIMEOUT();
         game.execute(new EditMessageText(tgid, messageId, msg));

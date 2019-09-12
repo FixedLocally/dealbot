@@ -709,16 +709,14 @@ public class Game {
 //            this.log("cancelled task");
             future.cancel(true);
             future = null;
-//            try {
-//                throw new Exception();
-//            } catch (Exception e) {
-//                this.log(e.getStackTrace()[1]);
-//            }
         }
     }
 
     void schedule(Runnable runnable, long l) {
         cancelFuture();
+        logf("schedule() called from %s", Thread.currentThread().getStackTrace()[2]);
+        logf("schedule() called from %s", Thread.currentThread().getStackTrace()[3]);
+        logf("schedule() called from %s", Thread.currentThread().getStackTrace()[4]);
         future = executor.schedule(runnable, l, TimeUnit.MILLISECONDS);
     }
 
