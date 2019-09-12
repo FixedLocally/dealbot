@@ -3,18 +3,14 @@ package me.lkp111138.dealbot.game.cards;
 import me.lkp111138.dealbot.game.GamePlayer;
 import me.lkp111138.dealbot.translation.Translation;
 
-public class JustSayNoCard implements Card {
+public class JustSayNoCard extends ActionCard {
     private final String title;
     private final Translation translation;
 
     public JustSayNoCard(Translation translation) {
+        super(translation);
         this.translation = translation;
         this.title = translation.JUST_SAY_NO();
-    }
-
-    @Override
-    public boolean isObjectable() {
-        return true;
     }
 
     @Override
@@ -23,27 +19,12 @@ public class JustSayNoCard implements Card {
     }
 
     @Override
-    public boolean isCurrency() {
-        return true;
-    }
-
-    @Override
-    public boolean isAction() {
-        return false;
-    }
-
-    @Override
-    public boolean isProperty() {
-        return false;
-    }
-
-    @Override
-    public String getCardTitle() {
+    public String getCardFunctionalTitle() {
         return title;
     }
 
     @Override
-    public void execute(GamePlayer player, String[] args) {
+    public void use(GamePlayer player, String[] args) {
         player.addMove();
         player.addHand(this);
         player.getGame().removeFromUsed(this);
