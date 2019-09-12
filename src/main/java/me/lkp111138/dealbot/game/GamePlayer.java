@@ -54,7 +54,7 @@ public class GamePlayer {
     private String paymentMessage;
     private int paymentValue;
 
-    private Runnable savedActionIfNotObjected;
+    private Runnable savedActionIfApproved;
     private Runnable savedActionIfObjected;
 
     private ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(2);
@@ -195,7 +195,7 @@ public class GamePlayer {
 
     public void promptForCard() {
         sendState();
-        long remainingTime = game.resumeTurn();
+        long remainingTime = game.getDelay() + 500; // round off
         // before we actually prompt for a card, check for win condition
         if (checkWinCondition()) {
             endTurnVoluntary(); // the game will take care of the announcement
@@ -345,7 +345,14 @@ public class GamePlayer {
         sendState();
     }
 
+    /**
+     * @param msg the message asking for objection
+     * @param actionIfApproved the action to execute if not objected
+     * @param actionIfObjected the action to execute if objected, typically nothing
+     * @param prompter the player who initiated the prompt
+     */
     public void promptSayNo(String msg, Runnable actionIfApproved, Runnable actionIfObjected, GamePlayer prompter) {
+        game.logf("prompting %s to say no %s %s", tgid, Thread.currentThread().getStackTrace()[2], Thread.currentThread().getStackTrace()[3]);
         int nonce = game.nextNonce();
         game.pauseTurn();
         SendMessage send = new SendMessage(tgid, msg);
@@ -358,21 +365,22 @@ public class GamePlayer {
             buttons[0][0] = new InlineKeyboardButton(translation.NO()).callbackData(nonce + ":say_no:n");
         }
         send.replyMarkup(new InlineKeyboardMarkup(buttons));
-        savedActionIfNotObjected = () -> {
+        savedActionIfApproved = () -> {
             actionIfApproved.run();
             sendState();
+            game.resumeTurn();
         };
         savedActionIfObjected = () -> {
-            actionIfObjected.run();
+//            actionIfObjected.run();
+            game.log("Objection!");
+            // broadcast to group
             SendMessage _send = new SendMessage(game.getGid(), translation.SB_SAID_NO(getName()));
             game.execute(_send);
-            prompter.promptSayNo(translation.SAID_NO_PROMPT_SAY_NO(getName()), actionIfObjected, () -> {
-                // being objected again
-                // so we need to ask the victim if they will object the player's objection
-                // if the victim objects, ah here we go again
-                // in the victim approves, get beaten badly lol
-                promptSayNo(translation.SAID_NO_PROMPT_SAY_NO(prompter.getName()), actionIfApproved, actionIfObjected, prompter);
-            }, GamePlayer.this);
+            // tell the user they were objected
+            _send = new SendMessage(prompter.tgid, translation.VICTIM_SAID_NO(getName()));
+            game.execute(_send);
+            // prompt for current user's objection
+            prompter.promptSayNo(translation.SAID_NO_PROMPT_SAY_NO(getName()), actionIfObjected, actionIfApproved, GamePlayer.this);
         };
         game.execute(send, new Callback<SendMessage, SendResponse>() {
             @Override
@@ -426,10 +434,6 @@ public class GamePlayer {
         DealBot.triggerAchievement(tgid, DealBot.Achievement.WELCOME_HOME);
         paymentMessage = translation.PAYMENT_COLLECTION_MESSAGE_SAY_NO(group, collector.getName(), value);
         promptSayNo(paymentMessage, () -> realCollectRent(value, group, collector), () -> {
-            // tell the sender its objected
-            game.log("Objection!");
-//            SendMessage send = new SendMessage(tgid, "You refused to pay.");
-//            game.execute(send);
             if (game.confirmPayment(null, tgid)) {
                 confirmPayment();
             }
@@ -686,7 +690,7 @@ public class GamePlayer {
                 }
                 // pass thru if not removed
             case "n":
-                savedActionIfNotObjected.run();
+                savedActionIfApproved.run();
                 game.execute(new EditMessageText(tgid, mid, translation.SAID_YES()));
                 break;
         }
@@ -748,6 +752,7 @@ public class GamePlayer {
     }
 
     public void endTurn(boolean voluntary) {
+        game.logf("executing end turn for %d", tgid);
         String msg = voluntary ? translation.PASS_CLICK() : translation.PASS_TIMEOUT();
         game.execute(new EditMessageText(tgid, messageId, msg));
         messageId = 0;

@@ -103,15 +103,7 @@ public class SlyDealActionCard extends ActionCard {
                 player.getPropertyDecks().put(group, props);
                 victim.removeProperty((PropertyCard) card, group);
                 player.promptForCard();
-            }, () -> {
-                // tell the sender its objected
-                player.getGame().log("Objection!");
-                SendMessage _send = new SendMessage(player.getTgid(), translation.VICTIM_SAID_NO(victim.getName()));
-                player.getGame().execute(_send);
-                _send = new SendMessage(player.getTgid(), translation.VICTIM_SAID_NO(victim.getName()));
-                player.getGame().execute(_send);
-                player.promptForCard();
-            }, player);
+            }, () -> {}, player);
         }
     }
 }

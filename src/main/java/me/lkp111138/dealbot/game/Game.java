@@ -16,7 +16,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.cards.*;
-import me.lkp111138.dealbot.game.cards.actions.ForcedDealActionCard;
+import me.lkp111138.dealbot.game.cards.actions.RentActionCard;
 import me.lkp111138.dealbot.misc.EmptyCallback;
 import me.lkp111138.dealbot.translation.Translation;
 
@@ -388,19 +388,16 @@ public class Game {
         //*/
 
         //*
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 26; i++) {
             mainDeck.add(new PropertyCard(1, "Repulse Bay", 7, translation));
-            mainDeck.add(new PropertyCard(1, "Central", 6, translation));
-            mainDeck.add(new PropertyCard(1, "Mong Kok", 5, translation));
-            mainDeck.add(new PropertyCard(1, "Wong Tai Sin", 4, translation));
-            mainDeck.add(new PropertyCard(1, "Sai Kung", 3, translation));
-            mainDeck.add(new PropertyCard(1, "Lo Wu", 2, translation));
-            mainDeck.add(new PropertyCard(1, "Peng Chau", 1, translation));
         }
-        for (int i = 0; i < 35; i++) {
-            mainDeck.add(new ForcedDealActionCard(translation));
+        for (int i = 0; i < 26; i++) {
+            mainDeck.add(new RentActionCard(new int[]{6, 7}, translation));
         }
-        for (int i = 0; i < 36; i++) {
+        for (int i = 0; i < 26; i++) {
+            mainDeck.add(new CurrencyCard(5, "$ 5M", translation));
+        }
+        for (int i = 0; i < 28; i++) {
             mainDeck.add(new JustSayNoCard(translation));
         }
         //*/
@@ -427,13 +424,22 @@ public class Game {
 
     public void pauseTurn() {
         cancelFuture();
-        turnTime += System.currentTimeMillis() - turnStartTime;
+        long now = System.currentTimeMillis();
+        turnTime += now - turnStartTime;
     }
 
-    public long resumeTurn() {
+    public void resumeTurn() {
         cancelFuture();
         schedule(gamePlayers.get(currentTurn)::endTurnTimeout, turnWait * 1000 - turnTime);
-        return turnWait * 1000 - turnTime;
+        gamePlayers.get(currentTurn).promptForCard();
+        turnStartTime = System.currentTimeMillis();
+    }
+
+    public long getDelay() {
+        if (future != null) {
+            return future.getDelay(TimeUnit.MILLISECONDS);
+        }
+        return -1;
     }
 
     private void kill(boolean isError) {
@@ -601,13 +607,13 @@ public class Game {
         String currentState = getGlobalState();
         player.sendGlobalState(currentState);
         execute(new SendMessage(gid, currentState).parseMode(ParseMode.HTML));
-        player.addHand(mainDeck.remove(0));
-        player.addHand(mainDeck.remove(0));
+        player.addHand(draw());
+        player.addHand(draw());
         // draw 5 if starting with 0
         if (player.handCount() == 2) {
-            player.addHand(mainDeck.remove(0));
-            player.addHand(mainDeck.remove(0));
-            player.addHand(mainDeck.remove(0));
+            player.addHand(draw());
+            player.addHand(draw());
+            player.addHand(draw());
         }
         cancelFuture();
         player.startTurn();

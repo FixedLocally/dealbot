@@ -134,13 +134,7 @@ public class ForcedDealActionCard extends ActionCard {
                 victim.addProperty((PropertyCard) selfCard, ((PropertyCard) selfCard).getGroup());
                 player.removeProperty((PropertyCard) selfCard, ((PropertyCard) selfCard).getGroup());
                 player.promptForCard();
-            }, () -> {
-                // tell the sender its objected
-                player.getGame().log("Objection!");
-                SendMessage _send = new SendMessage(player.getTgid(),  translation.VICTIM_SAID_NO(victim.getName()));
-                player.getGame().execute(_send);
-                player.promptForCard();
-            }, player);
+            }, () -> {}, player);
         }
     }
 }
