@@ -91,7 +91,9 @@ public class DealBreakerActionCard extends ActionCard {
                 player.getPropertyDecks().put(group, props);
                 victim.getPropertyDecks().remove(group);
                 player.getGame().resumeTurn();
-            }, () -> {}, player);
+            }, () -> {
+                player.getGame().resumeTurn();
+            }, player);
         }
     }
 }

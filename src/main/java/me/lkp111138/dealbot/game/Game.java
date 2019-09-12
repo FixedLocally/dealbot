@@ -16,7 +16,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.cards.*;
-import me.lkp111138.dealbot.game.cards.actions.ForcedDealActionCard;
+import me.lkp111138.dealbot.game.cards.actions.*;
 import me.lkp111138.dealbot.misc.EmptyCallback;
 import me.lkp111138.dealbot.translation.Translation;
 
@@ -388,16 +388,17 @@ public class Game {
         //*/
 
         /*
-        for (int i = 0; i < 26; i++) {
-            mainDeck.add(new PropertyCard(1, "Repulse Bay", 7, translation));
+        for (int i = 0; i < 7; i++) {
+            mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(20), 7, translation));
+            mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(16), 5, translation));
+            mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(17), 6, translation));
+            mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(10), 3, translation));
+            mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(11), 4, translation));
         }
         for (int i = 0; i < 26; i++) {
-            mainDeck.add(new RentActionCard(new int[]{6, 7}, translation));
+            mainDeck.add(new ForcedDealActionCard(translation));
         }
-        for (int i = 0; i < 26; i++) {
-            mainDeck.add(new CurrencyCard(5, "$ 5M", translation));
-        }
-        for (int i = 0; i < 28; i++) {
+        for (int i = 0; i < 35; i++) {
             mainDeck.add(new JustSayNoCard(translation));
         }
         //*/
