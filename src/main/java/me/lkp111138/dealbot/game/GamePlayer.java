@@ -201,6 +201,9 @@ public class GamePlayer {
             endTurnVoluntary(); // the game will take care of the announcement
             return;
         }
+        if (remainingTime < 0) {
+            endTurnTimeout();
+        }
         boolean hasWildcardsOrBuildings = propertyDecks.values().stream().anyMatch(x -> x.stream().anyMatch(xx -> xx instanceof WildcardPropertyCard || xx instanceof BuildingActionCard));
         // do prompt
         List<InlineKeyboardButton[]> buttons = new ArrayList<>();

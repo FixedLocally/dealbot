@@ -16,7 +16,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.cards.*;
-import me.lkp111138.dealbot.game.cards.actions.RentActionCard;
+import me.lkp111138.dealbot.game.cards.actions.*;
 import me.lkp111138.dealbot.misc.EmptyCallback;
 import me.lkp111138.dealbot.translation.Translation;
 
@@ -268,7 +268,7 @@ public class Game {
         SendMessage send = new SendMessage(gid, translation.GAME_STARTING_ANNOUNCEMENT());
         started = true;
         this.execute(send);
-        /*
+        //*
         // construct mainDeck
         // properties
         mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(0), 0, translation));
@@ -387,7 +387,7 @@ public class Game {
         mainDeck.add(new CurrencyCard(10, "$10M", translation));
         //*/
 
-        //*
+        /*
         for (int i = 0; i < 26; i++) {
             mainDeck.add(new PropertyCard(1, "Repulse Bay", 7, translation));
         }
