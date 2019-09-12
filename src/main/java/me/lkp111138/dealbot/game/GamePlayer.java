@@ -705,6 +705,8 @@ public class GamePlayer {
 
     public List<Card> getPaymentCurrencyCards() {
         List<Card> payment = new ArrayList<>();
+        System.out.println(paymentSelectedIndices);
+        System.out.println(paymentSelectedPropertyIndices);
         for (Integer index : paymentSelectedIndices) {
             payment.add(currencyDeck.get(index));
         }
