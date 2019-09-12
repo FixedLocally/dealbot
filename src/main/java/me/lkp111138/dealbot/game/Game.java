@@ -925,7 +925,7 @@ public class Game {
         }
         if (paymentConfirmationCount == gamePlayers.size() - 1) {
             // everyone has paid
-            gamePlayers.get(currentTurn).promptForCard();
+            resumeTurn();
             // restart end turn timer
         }
         return true;
