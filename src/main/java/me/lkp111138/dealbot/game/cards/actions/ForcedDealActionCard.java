@@ -133,7 +133,7 @@ public class ForcedDealActionCard extends ActionCard {
                 victim.removeProperty((PropertyCard) card, group);
                 victim.addProperty((PropertyCard) selfCard, ((PropertyCard) selfCard).getGroup());
                 player.removeProperty((PropertyCard) selfCard, ((PropertyCard) selfCard).getGroup());
-                player.promptForCard();
+                player.getGame().resumeTurn();
             }, () -> {}, player);
         }
     }

@@ -194,6 +194,7 @@ public class GamePlayer {
     }
 
     public void promptForCard() {
+        game.logf("prompting %s to play card %s %s", tgid, Thread.currentThread().getStackTrace()[2], Thread.currentThread().getStackTrace()[3]);
         sendState();
         long remainingTime = game.getDelay() + 500; // round off
         // before we actually prompt for a card, check for win condition
@@ -355,7 +356,7 @@ public class GamePlayer {
      * @param prompter the player who initiated the prompt
      */
     public void promptSayNo(String msg, Runnable actionIfApproved, Runnable actionIfObjected, GamePlayer prompter) {
-        game.logf("prompting %s to say no %s %s", tgid, Thread.currentThread().getStackTrace()[2], Thread.currentThread().getStackTrace()[3]);
+        game.logf("prompting %s to say no", tgid);
         int nonce = game.nextNonce();
         game.pauseTurn();
         SendMessage send = new SendMessage(tgid, msg);
@@ -371,7 +372,7 @@ public class GamePlayer {
         savedActionIfApproved = () -> {
             actionIfApproved.run();
             sendState();
-            game.resumeTurn();
+//            game.resumeTurn();
         };
         savedActionIfObjected = () -> {
 //            actionIfObjected.run();
@@ -444,7 +445,7 @@ public class GamePlayer {
     }
 
     private void realCollectRent(int value, int group, GamePlayer collector) {
-        game.logf("collecting rent of %s from %s for", value, tgid, collector.tgid);
+        game.logf("collecting rent of %s from %s for %s", value, tgid, collector.tgid);
         if (value >= 20) {
             DealBot.triggerAchievement(tgid, DealBot.Achievement.SHOCK_BILL);
         }
@@ -750,11 +751,12 @@ public class GamePlayer {
     }
 
     public void endTurnVoluntary() {
-        game.logf("turn ended for %s", tgid);
+        game.logf("turn ended for %s, actionCount=%s", tgid, actionCount);
         endTurn(true);
     }
 
     public void endTurn(boolean voluntary) {
+        Thread.dumpStack();
         game.logf("executing end turn for %d", tgid);
         String msg = voluntary ? translation.PASS_CLICK() : translation.PASS_TIMEOUT();
         game.execute(new EditMessageText(tgid, messageId, msg));

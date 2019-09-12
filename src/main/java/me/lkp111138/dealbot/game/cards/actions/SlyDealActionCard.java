@@ -102,7 +102,7 @@ public class SlyDealActionCard extends ActionCard {
                 props.add(card);
                 player.getPropertyDecks().put(group, props);
                 victim.removeProperty((PropertyCard) card, group);
-                player.promptForCard();
+                player.getGame().resumeTurn();
             }, () -> {}, player);
         }
     }
