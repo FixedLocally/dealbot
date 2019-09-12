@@ -856,6 +856,8 @@ public class Game {
                 player.removeHand(disposed);
                 addToMainDeck(disposed);
                 player.endTurnVoluntary();
+                execute(new SendMessage(gid, translation.SB_DISPOSED(player.getName(), disposed.getCardTitle())));
+                execute(new SendMessage(player.getTgid(), translation.YOU_DISPOSED(disposed.getCardTitle())));
                 return true;
             case "pay_choose":
             case "pay_confirm":

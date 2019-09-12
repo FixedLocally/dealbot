@@ -412,6 +412,12 @@ public class TraditionalChinese extends Translation {
     public String SAID_NO_PROMPT_SAY_NO(String name) {
         return name + " 使用了作出反對！你想用另外一張作出反對來抵銷嗎？";
     }
+    public String SB_DISPOSED(String name, String card) {
+        return name + " 棄置了 " + card;
+    }
+    public String YOU_DISPOSED(String card) {
+        return "你棄置了 " + card;
+    }
     @Override
     public String PASS_ANNOUNCEMENT() {
         return "%s 選擇結束回合";

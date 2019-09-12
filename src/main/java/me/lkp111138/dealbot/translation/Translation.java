@@ -405,6 +405,12 @@ public class Translation {
     public String SAID_NO_PROMPT_SAY_NO(String name) {
         return name + " has used Just Say No! Do you like to use another Just Say No to counter that?";
     }
+    public String SB_DISPOSED(String name, String card) {
+        return name + " has disposed " + card;
+    }
+    public String YOU_DISPOSED(String card) {
+        return "You have disposed " + card;
+    }
     public String PASS_ANNOUNCEMENT() {
         return "%s ended their turn";
     }
