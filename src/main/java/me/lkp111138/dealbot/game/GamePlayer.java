@@ -589,6 +589,10 @@ public class GamePlayer {
             int group = Integer.parseInt(args[1]);
             int index = Integer.parseInt(args[2]);
             int newGroup = Integer.parseInt(args[3]);
+            if (group == newGroup) {
+                promptForCard();
+                return;
+            }
             WildcardPropertyCard card = (WildcardPropertyCard) propertyDecks.get(group).get(index);
             if (addProperty(card, newGroup)) {
                 // success, remove from old group

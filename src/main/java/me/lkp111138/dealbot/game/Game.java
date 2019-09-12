@@ -271,56 +271,58 @@ public class Game {
         //*
         // construct mainDeck
         // properties
-        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(0), 0, translation));
-        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(1), 0, translation));
-
-        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(2), 1, translation));
-        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(3), 1, translation));
-        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(4), 1, translation));
-
-        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(5), 2, translation));
-        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(6), 2, translation));
-        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(7), 2, translation));
-
-        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(8), 3, translation));
-        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(9), 3, translation));
-        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(10), 3, translation));
-
-        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(11), 4, translation));
-        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(12), 4, translation));
-        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(13), 4, translation));
-
-        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(14), 5, translation));
-        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(15), 5, translation));
-        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(16), 5, translation));
-
-        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(17), 6, translation));
-        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(18), 6, translation));
-        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(19), 6, translation));
-
-        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(20), 7, translation));
-        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(21), 7, translation));
-
-        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(22), 8, translation));
-        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(23), 8, translation));
-        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(24), 8, translation));
-        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(25), 8, translation));
-
-        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(26), 9, translation));
-        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(27), 9, translation));
+//        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(0), 0, translation));
+//        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(1), 0, translation));
+//
+//        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(2), 1, translation));
+//        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(3), 1, translation));
+//        mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(4), 1, translation));
+//
+//        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(5), 2, translation));
+//        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(6), 2, translation));
+//        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(7), 2, translation));
+//
+//        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(8), 3, translation));
+//        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(9), 3, translation));
+//        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(10), 3, translation));
+//
+//        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(11), 4, translation));
+//        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(12), 4, translation));
+//        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(13), 4, translation));
+//
+//        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(14), 5, translation));
+//        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(15), 5, translation));
+//        mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(16), 5, translation));
+//
+//        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(17), 6, translation));
+//        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(18), 6, translation));
+//        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(19), 6, translation));
+//
+//        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(20), 7, translation));
+//        mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(21), 7, translation));
+//
+//        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(22), 8, translation));
+//        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(23), 8, translation));
+//        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(24), 8, translation));
+//        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(25), 8, translation));
+//
+//        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(26), 9, translation));
+//        mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(27), 9, translation));
 
         // wildcard properties
-        mainDeck.add(new WildcardPropertyCard(3, translation.WILD_CARD(4, 5), new int[]{4, 5}, translation));
-        mainDeck.add(new WildcardPropertyCard(3, translation.WILD_CARD(4, 5), new int[]{4, 5}, translation));
-        mainDeck.add(new WildcardPropertyCard(4, translation.WILD_CARD(6, 7), new int[]{6, 7}, translation));
-        mainDeck.add(new WildcardPropertyCard(1, translation.WILD_CARD(0, 1), new int[]{0, 1}, translation));
-        mainDeck.add(new WildcardPropertyCard(2, translation.WILD_CARD(2, 3), new int[]{2, 3}, translation));
-        mainDeck.add(new WildcardPropertyCard(2, translation.WILD_CARD(2, 3), new int[]{2, 3}, translation));
-        mainDeck.add(new WildcardPropertyCard(4, translation.WILD_CARD(6, 8), new int[]{6, 8}, translation));
-        mainDeck.add(new WildcardPropertyCard(4, translation.WILD_CARD(1, 8), new int[]{1, 8}, translation));
-        mainDeck.add(new WildcardPropertyCard(2, translation.WILD_CARD(8, 9), new int[]{8, 9}, translation));
-        mainDeck.add(new WildcardPropertyCard(0, translation.WILD_CARD(), new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, translation));
-        mainDeck.add(new WildcardPropertyCard(0, translation.WILD_CARD(), new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, translation));
+        for (int i = 0; i < 4; i++) {
+            mainDeck.add(new WildcardPropertyCard(3, translation.WILD_CARD(4, 5), new int[]{4, 5}, translation));
+            mainDeck.add(new WildcardPropertyCard(3, translation.WILD_CARD(4, 5), new int[]{4, 5}, translation));
+            mainDeck.add(new WildcardPropertyCard(4, translation.WILD_CARD(6, 7), new int[]{6, 7}, translation));
+            mainDeck.add(new WildcardPropertyCard(1, translation.WILD_CARD(0, 1), new int[]{0, 1}, translation));
+            mainDeck.add(new WildcardPropertyCard(2, translation.WILD_CARD(2, 3), new int[]{2, 3}, translation));
+            mainDeck.add(new WildcardPropertyCard(2, translation.WILD_CARD(2, 3), new int[]{2, 3}, translation));
+            mainDeck.add(new WildcardPropertyCard(4, translation.WILD_CARD(6, 8), new int[]{6, 8}, translation));
+            mainDeck.add(new WildcardPropertyCard(4, translation.WILD_CARD(1, 8), new int[]{1, 8}, translation));
+            mainDeck.add(new WildcardPropertyCard(2, translation.WILD_CARD(8, 9), new int[]{8, 9}, translation));
+            mainDeck.add(new WildcardPropertyCard(0, translation.WILD_CARD(), new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, translation));
+            mainDeck.add(new WildcardPropertyCard(0, translation.WILD_CARD(), new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, translation));
+        }
 
         // action mainDeck
         for (int i = 0; i < 3; i++) {
