@@ -16,7 +16,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.cards.*;
-import me.lkp111138.dealbot.game.cards.actions.*;
+import me.lkp111138.dealbot.game.cards.actions.ForcedDealActionCard;
 import me.lkp111138.dealbot.misc.EmptyCallback;
 import me.lkp111138.dealbot.translation.Translation;
 
@@ -268,7 +268,7 @@ public class Game {
         SendMessage send = new SendMessage(gid, translation.GAME_STARTING_ANNOUNCEMENT());
         started = true;
         this.execute(send);
-        //*
+        /*
         // construct mainDeck
         // properties
         mainDeck.add(new PropertyCard(1, translation.PROPERTY_NAME(0), 0, translation));
@@ -387,21 +387,21 @@ public class Game {
         mainDeck.add(new CurrencyCard(10, "$10M", translation));
         //*/
 
-        /*
+        //*
         for (int i = 0; i < 5; i++) {
-            mainDeck.add(new PropertyCard(1, "Repulse Bay", 7));
-            mainDeck.add(new PropertyCard(1, "Central", 6));
-            mainDeck.add(new PropertyCard(1, "Mong Kok", 5));
-            mainDeck.add(new PropertyCard(1, "Wong Tai Sin", 4));
-            mainDeck.add(new PropertyCard(1, "Sai Kung", 3));
-            mainDeck.add(new PropertyCard(1, "Lo Wu", 2));
-            mainDeck.add(new PropertyCard(1, "Peng Chau", 1));
+            mainDeck.add(new PropertyCard(1, "Repulse Bay", 7, translation));
+            mainDeck.add(new PropertyCard(1, "Central", 6, translation));
+            mainDeck.add(new PropertyCard(1, "Mong Kok", 5, translation));
+            mainDeck.add(new PropertyCard(1, "Wong Tai Sin", 4, translation));
+            mainDeck.add(new PropertyCard(1, "Sai Kung", 3, translation));
+            mainDeck.add(new PropertyCard(1, "Lo Wu", 2, translation));
+            mainDeck.add(new PropertyCard(1, "Peng Chau", 1, translation));
         }
         for (int i = 0; i < 35; i++) {
-            mainDeck.add(new ForcedDealActionCard());
+            mainDeck.add(new ForcedDealActionCard(translation));
         }
         for (int i = 0; i < 36; i++) {
-            mainDeck.add(new JustSayNoCard());
+            mainDeck.add(new JustSayNoCard(translation));
         }
         //*/
         
@@ -423,6 +423,16 @@ public class Game {
 
         startTime = System.currentTimeMillis();
         startTurn();
+    }
+
+    public void pauseTurn() {
+        cancelFuture();
+        turnTime += System.currentTimeMillis() - turnStartTime;
+    }
+
+    public void resumeTurn() {
+        cancelFuture();
+        schedule(gamePlayers.get(currentTurn)::endTurnTimeout, turnWait * 1000 - turnTime);
     }
 
     private void kill(boolean isError) {
@@ -524,8 +534,7 @@ public class Game {
     // 10: birthday
     // 11: debt
     public void collectRentFromAll(int value, int group) {
-        cancelFuture();
-        turnTime += System.currentTimeMillis() - turnStartTime;
+        pauseTurn();
         paymentConfirmationCount = 0;
         paidPlayers.clear();
         GamePlayer gamePlayer = gamePlayers.get(currentTurn);
@@ -548,8 +557,7 @@ public class Game {
     }
 
     public void collectRentFromOne(int value, int group, int order) {
-        cancelFuture();
-        turnTime += System.currentTimeMillis() - turnStartTime;
+        pauseTurn();
         paidPlayers.clear();
         paymentConfirmationCount = gamePlayers.size() - 2; // shush
         GamePlayer gamePlayer = gamePlayers.get(currentTurn);
@@ -912,9 +920,6 @@ public class Game {
             // everyone has paid
             gamePlayers.get(currentTurn).promptForCard();
             // restart end turn timer
-            long time = getTurnWait() * 1000 - turnTime;
-            schedule(gamePlayers.get(currentTurn)::endTurnTimeout, time);
-            turnStartTime = System.currentTimeMillis();
         }
         return true;
     }

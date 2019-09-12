@@ -195,6 +195,7 @@ public class GamePlayer {
 
     public void promptForCard() {
         sendState();
+        game.resumeTurn();
         // before we actually prompt for a card, check for win condition
         if (checkWinCondition()) {
             endTurnVoluntary(); // the game will take care of the announcement
@@ -346,6 +347,7 @@ public class GamePlayer {
 
     public void promptSayNo(String msg, Runnable actionIfApproved, Runnable actionIfObjected, GamePlayer prompter) {
         int nonce = game.nextNonce();
+        game.pauseTurn();
         SendMessage send = new SendMessage(tgid, msg);
         long sayNos = hand.stream().filter(x -> x instanceof JustSayNoCard).count();
         InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1 + (sayNos > 0 ? 1 : 0)][1];
