@@ -458,58 +458,60 @@ public class Game {
         for (int i = 0; i < playerCount(); i++) {
             uidGames.remove(players.get(i).id());
         }
-        games.remove(gid);
         ended = true;
         // save the stats
         float gameMinutes = (System.currentTimeMillis() - startTime) / (float) 60000;
-        try {
-            Connection conn = Main.getConnection();
-            for (int i = 0; i < gamePlayers.size(); i++) {
-                GamePlayer gamePlayer = gamePlayers.get(i);
-                int propertiesPlayed = gamePlayer.getPropertiesPlayed();
-                int currencyCollected = gamePlayer.getCurrencyCollected();
-                int actionUsed = gamePlayer.getCardsPlayed();
-                int rentCollected = gamePlayer.getRentCollected();
-                int won = i == currentTurn ? 1 : 0;
-                PreparedStatement stmt = conn.prepareStatement("update tg_users set game_minutes=game_minutes+?, game_count=game_count+1, won_count=won_count+?, cards_played=cards_played+?, currency_collected=currency_collected+?, properties_collected=properties_collected+?, rent_collected=rent_collected+? where tgid=?");
-                stmt.setFloat(1, gameMinutes);
-                stmt.setInt(2, won);
-                stmt.setInt(3, actionUsed);
-                stmt.setInt(4, currencyCollected);
-                stmt.setInt(5, propertiesPlayed);
-                stmt.setInt(6, rentCollected);
-                stmt.setInt(7, gamePlayer.getTgid());
-                stmt.executeUpdate();
-                stmt.close();
-                stmt = conn.prepareStatement("select game_count, won_count from tg_users where tgid=?");
-                stmt.setInt(1, gamePlayer.getTgid());
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) {
-                    int wins = rs.getInt(2);
-                    int games = rs.getInt(1);
-                    if (wins == 1) {
-                        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.WINNER);
-                    }
-                    if (wins == 10) {
-                        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.ADEPTED);
-                    }
-                    if (wins == 50) {
-                        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.MASTER);
-                    }
-                    if (games == 1) {
-                        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.GETTING_STARTED);
-                    }
-                    if (games == 10) {
-                        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.FAMILIAR);
-                    }
-                    if (games == 50) {
-                        DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.ADDICTED);
+        if (!isError) {
+            try {
+                Connection conn = Main.getConnection();
+                for (int i = 0; i < gamePlayers.size(); i++) {
+                    GamePlayer gamePlayer = gamePlayers.get(i);
+                    int propertiesPlayed = gamePlayer.getPropertiesPlayed();
+                    int currencyCollected = gamePlayer.getCurrencyCollected();
+                    int actionUsed = gamePlayer.getCardsPlayed();
+                    int rentCollected = gamePlayer.getRentCollected();
+                    int won = i == currentTurn ? 1 : 0;
+                    PreparedStatement stmt = conn.prepareStatement("update tg_users set game_minutes=game_minutes+?, game_count=game_count+1, won_count=won_count+?, cards_played=cards_played+?, currency_collected=currency_collected+?, properties_collected=properties_collected+?, rent_collected=rent_collected+? where tgid=?");
+                    stmt.setFloat(1, gameMinutes);
+                    stmt.setInt(2, won);
+                    stmt.setInt(3, actionUsed);
+                    stmt.setInt(4, currencyCollected);
+                    stmt.setInt(5, propertiesPlayed);
+                    stmt.setInt(6, rentCollected);
+                    stmt.setInt(7, gamePlayer.getTgid());
+                    stmt.executeUpdate();
+                    stmt.close();
+                    stmt = conn.prepareStatement("select game_count, won_count from tg_users where tgid=?");
+                    stmt.setInt(1, gamePlayer.getTgid());
+                    ResultSet rs = stmt.executeQuery();
+                    if (rs.next()) {
+                        int wins = rs.getInt(2);
+                        int games = rs.getInt(1);
+                        if (wins == 1) {
+                            DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.WINNER);
+                        }
+                        if (wins == 10) {
+                            DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.ADEPTED);
+                        }
+                        if (wins == 50) {
+                            DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.MASTER);
+                        }
+                        if (games == 1) {
+                            DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.GETTING_STARTED);
+                        }
+                        if (games == 10) {
+                            DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.FAMILIAR);
+                        }
+                        if (games == 50) {
+                            DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.ADDICTED);
+                        }
                     }
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
+        games.remove(gid);
     }
 
     public void kill() {
