@@ -56,6 +56,7 @@ public class Game {
     private int nextNonce = 0;
     private long turnStartTime;
     private long turnTime;
+    private boolean turnPaused = false;
 
     private boolean ended = false;
     private int[] offsets;
@@ -424,13 +425,19 @@ public class Game {
     }
 
     public void pauseTurn() {
+        if (turnPaused) {
+            return;
+        }
+        turnPaused = true;
         cancelFuture();
         long now = System.currentTimeMillis();
         turnTime += now - turnStartTime;
+        logf("pausing turn, turnTime=%s", turnTime);
     }
 
     public void resumeTurn() {
         cancelFuture();
+        turnPaused = false;
         schedule(gamePlayers.get(currentTurn)::endTurnTimeout, turnWait * 1000 - turnTime);
         gamePlayers.get(currentTurn).promptForCard();
         turnStartTime = System.currentTimeMillis();
@@ -550,7 +557,7 @@ public class Game {
         GamePlayer gamePlayer = gamePlayers.get(currentTurn);
         if (value <= 0) {
             // nothing to collect
-            gamePlayer.promptForCard();
+            resumeTurn();
             return;
         }
         for (GamePlayer player : gamePlayers) {
@@ -573,7 +580,7 @@ public class Game {
         GamePlayer gamePlayer = gamePlayers.get(currentTurn);
         if (value <= 0) {
             // nothing to collect
-            gamePlayer.promptForCard();
+            resumeTurn();
             return;
         }
         gamePlayers.get(order).collectRent(value, group, gamePlayer);
@@ -605,6 +612,7 @@ public class Game {
         currentCard = null;
         turnStartTime = System.currentTimeMillis();
         turnTime = 0;
+        turnPaused = false;
         // tell the current player the current situation
         GamePlayer player = gamePlayers.get(currentTurn);
         String currentState = getGlobalState();
@@ -707,6 +715,9 @@ public class Game {
     void cancelFuture() {
         if (future != null && !future.isDone() && !future.isCancelled()) {
 //            this.log("cancelled task");
+            logf("cancelFuture() called from %s", Thread.currentThread().getStackTrace()[2]);
+            logf("                           %s", Thread.currentThread().getStackTrace()[3]);
+            logf("                           %s", Thread.currentThread().getStackTrace()[4]);
             future.cancel(true);
             future = null;
         }
@@ -714,9 +725,9 @@ public class Game {
 
     void schedule(Runnable runnable, long l) {
         cancelFuture();
-        logf("schedule() called from %s", Thread.currentThread().getStackTrace()[2]);
-        logf("schedule() called from %s", Thread.currentThread().getStackTrace()[3]);
-        logf("schedule() called from %s", Thread.currentThread().getStackTrace()[4]);
+        logf("schedule() called from %s %s", Thread.currentThread().getStackTrace()[2], l);
+        logf("                       %s", Thread.currentThread().getStackTrace()[3]);
+        logf("                       %s", Thread.currentThread().getStackTrace()[4]);
         future = executor.schedule(runnable, l, TimeUnit.MILLISECONDS);
     }
 

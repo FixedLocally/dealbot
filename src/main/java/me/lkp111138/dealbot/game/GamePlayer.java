@@ -197,6 +197,10 @@ public class GamePlayer {
         sendState();
         long remainingTime = game.getDelay() + 500; // round off
         game.logf("prompting %s to play card, time=%s, actionCount=%s", tgid, remainingTime, actionCount);
+
+        game.logf("promptForCard() called from %s", Thread.currentThread().getStackTrace()[2]);
+        game.logf("                            %s", Thread.currentThread().getStackTrace()[3]);
+        game.logf("                            %s", Thread.currentThread().getStackTrace()[4]);
         // before we actually prompt for a card, check for win condition
         if (checkWinCondition()) {
             endTurnVoluntary(); // the game will take care of the announcement
