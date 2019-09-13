@@ -26,7 +26,7 @@ public class StatCommand implements Command {
             if (rs.next()) {
                 if (rs.getInt(4) > 0) {
                     String sb = String.format("Statistics for <a href=\"tg://user?id=%d\">%s</a>\n", target.id(), target.firstName()) +
-                            String.format("Won/Total games: %d / %d (%.2f%%)\n", rs.getInt(1), rs.getInt(2), 100.0 * rs.getInt(3) / rs.getInt(4)) +
+                            String.format("Won/Total games: %d / %d (%.2f%%)\n", rs.getInt(1), rs.getInt(2), 100.0 * rs.getInt(1) / rs.getInt(2)) +
                             String.format("Total in game minutes: %.1f\n", rs.getFloat(3)) +
                             String.format("Number of cards played: %d\n", rs.getInt(4)) +
                             String.format("Currency collected: $ %dM\n", rs.getInt(5)) +
