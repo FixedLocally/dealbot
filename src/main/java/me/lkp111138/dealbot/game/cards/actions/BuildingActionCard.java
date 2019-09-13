@@ -30,7 +30,7 @@ public abstract class BuildingActionCard extends ActionCard {
             List<InlineKeyboardButton[]> buttons = new ArrayList<>();
             int nonce = player.getGame().nextNonce();
             for (Integer group : player.getPropertyDecks().keySet()) {
-                if (player.getPropertyDecks().get(group).size() >= PropertyCard.propertySetCounts[group]) {
+                if (player.getPropertyDecks().get(group).size() >= PropertyCard.propertySetCounts[group] && group < 8) {
                     buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.PROPERTY_GROUP(group))
                             .callbackData(nonce + ":card_arg:" + group)});
                 }
