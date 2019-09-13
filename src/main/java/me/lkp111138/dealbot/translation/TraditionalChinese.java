@@ -123,7 +123,7 @@ public class TraditionalChinese extends Translation {
         return "雙倍租金";
     }
     public String JUST_SAY_NO() {
-        return "做出反對";
+        return "作出反對";
     }
     public String DEAL_BREAKER() {
         return "物業接管";
@@ -539,7 +539,7 @@ public class TraditionalChinese extends Translation {
             case WHAT_WAS_THIS_DEBT:
                 return "什麼債務？";
             case YOUR_PROPERTY_ISNT_YOURS:
-                return "Y你的物業不是你的";
+                return "你的物業不是你的";
         }
         return "";
     }
@@ -576,7 +576,7 @@ public class TraditionalChinese extends Translation {
             case WHAT_WAS_THIS_DEBT:
                 return "被其他玩家使用 \"收取債務\"。";
             case YOUR_PROPERTY_ISNT_YOURS:
-                return "被其他玩家使用 \"強制交易\"取去一整套物業。";
+                return "被其他玩家使用 \"物業接管\" 取去一整套物業。";
         }
         return "";
     }
