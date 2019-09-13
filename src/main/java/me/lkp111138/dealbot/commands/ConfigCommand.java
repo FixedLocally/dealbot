@@ -50,23 +50,26 @@ public class ConfigCommand implements Command {
             case supergroup:
                 long gid = msg.chat().id();
                 int uid = msg.from().id();
-                try (PreparedStatement stmt = Main.getConnection().prepareStatement("SELECT fry, collect_place FROM `groups` where gid=?")) {
+                try (PreparedStatement stmt = Main.getConnection().prepareStatement("SELECT turn_wait_time, pay_time, say_no_time FROM `groups` where gid=?")) {
                     stmt.setLong(1, gid);
                     ResultSet rs = stmt.executeQuery();
-                    int fry = 0;
-                    int collect_place = 0;
+                    int turnTime = 0;
+                    int payTime = 0;
+                    int objectionTime = 0;
                     if (rs.next()) {
-                        fry = rs.getInt(1);
-                        collect_place = rs.getInt(2);
+                        turnTime = rs.getInt(1);
+                        payTime = rs.getInt(2);
+                        objectionTime = rs.getInt(3);
                     }
-                    int finalCollect_place = collect_place;
-                    int finalFry = fry;
+                    int finalTurnTime = turnTime;
+                    int finalPayTime = payTime;
+                    int finalObjectionTime = objectionTime;
                     bot.execute(new GetChatMember(gid, uid), new Callback<GetChatMember, GetChatMemberResponse>() {
                         @Override
                         public void onResponse(GetChatMember getChatMember, GetChatMemberResponse getChatMemberResponse) {
                             SendMessage send = new SendMessage(uid, "群組遊戲設定：<b>" + msg.chat().title() + "</b>");
                             send.parseMode(ParseMode.HTML);
-                            send.replyMarkup(markupFromFlags(finalFry, finalCollect_place, msg, msg.chat().id()));
+                            send.replyMarkup(markupFromFlags(finalTurnTime, finalPayTime, finalObjectionTime, msg, msg.chat().id()));
                             bot.execute(send);
                         }
 
@@ -87,11 +90,13 @@ public class ConfigCommand implements Command {
         String[] args = payload.split(":");
         switch (args[0]) {
             case "flags":
-                if (args.length > 2) {
+                if (args.length > 4) {
                     Message msg = query.message();
                     long gid = Long.parseLong(args[1]);
-                    int flag = Integer.parseInt(args[2]);
-                    InlineKeyboardMarkup markup = markupFromFlags(flag >> 1, flag & 1, query.message(), gid);
+                    int turnTime = Integer.parseInt(args[2]);
+                    int payTime = Integer.parseInt(args[3]);
+                    int objectionTime = Integer.parseInt(args[4]);
+                    InlineKeyboardMarkup markup = markupFromFlags(turnTime, payTime, objectionTime, query.message(), gid);
                     EditMessageReplyMarkup edit = new EditMessageReplyMarkup(msg.chat().id(), msg.messageId());
                     edit.replyMarkup(markup);
                     bot.execute(edit);
@@ -100,15 +105,17 @@ public class ConfigCommand implements Command {
                 processed = true;
                 break;
             case "config":
-                if (args.length > 2) {
+                if (args.length > 4) {
                     long gid = Long.parseLong(args[1]);
-                    int flag = Integer.parseInt(args[2]);
+                    int turnTime = Integer.parseInt(args[2]);
+                    int payTime = Integer.parseInt(args[3]);
+                    int objectionTime = Integer.parseInt(args[4]);
                     Message msg = query.message();
-                    System.out.println(flag);
-                    try (PreparedStatement stmt = Main.getConnection().prepareStatement("UPDATE `groups` SET fry=?, collect_place=? where gid=?")) {
-                        stmt.setInt(1, flag >> 1);
-                        stmt.setInt(2, flag & 1);
-                        stmt.setLong(3, gid);
+                    try (PreparedStatement stmt = Main.getConnection().prepareStatement("UPDATE `groups` SET say_no_time=?, turn_wait_time=?, pay_time=? where gid=?")) {
+                        stmt.setInt(1, objectionTime);
+                        stmt.setInt(2, turnTime);
+                        stmt.setInt(3, payTime);
+                        stmt.setLong(4, gid);
                         stmt.execute();
                         EditMessageText edit = new EditMessageText(msg.chat().id(), msg.messageId(), "設定成功！");
                         bot.execute(edit);
@@ -123,11 +130,29 @@ public class ConfigCommand implements Command {
         return processed;
     }
 
-    private static InlineKeyboardMarkup markupFromFlags(int finalFry, int finalCollect_place, Message msg, long gid) {
+    private static InlineKeyboardMarkup markupFromFlags(int turnTime, int payTime, int objectionTime, Message msg, long gid) {
         return new InlineKeyboardMarkup(
-            new InlineKeyboardButton[]{new InlineKeyboardButton("炒：" + (finalFry > 0 ? "開啟" : "關閉")).callbackData("flags:" + gid + ":" + ((1 - finalFry) * 2 + finalCollect_place))},
-            new InlineKeyboardButton[]{new InlineKeyboardButton("收 place：" + (finalCollect_place > 0 ? "開啟" : "關閉")).callbackData("flags:" + gid + ":" + ((1 - finalCollect_place) + finalFry * 2))},
-            new InlineKeyboardButton[]{new InlineKeyboardButton("確認").callbackData("config:" + gid + ":" + (finalFry * 2 + finalCollect_place))}
+                new InlineKeyboardButton[]{
+                        new InlineKeyboardButton("出牌時限（秒）：").callbackData(""),
+                        new InlineKeyboardButton("-15").callbackData(String.format("flags:%s:%s:%s:%s", gid, turnTime - 15, payTime, objectionTime)),
+                        new InlineKeyboardButton("" + turnTime).callbackData(""),
+                        new InlineKeyboardButton("+15").callbackData(String.format("flags:%s:%s:%s:%s", gid, turnTime + 15, payTime, objectionTime))
+                },
+                new InlineKeyboardButton[]{
+                        new InlineKeyboardButton("付款時限（秒）：").callbackData(""),
+                        new InlineKeyboardButton("-5").callbackData(String.format("flags:%s:%s:%s:%s", gid, turnTime, payTime - 5, objectionTime)),
+                        new InlineKeyboardButton("" + payTime).callbackData(""),
+                        new InlineKeyboardButton("+5").callbackData(String.format("flags:%s:%s:%s:%s", gid, turnTime, payTime + 5, objectionTime))
+                },
+                new InlineKeyboardButton[]{
+                        new InlineKeyboardButton("作出反對時限（秒）：").callbackData(""),
+                        new InlineKeyboardButton("-5").callbackData(String.format("flags:%s:%s:%s:%s", gid, turnTime, payTime, objectionTime - 5)),
+                        new InlineKeyboardButton("" + objectionTime).callbackData(""),
+                        new InlineKeyboardButton("+5").callbackData(String.format("flags:%s:%s:%s:%s", gid, turnTime, payTime, objectionTime + 5))
+                },
+                new InlineKeyboardButton[]{
+                        new InlineKeyboardButton("確定").callbackData(String.format("config:%s:%s:%s:%s", gid, turnTime, payTime, objectionTime)),
+                }
         );
     }
 }
