@@ -809,6 +809,7 @@ public class Game {
             return true;
         }
         usedNonces.add(nonce);
+        logf("query from %s: %s\n", query.from().id(), query.data());
         String[] args = new String[_args.length - 1];
         System.arraycopy(_args, 1, args, 0, args.length);
         if (gamePlayers.get(currentTurn).getTgid() != query.from().id() && !args[0].startsWith("pay_")

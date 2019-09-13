@@ -51,7 +51,7 @@ public class DealBot {
         commands.put("extend", new ExtendCommand());
 //        commands.put("config", new ConfigCommand());
         commands.put("maintmode", new MaintModeCommand());
-//        commands.put("runinfo", new RunInfoCommand());
+        commands.put("runinfo", new RunInfoCommand());
         commands.put("setlang", new SetLangCommand());
         commands.put("help", new HelpCommand());
         commands.put("feedback", new FeedbackCommand());
@@ -135,7 +135,7 @@ public class DealBot {
             return;
         }
         if (query != null) {
-            System.out.printf("query from %s: %s\n", query.from().id(), query.data());
+//            System.out.printf("query from %s: %s\n", query.from().id(), query.data());
             Game g = Game.byUser(query.from().id());
             if (g != null) {
                 try {
