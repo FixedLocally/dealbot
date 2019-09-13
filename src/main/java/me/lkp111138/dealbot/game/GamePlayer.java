@@ -298,7 +298,9 @@ public class GamePlayer {
         for (Card card : currencyDeck) {
             state.append("$ ").append(card.currencyValue()).append("M, ");
         }
-        state.setLength(state.length() - 2);
+        if (currencyDeck.size() > 0) {
+            state.setLength(state.length() - 2);
+        }
 
         state.append("\n").append(translation.PROPERTIES()).append("\n");
         for (Integer group : propertyDecks.keySet()) {
