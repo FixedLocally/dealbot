@@ -96,7 +96,7 @@ public class SlyDealActionCard extends ActionCard {
             player.getGame().execute(edit);
             SendMessage send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_HAVE_USED_AGAINST(player.getName(), getCardFunctionalTitle(), victim.getName()));
             player.getGame().execute(send);
-            victim.promptSayNo(translation.SLY_DEAL_SAY_NO_PROMPT(player.getName(), group, card.getCardTitle()), () -> {
+            victim.promptSayNo(0, translation.SLY_DEAL_SAY_NO_PROMPT(player.getName(), group, card.getCardTitle()), () -> {
                 DealBot.triggerAchievement(victim.getTgid(), DealBot.Achievement.WHERE_DID_IT_GO);
                 List<Card> props = player.getPropertyDecks().getOrDefault(group, new ArrayList<>());
                 props.add(card);

@@ -124,7 +124,7 @@ public class ForcedDealActionCard extends ActionCard {
             player.getGame().execute(edit);
             SendMessage send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_HAVE_USED_AGAINST(player.getName(), getCardFunctionalTitle(), victim.getName()));
             player.getGame().execute(send);
-            victim.promptSayNo(translation.FORCED_DEAL_SAY_NO_PROMPT(player, card, group, selfCard), () -> {
+            victim.promptSayNo(0, translation.FORCED_DEAL_SAY_NO_PROMPT(player, card, group, selfCard), () -> {
                 System.out.println("running forced deal");
                 DealBot.triggerAchievement(victim.getTgid(), DealBot.Achievement.NICE_DEAL_WITH_U);
                 List<Card> props = player.getPropertyDecks().getOrDefault(group, new ArrayList<>());

@@ -389,17 +389,14 @@ public class Game {
         //*/
 
         /*
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 18; i++) {
             mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(20), 7, translation));
-            mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(16), 5, translation));
             mainDeck.add(new PropertyCard(4, translation.PROPERTY_NAME(17), 6, translation));
-            mainDeck.add(new PropertyCard(2, translation.PROPERTY_NAME(10), 3, translation));
-            mainDeck.add(new PropertyCard(3, translation.PROPERTY_NAME(11), 4, translation));
         }
-        for (int i = 0; i < 26; i++) {
-            mainDeck.add(new ForcedDealActionCard(translation));
+        for (int i = 0; i < 40; i++) {
+            mainDeck.add(new RentActionCard(new int[]{6, 7}, translation));
         }
-        for (int i = 0; i < 35; i++) {
+        for (int i = 0; i < 30; i++) {
             mainDeck.add(new JustSayNoCard(translation));
         }
         //*/
@@ -908,8 +905,10 @@ public class Game {
 
     public boolean confirmPayment(List<Card> payment, int tgid) {
         if (paidPlayers.contains(tgid)) {
+            logf("confirm payment from %s but duplicated", tgid);
             return false;
         }
+        logf("confirm payment from %s", tgid);
         String name = "";
         for (User user : players) {
             if (user.id() == tgid) {
@@ -918,6 +917,7 @@ public class Game {
             }
         }
         ++paymentConfirmationCount;
+        logf("confirmed payments: %s / %s", paymentConfirmationCount, gamePlayers.size() - 1);
         paidPlayers.add(tgid);
         int id = gamePlayers.get(currentTurn).getTgid();
         if (payment != null) {

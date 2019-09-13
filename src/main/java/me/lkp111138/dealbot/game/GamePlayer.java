@@ -54,8 +54,11 @@ public class GamePlayer {
     private String paymentMessage;
     private int paymentValue;
 
-    private Runnable savedActionIfApproved;
-    private Runnable savedActionIfObjected;
+//    private Runnable savedActionIfApproved;
+//    private Runnable savedActionIfObjected;
+
+    private Map<Integer, Runnable> approvedActions = new HashMap<>();
+    private Map<Integer, Runnable> objectedActions = new HashMap<>();
 
     private ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(2);
     private ScheduledFuture future;
@@ -359,26 +362,30 @@ public class GamePlayer {
      * @param actionIfObjected the action to execute if objected, typically nothing
      * @param prompter the player who initiated the prompt
      */
-    public void promptSayNo(String msg, Runnable actionIfApproved, Runnable actionIfObjected, GamePlayer prompter) {
-        game.logf("prompting %s to say no", tgid);
+    public void promptSayNo(int actionId, String msg, Runnable actionIfApproved, Runnable actionIfObjected, GamePlayer prompter) {
+        if (actionId == 0) {
+            actionId = game.nextNonce();
+        }
+        final int _actionId = actionId;
+        game.logf("prompting %s to say no, actionId=%s", tgid, actionId);
         int nonce = game.nextNonce();
         game.pauseTurn();
         SendMessage send = new SendMessage(tgid, msg);
         long sayNos = hand.stream().filter(x -> x instanceof JustSayNoCard).count();
         InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1 + (sayNos > 0 ? 1 : 0)][1];
         if (sayNos > 0) {
-            buttons[0][0] = new InlineKeyboardButton(translation.JUST_SAY_NO_BTN(sayNos)).callbackData(nonce + ":say_no:y");
-            buttons[1][0] = new InlineKeyboardButton(translation.NO()).callbackData(nonce + ":say_no:n");
+            buttons[0][0] = new InlineKeyboardButton(translation.JUST_SAY_NO_BTN(sayNos)).callbackData(String.format("%d:say_no:y:%d", nonce, actionId));
+            buttons[1][0] = new InlineKeyboardButton(translation.NO()).callbackData(String.format("%d:say_no:n:%d", nonce, actionId));
         } else {
-            buttons[0][0] = new InlineKeyboardButton(translation.NO()).callbackData(nonce + ":say_no:n");
+            buttons[0][0] = new InlineKeyboardButton(translation.NO()).callbackData(String.format("%d:say_no:n:%d", nonce, actionId));
         }
         send.replyMarkup(new InlineKeyboardMarkup(buttons));
-        savedActionIfApproved = () -> {
+        approvedActions.put(actionId, () -> {
             actionIfApproved.run();
             sendState();
 //            game.resumeTurn();
-        };
-        savedActionIfObjected = () -> {
+        });
+        objectedActions.put(actionId, () -> {
 //            actionIfObjected.run();
             game.log("Objection!");
             // broadcast to group
@@ -388,8 +395,8 @@ public class GamePlayer {
             _send = new SendMessage(prompter.tgid, translation.VICTIM_SAID_NO(getName()));
             game.execute(_send);
             // prompt for current user's objection
-            prompter.promptSayNo(translation.SAID_NO_PROMPT_SAY_NO(getName()), actionIfObjected, actionIfApproved, GamePlayer.this);
-        };
+            prompter.promptSayNo(_actionId, translation.SAID_NO_PROMPT_SAY_NO(getName()), actionIfObjected, actionIfApproved, GamePlayer.this);
+        });
         game.execute(send, new Callback<SendMessage, SendResponse>() {
             @Override
             public void onResponse(SendMessage request, SendResponse response) {
@@ -444,7 +451,7 @@ public class GamePlayer {
         paymentSelectedIndices.clear();
         paymentSelectedPropertyIndices.clear();
         paymentMessage = translation.PAYMENT_COLLECTION_MESSAGE_SAY_NO(group, collector.getName(), value);
-        promptSayNo(paymentMessage, () -> realCollectRent(value, group, collector), () -> {
+        promptSayNo(0, paymentMessage, () -> realCollectRent(value, group, collector), () -> {
             if (game.confirmPayment(null, tgid)) {
                 paymentSelectedIndices.clear();
                 paymentSelectedPropertyIndices.clear();
@@ -682,6 +689,7 @@ public class GamePlayer {
         if (future != null) {
             future.cancel(true);
         }
+        int actionId = Integer.parseInt(args[2]);
         switch (args[1]) {
             case "y":
                 // say no
@@ -696,14 +704,14 @@ public class GamePlayer {
                 System.out.println(removed);
                 if (removed != null) {
                     // did say no, notify sender
-                    savedActionIfObjected.run();
+                    objectedActions.get(actionId).run();
                     game.execute(new EditMessageText(tgid, mid, translation.SAID_NO()));
                     game.addToUsedDeck(removed);
                     break;
                 }
                 // pass thru if not removed
             case "n":
-                savedActionIfApproved.run();
+                approvedActions.get(actionId).run();
                 game.execute(new EditMessageText(tgid, mid, translation.SAID_YES()));
                 break;
         }

@@ -83,7 +83,7 @@ public class DealBreakerActionCard extends ActionCard {
             player.getGame().execute(edit);
             SendMessage send = new SendMessage(player.getGame().getGid(), translation.SOMEONE_HAVE_USED_AGAINST(player.getName(), getCardFunctionalTitle(), victim.getName()));
             player.getGame().execute(send);
-            victim.promptSayNo(translation.DEAL_BREAKER_SAY_NO_PROMPT(player.getName(), group), () -> {
+            victim.promptSayNo(0, translation.DEAL_BREAKER_SAY_NO_PROMPT(player.getName(), group), () -> {
                 DealBot.triggerAchievement(victim.getTgid(), DealBot.Achievement.YOUR_PROPERTY_ISNT_YOURS);
                 List<Card> cards = victim.getPropertyDecks().get(group);
                 List<Card> props = player.getPropertyDecks().getOrDefault(group, new ArrayList<>());
