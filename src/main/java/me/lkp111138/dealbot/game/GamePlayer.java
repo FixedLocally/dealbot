@@ -440,6 +440,9 @@ public class GamePlayer {
 
     public void collectRent(int value, int group, GamePlayer collector) {
         DealBot.triggerAchievement(tgid, DealBot.Achievement.WELCOME_HOME);
+        // clear payment choices
+        paymentSelectedIndices.clear();
+        paymentSelectedPropertyIndices.clear();
         paymentMessage = translation.PAYMENT_COLLECTION_MESSAGE_SAY_NO(group, collector.getName(), value);
         promptSayNo(paymentMessage, () -> realCollectRent(value, group, collector), () -> {
             if (game.confirmPayment(null, tgid)) {
@@ -456,8 +459,6 @@ public class GamePlayer {
             DealBot.triggerAchievement(tgid, DealBot.Achievement.SHOCK_BILL);
         }
         paymentValue = value;
-        paymentSelectedIndices.clear();
-        paymentSelectedPropertyIndices.clear();
         paymentMessage = translation.PAYMENT_COLLECTION_MESSAGE(group, collector.getName(), value, game.getPaymentWait());
         // the currency deck can cover this
         SendMessage send = new SendMessage(tgid, paymentMessage);
@@ -481,8 +482,6 @@ public class GamePlayer {
         game.logf("scheduled autopay task for %s", tgid);
         future = executor.schedule(() -> {
             game.logf("firing autopay task for %s", tgid);
-            paymentSelectedIndices.clear();
-            paymentSelectedPropertyIndices.clear();
             int paid = 0;
             for (int i = 0; i < currencyCount(); i++) {
                 paid += currencyDeck.get(i).currencyValue();
