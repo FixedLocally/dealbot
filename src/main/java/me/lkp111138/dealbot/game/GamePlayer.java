@@ -443,6 +443,8 @@ public class GamePlayer {
         paymentMessage = translation.PAYMENT_COLLECTION_MESSAGE_SAY_NO(group, collector.getName(), value);
         promptSayNo(paymentMessage, () -> realCollectRent(value, group, collector), () -> {
             if (game.confirmPayment(null, tgid)) {
+                paymentSelectedIndices.clear();
+                paymentSelectedPropertyIndices.clear();
                 confirmPayment();
             }
         }, collector);
