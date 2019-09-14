@@ -540,6 +540,8 @@ public class TraditionalChinese extends Translation {
                 return "什麼債務？";
             case YOUR_PROPERTY_ISNT_YOURS:
                 return "你的物業不是你的";
+            case PLAY_WITH_MINT:
+                return "來點薄荷嗎？";
         }
         return "";
     }
@@ -577,6 +579,8 @@ public class TraditionalChinese extends Translation {
                 return "被其他玩家使用 \"收取債務\"。";
             case YOUR_PROPERTY_ISNT_YOURS:
                 return "被其他玩家使用 \"物業接管\" 取去一整套物業。";
+            case PLAY_WITH_MINT:
+                return "和開發者玩一局。";
         }
         return "";
     }

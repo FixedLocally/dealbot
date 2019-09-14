@@ -205,7 +205,7 @@ public class DealBot {
         }
     }
 
-    public static boolean realTriggerAchievement(int tgid, Achievement ach) {
+    private static boolean realTriggerAchievement(int tgid, Achievement ach) {
         try {
             Connection conn = Main.getConnection();
             PreparedStatement stmt = conn.prepareStatement("insert into achv_log values (?, ?)");
@@ -231,7 +231,7 @@ public class DealBot {
         return ban.type;
     }
 
-    public static void executeBan(long tgid, String type, int length, String reason) {
+    private static void executeBan(long tgid, String type, int length, String reason) {
         try (Connection conn = Main.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("INSERT into bans (tgid, until, count, type, reason) VALUES (?, ?, ?, ?, ?)");
             int expiry = (int) (System.currentTimeMillis() / 1000) + length;
@@ -289,6 +289,7 @@ public class DealBot {
         MANSION,                    // build a house on top of ur properties
         HOTEL_MANAGER,              // build a hotel
         SHOCK_BILL,                 // be collected a rent of 20M+
-        THANK_YOU;                  // collect a rent of 20M+
+        THANK_YOU,                  // collect a rent of 20M+
+        PLAY_WITH_MINT              // play a game with the developer
     }
 }

@@ -494,6 +494,9 @@ public class Game {
                         if (games == 50) {
                             DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.ADDICTED);
                         }
+                        if (players.stream().mapToInt(User::id).anyMatch(x -> x == Main.BOT_OWNER)) {
+                            DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.PLAY_WITH_MINT);
+                        }
                     }
                 }
             } catch (SQLException e) {

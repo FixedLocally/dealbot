@@ -515,6 +515,8 @@ public class Translation {
                 return "What was this debt?";
             case YOUR_PROPERTY_ISNT_YOURS:
                 return "Your Property Isn't Yours";
+            case PLAY_WITH_MINT:
+                return "You need a mint?";
         }
         return "";
     }
@@ -552,6 +554,8 @@ public class Translation {
                 return "Be forced to pay a debt.";
             case YOUR_PROPERTY_ISNT_YOURS:
                 return "Have your hard earnt full set taken away.";
+            case PLAY_WITH_MINT:
+                return "Play a game with the developer.";
         }
         return "";
     }
