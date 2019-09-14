@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BuildingActionCard extends ActionCard {
-    protected BuildingActionCard(Translation translation) {
+    BuildingActionCard(Translation translation) {
         super(translation);
     }
 

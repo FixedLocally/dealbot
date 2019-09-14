@@ -1,10 +1,8 @@
 package me.lkp111138.dealbot.game;
 
-import com.google.gson.JsonObject;
 import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.CallbackQuery;
-import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
@@ -37,18 +35,12 @@ public class Game {
     private int currentTurn = 0;
     private long startTime;
     private long gid;
-    private Chat group;
     private boolean started = false;
-    private boolean firstRound = true;
     private List<User> players = new ArrayList<>();
     private List<GamePlayer> gamePlayers = new ArrayList<>();
-    private int[] deckMsgid = new int[4];
-    private User deskUser;
     private ScheduledFuture future;
-    private int currentMsgid;
     private String lang;
     private Translation translation;
-    private JsonObject gameSequence = new JsonObject();
     private int id;
     private List<Card> mainDeck = new ArrayList<>();
     private List<Card> usedDeck = new ArrayList<>();
@@ -59,7 +51,6 @@ public class Game {
     private boolean turnPaused = false;
 
     private boolean ended = false;
-    private int[] offsets;
 
     private int paymentConfirmationCount;
     private Set<Integer> paidPlayers = new HashSet<>();
@@ -90,7 +81,6 @@ public class Game {
         this.gid = gid;
         this.turnWait = groupInfo.waitTime;
         this.groupInfo = groupInfo;
-        this.group = msg.chat();
         this.lang = DealBot.lang(gid);
         this.translation = Translation.get(this.lang);
         if (maintMode) {
@@ -258,9 +248,6 @@ public class Game {
         schedule(this::remind, (seconds - remindSeconds[--i]) * 1000);
     }
 
-    private void updateDeck(int i) {
-    }
-
     /**
      * Starts the game
      */
@@ -405,7 +392,7 @@ public class Game {
 
         // construct players
         for (User player : players) {
-            gamePlayers.add(new GamePlayer(this, player.id(), gid, player));
+            gamePlayers.add(new GamePlayer(this, player.id(), player));
         }
 
         // distribute mainDeck
@@ -421,7 +408,7 @@ public class Game {
         startTurn();
     }
 
-    public void pauseTurn() {
+    void pauseTurn() {
         if (turnPaused) {
             return;
         }
@@ -440,7 +427,7 @@ public class Game {
         turnStartTime = System.currentTimeMillis();
     }
 
-    public long getDelay() {
+    long getDelay() {
         if (future != null) {
             return future.getDelay(TimeUnit.MILLISECONDS);
         }
@@ -452,9 +439,9 @@ public class Game {
         if (started) {
             // the game is forcibly killed, kill aht buttons of the current player too
             if (isError) {
-                this.execute(new EditMessageText(players.get(currentTurn).id(), currentMsgid, this.translation.GAME_ENDED_ERROR()));
+                this.execute(new EditMessageText(players.get(currentTurn).id(), gamePlayers.get(currentTurn).getMessageId(), this.translation.GAME_ENDED_ERROR()));
             } else {
-                this.execute(new EditMessageText(players.get(currentTurn).id(), currentMsgid, this.translation.GAME_ENDED()));
+                this.execute(new EditMessageText(players.get(currentTurn).id(), gamePlayers.get(currentTurn).getMessageId(), this.translation.GAME_ENDED()));
             }
         }
         cancelFuture();
@@ -536,11 +523,11 @@ public class Game {
         }
     }
 
-    public void addToMainDeck(Card card) {
+    void addToMainDeck(Card card) {
         mainDeck.add(card);
     }
 
-    public void addToUsedDeck(Card card) {
+    void addToUsedDeck(Card card) {
         usedDeck.add(card);
     }
 
@@ -694,7 +681,7 @@ public class Game {
         return currentState.toString();
     }
 
-    public void nextTurn() {
+    void nextTurn() {
         // before we start, we check if the previous player had won
         GamePlayer player = gamePlayers.get(currentTurn);
         if (player.checkWinCondition()) {
@@ -732,24 +719,24 @@ public class Game {
         return lang;
     }
 
-    public int getTurnWait() {
+    int getTurnWait() {
         return turnWait;
     }
 
-    public int getPaymentWait() {
+    int getPaymentWait() {
         return groupInfo.payTime;
     }
 
-    public int getObjectionWait() {
+    int getObjectionWait() {
         return groupInfo.sayNoTime;
     }
 
-    public void log(Object o) {
+    void log(Object o) {
         String date = sdf.format(new Date());
         System.out.printf("[%s][Game %d] %s\n", date, id, o);
     }
 
-    public void logf(String format, Object ...objs) {
+    void logf(String format, Object... objs) {
         String date = sdf.format(new Date());
         Object[] _objs = new Object[objs.length + 2];
         _objs[1] = id;
@@ -903,7 +890,7 @@ public class Game {
         usedDeck.remove(card);
     }
 
-    public boolean confirmPayment(List<Card> payment, int tgid) {
+    boolean confirmPayment(List<Card> payment, int tgid) {
         if (paidPlayers.contains(tgid)) {
             logf("confirm payment from %s but duplicated", tgid);
             return false;
@@ -921,7 +908,7 @@ public class Game {
         paidPlayers.add(tgid);
         int id = gamePlayers.get(currentTurn).getTgid();
         if (payment != null) {
-            String paymentStr = (payment.stream().map(x -> x instanceof CurrencyCard ? ("$ " + x.currencyValue() + "M") : (x.getCardTitle())).collect(Collectors.joining(", ")));
+            String paymentStr = (payment.stream().map(x -> x.isCurrency() ? ("$ " + x.currencyValue() + "M") : (x.getCardTitle())).collect(Collectors.joining(", ")));
             for (Card card : payment) {
                 if (card instanceof PropertyCard) {
                     PropertyCard pcard = (PropertyCard) card;
@@ -930,6 +917,7 @@ public class Game {
                     gamePlayers.get(currentTurn).addCurrency(card);
                 }
             }
+            gamePlayers.get(currentTurn).rentCollected(payment.stream().mapToInt(Card::currencyValue).sum());
             SendMessage send = new SendMessage(id, translation.SB_PAID_YOU(name, paymentStr));
             execute(send);
             send = new SendMessage(gid, translation.SB_PAID_SB(name, gamePlayers.get(currentTurn).getName(), paymentStr));

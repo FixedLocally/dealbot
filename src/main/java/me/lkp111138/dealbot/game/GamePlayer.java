@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 public class GamePlayer {
     // player info
     private final int tgid;
-    private final long gid;
     private final Game game;
     private final User user;
     private final Translation translation;
@@ -68,24 +67,19 @@ public class GamePlayer {
     private final List<Card> currencyDeck = new ArrayList<>();
     private final Map<Integer, List<Card>> propertyDecks = new HashMap<>();
 
-    public GamePlayer(Game game, int tgid, long gid, User user) {
+    public GamePlayer(Game game, int tgid, User user) {
         this.tgid = tgid;
-        this.gid = gid;
         this.game = game;
         this.user = user;
         this.translation = game.getTranslation();
     }
 
-    public void removeHand(Card card) {
+    void removeHand(Card card) {
         hand.remove(card);
     }
 
     public void addHand(Card card) {
         hand.add(card);
-    }
-
-    public void removeCurrency(Card card) {
-        currencyDeck.remove(card);
     }
 
     public void addCurrency(Card card) {
@@ -108,7 +102,7 @@ public class GamePlayer {
         currencyCollected += amount;
     }
 
-    public void rentCollected(int amount) {
+    void rentCollected(int amount) {
         rentCollected += amount;
     }
 
@@ -157,7 +151,7 @@ public class GamePlayer {
         return group;
     }
 
-    public boolean checkWinCondition() {
+    boolean checkWinCondition() {
         // 3 full sets
         int sets = 0;
         for (Integer group : propertyDecks.keySet()) {
@@ -180,7 +174,7 @@ public class GamePlayer {
         }
     }
 
-    public void startTurn() {
+    void startTurn() {
         game.schedule(this::endTurnTimeout, 1000 * game.getTurnWait());
         game.execute(new DeleteMessage(tgid, stateMessageId));
         game.execute(new DeleteMessage(tgid, globalStateMessageId));
@@ -267,19 +261,15 @@ public class GamePlayer {
         return messageId;
     }
 
-    public List<Card> getCurrencyDeck() {
-        return currencyDeck;
-    }
-
     public Map<Integer, List<Card>> getPropertyDecks() {
         return propertyDecks;
     }
 
-    public Card handCardAt(int i) {
+    Card handCardAt(int i) {
         return hand.get(i);
     }
 
-    public void play(Card card) {
+    void play(Card card) {
         if (card instanceof PropertyCard) {
             card.execute(this, new String[0]);
         } else {
@@ -287,7 +277,7 @@ public class GamePlayer {
         }
     }
 
-    public String getMyState() {
+    private String getMyState() {
         StringBuilder state = new StringBuilder(translation.CARDS_IN_HAND());
         state.append(handCount()).append("\n");
         for (Card card : hand) {
@@ -329,7 +319,7 @@ public class GamePlayer {
         return state.toString();
     }
 
-    public void sendState() {
+    void sendState() {
         if (stateMessageId == 0) {
             SendMessage send = new SendMessage(tgid, getMyState()).parseMode(ParseMode.HTML);
             game.execute(send, new Callback<SendMessage, SendResponse>() {
@@ -405,9 +395,7 @@ public class GamePlayer {
                 if (future != null) {
                     future.cancel(true);
                 }
-                future = executor.schedule(() -> {
-                    sayNoCallback(new String[]{"say_no", "n"}, "", response.message().messageId());
-                }, game.getObjectionWait(), TimeUnit.SECONDS);
+                future = executor.schedule(() -> sayNoCallback(new String[]{"say_no", "n"}, "", response.message().messageId()), game.getObjectionWait(), TimeUnit.SECONDS);
             }
 
             @Override
@@ -417,7 +405,7 @@ public class GamePlayer {
         });
     }
 
-    public void sendGlobalState(String s) {
+    void sendGlobalState(String s) {
         if (globalStateMessageId == 0) {
             game.execute(new DeleteMessage(tgid, globalStateMessageId));
         }
@@ -439,15 +427,15 @@ public class GamePlayer {
         return user.firstName();
     }
 
-    public int handCount() {
+    int handCount() {
         return hand.size();
     }
 
-    public int currencyCount() {
+    int currencyCount() {
         return currencyDeck.size();
     }
 
-    public void collectRent(int value, int group, GamePlayer collector) {
+    void collectRent(int value, int group, GamePlayer collector) {
         DealBot.triggerAchievement(tgid, DealBot.Achievement.WELCOME_HOME);
         // clear payment choices
         paymentSelectedIndices.clear();
@@ -537,8 +525,7 @@ public class GamePlayer {
         int k = -1;
         for (Integer grp : propertyDecks.keySet()) {
             List<Card> get = propertyDecks.get(grp);
-            for (int i = 0; i < get.size(); i++) {
-                Card card = get.get(i);
+            for (Card card : get) {
                 if (card.currencyValue() > 0) {
                     ++k;
                     boolean contains = paymentSelectedPropertyIndices.contains(k);
@@ -553,7 +540,7 @@ public class GamePlayer {
         return buttons;
     }
 
-    public void wildcardMenuCallback(String[] args, String id) {
+    void wildcardMenuCallback(String[] args, String id) {
         AnswerCallbackQuery answer = new AnswerCallbackQuery(id);
         int nonce = game.nextNonce();
         if (args.length == 1) {
@@ -622,7 +609,7 @@ public class GamePlayer {
         game.execute(answer);
     }
 
-    public void payCallback(String[] args, String id) {
+    void payCallback(String[] args, String id) {
         switch (args[0]) {
             case "pay_choose":
                 if (args[1].equals("p")) {
@@ -687,7 +674,7 @@ public class GamePlayer {
         }
     }
 
-    public void sayNoCallback(String[] args, String id, int mid) {
+    void sayNoCallback(String[] args, String id, int mid) {
         if (future != null) {
             future.cancel(true);
         }
@@ -722,7 +709,7 @@ public class GamePlayer {
         }
     }
 
-    public List<Card> getPaymentCurrencyCards() {
+    private List<Card> getPaymentCurrencyCards() {
         List<Card> payment = new ArrayList<>();
         for (Integer index : paymentSelectedIndices) {
             payment.add(currencyDeck.get(index));
@@ -730,8 +717,7 @@ public class GamePlayer {
         int k = -1;
         for (Integer grp : propertyDecks.keySet()) {
             List<Card> get = propertyDecks.get(grp);
-            for (int i = 0; i < get.size(); i++) {
-                Card card = get.get(i);
+            for (Card card : get) {
                 if (card.currencyValue() > 0) {
                     k++;
                     if (paymentSelectedPropertyIndices.contains(k)) {
@@ -743,7 +729,7 @@ public class GamePlayer {
         return payment;
     }
 
-    public void confirmPayment() {
+    private void confirmPayment() {
         // deduct the currencies
         List<Card> payment = getPaymentCurrencyCards();
         currencyDeck.removeAll(payment);
@@ -764,17 +750,17 @@ public class GamePlayer {
         --actionCount;
     }
 
-    public void endTurnTimeout() {
+    void endTurnTimeout() {
         game.logf("turn timeout for %s", tgid);
         endTurn(false);
     }
 
-    public void endTurnVoluntary() {
+    void endTurnVoluntary() {
         game.logf("turn ended for %s, actionCount=%s", tgid, actionCount);
         endTurn(true);
     }
 
-    public void endTurn(boolean voluntary) {
+    private void endTurn(boolean voluntary) {
         game.logf("executing end turn for %d", tgid);
         String msg = voluntary ? translation.PASS_CLICK() : translation.PASS_TIMEOUT();
         game.execute(new EditMessageText(tgid, messageId, msg));
@@ -833,19 +819,19 @@ public class GamePlayer {
         return PropertyCard.getRent(group, propertyDecks.getOrDefault(group, new ArrayList<>()));
     }
 
-    public int getPropertiesPlayed() {
+    int getPropertiesPlayed() {
         return propertiesPlayed;
     }
 
-    public int getCurrencyCollected() {
+    int getCurrencyCollected() {
         return currencyCollected;
     }
 
-    public int getCardsPlayed() {
+    int getCardsPlayed() {
         return cardsPlayed;
     }
 
-    public int getRentCollected() {
+    int getRentCollected() {
         return rentCollected;
     }
 }

@@ -42,20 +42,7 @@ public class DealBreakerActionCard extends ActionCard {
         int nonce = player.getGame().nextNonce();
         if (args.length == 0) {
             // choose player
-            List<GamePlayer> players = player.getGame().getGamePlayers();
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[players.size()][1];
-            int i = 0;
-            for (int j = 0; j < players.size(); j++) {
-                GamePlayer gamePlayer = players.get(j);
-                if (gamePlayer == player) {
-                    continue;
-                }
-                buttons[i++][0] = new InlineKeyboardButton(gamePlayer.getName()).callbackData(nonce + ":card_arg:" + j);
-            }
-            buttons[i][0] = new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel");
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.WHOSE_DEAL_TO_BREAK());
-            edit.replyMarkup(new InlineKeyboardMarkup(buttons));
-            player.getGame().execute(edit);
+            SlyDealActionCard.playerChooser(player, nonce, translation.CANCEL(), translation.WHOSE_DEAL_TO_BREAK());
         }
         if (args.length == 1) {
             // player chosen, choose property
@@ -91,9 +78,7 @@ public class DealBreakerActionCard extends ActionCard {
                 player.getPropertyDecks().put(group, props);
                 victim.getPropertyDecks().remove(group);
                 player.getGame().resumeTurn();
-            }, () -> {
-                player.getGame().resumeTurn();
-            }, player);
+            }, player.getGame()::resumeTurn, player);
         }
     }
 }

@@ -43,47 +43,11 @@ public class SlyDealActionCard extends ActionCard {
         int nonce = player.getGame().nextNonce();
         if (args.length == 0) {
             // choose player
-            List<GamePlayer> players = player.getGame().getGamePlayers();
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[players.size()][1];
-            int i = 0;
-            for (int j = 0; j < players.size(); j++) {
-                GamePlayer gamePlayer = players.get(j);
-                if (gamePlayer == player) {
-                    continue;
-                }
-                buttons[i++][0] = new InlineKeyboardButton(gamePlayer.getName()).callbackData(nonce + ":card_arg:" + j);
-            }
-            buttons[i][0] = new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel");
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.SLY_DEAL_CHOOSE_PLAYER());
-            edit.replyMarkup(new InlineKeyboardMarkup(buttons));
-            player.getGame().execute(edit);
+            playerChooser(player, nonce, translation.CANCEL(), translation.SLY_DEAL_CHOOSE_PLAYER());
         }
         if (args.length == 1) {
             // player chosen, choose property
-            int index = Integer.parseInt(args[0]);
-            GamePlayer victim = player.getGame().getGamePlayers().get(index);
-            List<InlineKeyboardButton[]> buttons = new ArrayList<>();
-            for (Integer group : victim.getPropertyDecks().keySet()) {
-                if (victim.getPropertyDecks().get(group).size() >= PropertyCard.propertySetCounts[group]) {
-                    // is a full set
-                    continue;
-                }
-                List<Card> get = victim.getPropertyDecks().get(group);
-                for (int i = 0; i < get.size(); i++) {
-                    Card card = get.get(i);
-                    if (card instanceof WildcardPropertyCard) {
-                        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("[" + translation.PROPERTY_GROUP(group) + "] " + card.getCardTitle())
-                                .callbackData(nonce + ":card_arg:" + index + ":" + group + ":" + i)});
-                    } else {
-                        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle())
-                                .callbackData(nonce + ":card_arg:" + index + ":" + group + ":" + i)});
-                    }
-                }
-            }
-            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel")});
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.FORCED_DEAL_CHOOSE_TARGET());
-            edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
-            player.getGame().execute(edit);
+            propertyChooser(args, player, nonce, translation);
         }
         if (args.length == 3) {
             // ask if they were to say no about us stealing
@@ -103,9 +67,51 @@ public class SlyDealActionCard extends ActionCard {
                 player.getPropertyDecks().put(group, props);
                 victim.removeProperty((PropertyCard) card, group);
                 player.getGame().resumeTurn();
-            }, () -> {
-                player.getGame().resumeTurn();
-            }, player);
+            }, player.getGame()::resumeTurn, player);
         }
+    }
+
+    static void playerChooser(GamePlayer player, int nonce, String cancel, String s) {
+        List<GamePlayer> players = player.getGame().getGamePlayers();
+        InlineKeyboardButton[][] buttons = new InlineKeyboardButton[players.size()][1];
+        int i = 0;
+        for (int j = 0; j < players.size(); j++) {
+            GamePlayer gamePlayer = players.get(j);
+            if (gamePlayer == player) {
+                continue;
+            }
+            buttons[i++][0] = new InlineKeyboardButton(gamePlayer.getName()).callbackData(nonce + ":card_arg:" + j);
+        }
+        buttons[i][0] = new InlineKeyboardButton(cancel).callbackData(nonce + ":use_cancel");
+        EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), s);
+        edit.replyMarkup(new InlineKeyboardMarkup(buttons));
+        player.getGame().execute(edit);
+    }
+
+    static void propertyChooser(String[] args, GamePlayer player, int nonce, Translation translation) {
+        int index = Integer.parseInt(args[0]);
+        GamePlayer victim = player.getGame().getGamePlayers().get(index);
+        List<InlineKeyboardButton[]> buttons = new ArrayList<>();
+        for (Integer group : victim.getPropertyDecks().keySet()) {
+            if (victim.getPropertyDecks().get(group).size() >= PropertyCard.propertySetCounts[group]) {
+                // is a full set
+                continue;
+            }
+            List<Card> get = victim.getPropertyDecks().get(group);
+            for (int i = 0; i < get.size(); i++) {
+                Card card = get.get(i);
+                if (card instanceof WildcardPropertyCard) {
+                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("[" + translation.PROPERTY_GROUP(group) + "] " + card.getCardTitle())
+                            .callbackData(nonce + ":card_arg:" + index + ":" + group + ":" + i)});
+                } else {
+                    buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle())
+                            .callbackData(nonce + ":card_arg:" + index + ":" + group + ":" + i)});
+                }
+            }
+        }
+        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel")});
+        EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.FORCED_DEAL_CHOOSE_TARGET());
+        edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
+        player.getGame().execute(edit);
     }
 }

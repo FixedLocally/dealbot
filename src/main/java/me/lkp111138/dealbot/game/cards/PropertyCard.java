@@ -16,7 +16,7 @@ public class PropertyCard implements Card {
 
     // there are currently 10 groups of properties
     public static final int[] propertySetCounts = {2, 3, 3, 3, 3, 3, 3, 2, 4, 2};
-    public static final int[][] propertyRents = {
+    private static final int[][] propertyRents = {
             {1, 2},
             {1, 2, 3},
             {1, 2, 4},

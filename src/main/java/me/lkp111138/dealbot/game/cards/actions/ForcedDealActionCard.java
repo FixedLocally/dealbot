@@ -42,47 +42,11 @@ public class ForcedDealActionCard extends ActionCard {
         int nonce = player.getGame().nextNonce();
         if (args.length == 0) {
             // choose player
-            List<GamePlayer> players = player.getGame().getGamePlayers();
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[players.size()][1];
-            int i = 0;
-            for (int j = 0; j < players.size(); j++) {
-                GamePlayer gamePlayer = players.get(j);
-                if (gamePlayer == player) {
-                    continue;
-                }
-                buttons[i++][0] = new InlineKeyboardButton(gamePlayer.getName()).callbackData(nonce + ":card_arg:" + j);
-            }
-            buttons[i][0] = new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel");
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.FORCED_DEAL_TARGET());
-            edit.replyMarkup(new InlineKeyboardMarkup(buttons));
-            player.getGame().execute(edit);
+            SlyDealActionCard.playerChooser(player, nonce, translation.CANCEL(), translation.FORCED_DEAL_TARGET());
         }
         if (args.length == 1) {
             // player chosen, choose property from them
-            int index = Integer.parseInt(args[0]);
-            GamePlayer victim = player.getGame().getGamePlayers().get(index);
-            List<InlineKeyboardButton[]> buttons = new ArrayList<>();
-            for (Integer group : victim.getPropertyDecks().keySet()) {
-                if (victim.getPropertyDecks().get(group).size() >= PropertyCard.propertySetCounts[group]) {
-                    // is a full set
-                    continue;
-                }
-                List<Card> get = victim.getPropertyDecks().get(group);
-                for (int i = 0; i < get.size(); i++) {
-                    Card card = get.get(i);
-                    if (card instanceof WildcardPropertyCard) {
-                        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton("[" + translation.PROPERTY_GROUP(group) + "] " + card.getCardTitle())
-                                .callbackData(nonce + ":card_arg:" + index + ":" + group + ":" + i)});
-                    } else {
-                        buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(card.getCardTitle())
-                                .callbackData(nonce + ":card_arg:" + index + ":" + group + ":" + i)});
-                    }
-                }
-            }
-            buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.CANCEL()).callbackData(nonce + ":use_cancel")});
-            EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(), translation.FORCED_DEAL_CHOOSE_TARGET());
-            edit.replyMarkup(new InlineKeyboardMarkup(buttons.toArray(new InlineKeyboardButton[0][0])));
-            player.getGame().execute(edit);
+            SlyDealActionCard.propertyChooser(args, player, nonce, translation);
         }
         if (args.length == 3) {
             // property chosen, choose property from self
@@ -134,9 +98,7 @@ public class ForcedDealActionCard extends ActionCard {
                 victim.addProperty((PropertyCard) selfCard, ((PropertyCard) selfCard).getGroup());
                 player.removeProperty((PropertyCard) selfCard, ((PropertyCard) selfCard).getGroup());
                 player.getGame().resumeTurn();
-            }, () -> {
-                player.getGame().resumeTurn();
-            }, player);
+            }, player.getGame()::resumeTurn, player);
         }
     }
 }
