@@ -61,23 +61,10 @@ public class ConfigCommand implements Command {
                         payTime = rs.getInt(2);
                         objectionTime = rs.getInt(3);
                     }
-                    int finalTurnTime = turnTime;
-                    int finalPayTime = payTime;
-                    int finalObjectionTime = objectionTime;
-                    bot.execute(new GetChatMember(gid, uid), new Callback<GetChatMember, GetChatMemberResponse>() {
-                        @Override
-                        public void onResponse(GetChatMember getChatMember, GetChatMemberResponse getChatMemberResponse) {
-                            SendMessage send = new SendMessage(uid, "群組遊戲設定：<b>" + msg.chat().title() + "</b>");
-                            send.parseMode(ParseMode.HTML);
-                            send.replyMarkup(markupFromFlags(finalTurnTime, finalPayTime, finalObjectionTime, msg, msg.chat().id()));
-                            bot.execute(send);
-                        }
-
-                        @Override
-                        public void onFailure(GetChatMember getChatMember, IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
+                    SendMessage send = new SendMessage(uid, "群組遊戲設定：<b>" + msg.chat().title() + "</b>");
+                    send.parseMode(ParseMode.HTML);
+                    send.replyMarkup(markupFromFlags(turnTime, payTime, objectionTime, msg, msg.chat().id()));
+                    bot.execute(send);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
