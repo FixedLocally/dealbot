@@ -155,7 +155,7 @@ public class GamePlayer {
         // 3 full sets
         int sets = 0;
         for (Integer group : propertyDecks.keySet()) {
-            if (propertyDecks.get(group).size() >= PropertyCard.propertySetCounts[group]) {
+            if (PropertyCard.realCount(propertyDecks.get(group)) >= PropertyCard.propertySetCounts[group]) {
                 ++sets;
             }
         }
