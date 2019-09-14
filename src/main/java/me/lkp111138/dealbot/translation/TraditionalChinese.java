@@ -308,7 +308,7 @@ public class TraditionalChinese extends Translation {
         return String.format("本輪下一次收取租金時，金額將作 %d 倍計算。", multiplier);
     }
     public String FORCED_DEAL_DESC() {
-        return "以自己一項強制換取另一名玩家的一項物業。不得為完整一套物業之一。";
+        return "以自己一項物業強制換取另一名玩家的一項物業。不得為完整一套物業之一。";
     }
     public String FORCED_DEAL_TARGET() {
         return "你要和誰強制交易？";
