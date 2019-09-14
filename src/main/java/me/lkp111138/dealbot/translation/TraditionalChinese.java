@@ -38,7 +38,7 @@ public class TraditionalChinese extends Translation {
         return "加入時間已延長30秒，尚餘 %d 秒。 /join";
     }
     public String GAME_STARTING_ANNOUNCEMENT() {
-        return "The game is starting, please wait...";
+        return "遊戲正在啟動，請稍等...";
     }
     public String PROPERTY_NAME(int index) {
         switch (index) {
@@ -236,7 +236,7 @@ public class TraditionalChinese extends Translation {
         return "";
     }
     public String PAY(int value) {
-        return String.format("繳付（ %dM）", value);
+        return String.format("繳付（$ %dM）", value);
     }
     public String CHOOSE_CARD_TO_MANAGE() {
         return "選擇要管理的卡牌：";
@@ -377,10 +377,10 @@ public class TraditionalChinese extends Translation {
         return String.format("將 %s 存入銀行還是作為行動？\n卡牌描述：%s", title, desc);
     }
     public String AS_CURRENCY() {
-        return "存入銀行";
+        return "\uD83D\uDCB5 存入銀行";
     }
     public String AS_ACTION() {
-        return "作為行動";
+        return "\uD83D\uDE4B\uD83C\uDFFB\u200D♂️ 作為行動";
     }
     public String YOU_DEPOSITED(String title) {
         return "你將 " + title + " 存入銀行。";

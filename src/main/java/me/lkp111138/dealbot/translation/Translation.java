@@ -229,7 +229,7 @@ public class Translation {
         return "";
     }
     public String PAY(int value) {
-        return String.format("Pay ( %dM)", value);
+        return String.format("Pay ($ %dM)", value);
     }
     public String CHOOSE_CARD_TO_MANAGE() {
         return "Choose a card to manage:";
@@ -370,10 +370,10 @@ public class Translation {
         return String.format("Use as %s currency or an action?\nCard description: %s", title, desc);
     }
     public String AS_CURRENCY() {
-        return "As currency";
+        return "\uD83D\uDCB5 As currency";
     }
     public String AS_ACTION() {
-        return "As action";
+        return "\uD83D\uDE4B\uD83C\uDFFB\u200D♂️ As action";
     }
     public String YOU_DEPOSITED(String title) {
         return "You have deposited " + title + " into your bank.";
