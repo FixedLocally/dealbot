@@ -270,11 +270,7 @@ public class GamePlayer {
     }
 
     void play(Card card) {
-        if (card instanceof PropertyCard) {
-            card.execute(this, new String[0]);
-        } else {
-            card.execute(this, new String[0]);
-        }
+        card.execute(this, new String[0]);
     }
 
     private String getMyState() {
