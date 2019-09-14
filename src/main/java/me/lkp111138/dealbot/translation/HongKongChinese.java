@@ -336,57 +336,57 @@ public class HongKongChinese extends TraditionalChinese {
 
     @Override
     public String YOU_HAVE_USED_RENT_FOR(String card, int group) {
-        return super.YOU_HAVE_USED_RENT_FOR(card, group);
+        return String.format("你用咗 %s 收 %s 嘅租金。", card, PROPERTY_GROUP(group));
     }
 
     @Override
     public String SOMEONE_HAVE_USED_RENT_FOR(String name, String card, int group) {
-        return super.SOMEONE_HAVE_USED_RENT_FOR(name, card, group);
+        return String.format("%s 用咗 %s 收 %s 嘅租金。", name, card, PROPERTY_GROUP(group));
     }
 
     @Override
     public String YOU_HAVE_USED_RENT_FOR_AGAINST(String card, String victim, int group) {
-        return super.YOU_HAVE_USED_RENT_FOR_AGAINST(card, victim, group);
+        return String.format("你用咗 %1$s 向 %3$s 收取 %2$s 嘅租金。", card, PROPERTY_GROUP(group), victim);
     }
 
     @Override
     public String SOMEONE_HAVE_USED_RENT_FOR_AGAINST(String name, String card, String victim, int group) {
-        return super.SOMEONE_HAVE_USED_RENT_FOR_AGAINST(name, card, victim, group);
+        return String.format("%1$s 用咗 %2$s 向 %4$s 收取 %3$s 嘅租金。", name, card, PROPERTY_GROUP(group), victim);
     }
 
     @Override
     public String COLLECTING_RENT(String from, int group, int amount) {
-        return super.COLLECTING_RENT(from, group, amount);
+        return String.format("向 %s 收取 %s 嘅租金，金額係 $ %dM。", from == null ? "所有人" : from, PROPERTY_GROUP(group), amount);
     }
 
     @Override
     public String RENT_CHOOSE_GROUP() {
-        return super.RENT_CHOOSE_GROUP();
+        return "揀一組物業嚟收租：";
     }
 
     @Override
     public String RENT_CHOOSE_PLAYER() {
-        return super.RENT_CHOOSE_PLAYER();
+        return "揀一個玩家嚟收租：";
     }
 
     @Override
     public String SLY_DEAL_DESC() {
-        return super.SLY_DEAL_DESC();
+        return "盜取一個玩家的一項物業，但係唔可以係完整物業之一。";
     }
 
     @Override
     public String SLY_DEAL_CHOOSE_PLAYER() {
-        return super.SLY_DEAL_CHOOSE_PLAYER();
+        return "你要盜取邊個嘅物業？";
     }
 
     @Override
     public String SLY_DEAL_SAY_NO_PROMPT(String name, int group, String target) {
-        return super.SLY_DEAL_SAY_NO_PROMPT(name, group, target);
+        return String.format("%s 對你用咗盜取，想要你 %s 物業裡面嘅 %s. 你想唔想作出反對？", name, PROPERTY_GROUP(group), target);
     }
 
     @Override
     public String ACTION_CARD_DESC(String title, String desc) {
-        return super.ACTION_CARD_DESC(title, desc);
+        return String.format("將 %s 存入銀行定係作為行動？\n卡牌描述：%s", title, desc);
     }
 
     @Override
@@ -411,52 +411,52 @@ public class HongKongChinese extends TraditionalChinese {
 
     @Override
     public String YOU_PLACED_PROP(String title) {
-        return super.YOU_PLACED_PROP(title);
+        return "你將 " + title + " 放喺你嘅物業區。";
     }
 
     @Override
     public String SOMEONE_PLACED_PROP(String name, String title) {
-        return super.SOMEONE_PLACED_PROP(name, title);
+        return name + " 將 " + title + " 放喺佢嘅物業區。";
     }
 
     @Override
     public String YOU_PLACED_PROP_AS(String title, int group) {
-        return super.YOU_PLACED_PROP_AS(title, group);
+        return "你將 " + title + " 放咗喺你嘅 " + PROPERTY_GROUP(group) + " 物業區。";
     }
 
     @Override
     public String SOMEONE_PLACED_PROP_AS(String name, String title, int group) {
-        return super.SOMEONE_PLACED_PROP_AS(name, title, group);
+        return name + " 將 " + title + " 放咗喺 " + PROPERTY_GROUP(group) + " 物業區。";
     }
 
     @Override
     public String WILDCARD_CHOOSE_GROUP() {
-        return super.WILDCARD_CHOOSE_GROUP();
+        return "將呢張牌當做咩色嘅物業？";
     }
 
     @Override
     public String SB_PAID_YOU(String name, String payment) {
-        return super.SB_PAID_YOU(name, payment);
+        return name + " 俾咗 " + payment + "你";
     }
 
     @Override
     public String SB_PAID_SB(String name, String payee, String payment) {
-        return super.SB_PAID_SB(name, payee, payment);
+        return name + " 俾咗 " + payment + " " + payee;
     }
 
     @Override
     public String SAID_NO_PROMPT_SAY_NO(String name) {
-        return super.SAID_NO_PROMPT_SAY_NO(name);
+        return name + " 用咗作出反對！你想唔想用另外一張作出反對嚟抵銷？";
     }
 
     @Override
     public String SB_DISPOSED(String name, String card) {
-        return super.SB_DISPOSED(name, card);
+        return name + " 棄置咗 " + card;
     }
 
     @Override
     public String YOU_DISPOSED(String card) {
-        return super.YOU_DISPOSED(card);
+        return "你棄置咗 " + card;
     }
 
     @Override
@@ -466,7 +466,7 @@ public class HongKongChinese extends TraditionalChinese {
 
     @Override
     public String WON_ANNOUNCEMENT(int tgid, String name) {
-        return super.WON_ANNOUNCEMENT(tgid, name);
+        return String.format("<a href=\"tg://user?id=%1$s\">%2$s</a> 成功收集三套完整物業，贏咗呢場遊戲！", tgid, name);
     }
 
     @Override

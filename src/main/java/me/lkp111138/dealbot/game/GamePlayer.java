@@ -392,6 +392,7 @@ public class GamePlayer {
         game.execute(send, new Callback<SendMessage, SendResponse>() {
             @Override
             public void onResponse(SendMessage request, SendResponse response) {
+                game.logf("scheduled auto approve task for %s, actionId=%s", tgid, _actionId);
                 if (future != null) {
                     future.cancel(true);
                 }
