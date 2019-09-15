@@ -392,7 +392,7 @@ public class GamePlayer {
                 if (future != null) {
                     future.cancel(true);
                 }
-                future = executor.schedule(() -> sayNoCallback(new String[]{"say_no", "n"}, "", response.message().messageId()), game.getObjectionWait(), TimeUnit.SECONDS);
+                future = executor.schedule(() -> sayNoCallback(new String[]{"say_no", "n", String.valueOf(_actionId)}, "", response.message().messageId()), game.getObjectionWait(), TimeUnit.SECONDS);
             }
 
             @Override
