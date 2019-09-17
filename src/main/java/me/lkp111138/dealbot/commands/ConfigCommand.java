@@ -13,6 +13,7 @@ import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.GetChatMember;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.GetChatMemberResponse;
+import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.Main;
 
 import java.io.IOException;
@@ -64,7 +65,17 @@ public class ConfigCommand implements Command {
                     SendMessage send = new SendMessage(uid, "群組遊戲設定：<b>" + msg.chat().title() + "</b>");
                     send.parseMode(ParseMode.HTML);
                     send.replyMarkup(markupFromFlags(turnTime, payTime, objectionTime, msg, msg.chat().id()));
-                    bot.execute(send);
+                    bot.execute(send, new Callback<SendMessage, SendResponse>() {
+                        @Override
+                        public void onResponse(SendMessage request, SendResponse response) {
+                            System.out.println(response.description());
+                        }
+
+                        @Override
+                        public void onFailure(SendMessage request, IOException e) {
+
+                        }
+                    });
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -120,21 +131,21 @@ public class ConfigCommand implements Command {
     private static InlineKeyboardMarkup markupFromFlags(int turnTime, int payTime, int objectionTime, Message msg, long gid) {
         return new InlineKeyboardMarkup(
                 new InlineKeyboardButton[]{
-                        new InlineKeyboardButton("出牌時限（秒）：").callbackData(""),
+                        new InlineKeyboardButton("出牌時限（秒）：").callbackData("nop"),
                         new InlineKeyboardButton("-15").callbackData(String.format("flags:%s:%s:%s:%s", gid, turnTime - 15, payTime, objectionTime)),
-                        new InlineKeyboardButton("" + turnTime).callbackData(""),
+                        new InlineKeyboardButton(turnTime + " 秒").callbackData("nop"),
                         new InlineKeyboardButton("+15").callbackData(String.format("flags:%s:%s:%s:%s", gid, turnTime + 15, payTime, objectionTime))
                 },
                 new InlineKeyboardButton[]{
-                        new InlineKeyboardButton("付款時限（秒）：").callbackData(""),
+                        new InlineKeyboardButton("付款時限（秒）：").callbackData("nop"),
                         new InlineKeyboardButton("-5").callbackData(String.format("flags:%s:%s:%s:%s", gid, turnTime, payTime - 5, objectionTime)),
-                        new InlineKeyboardButton("" + payTime).callbackData(""),
+                        new InlineKeyboardButton(payTime + " 秒").callbackData("nop"),
                         new InlineKeyboardButton("+5").callbackData(String.format("flags:%s:%s:%s:%s", gid, turnTime, payTime + 5, objectionTime))
                 },
                 new InlineKeyboardButton[]{
-                        new InlineKeyboardButton("作出反對時限（秒）：").callbackData(""),
+                        new InlineKeyboardButton("作出反對時限（秒）：").callbackData("nop"),
                         new InlineKeyboardButton("-5").callbackData(String.format("flags:%s:%s:%s:%s", gid, turnTime, payTime, objectionTime - 5)),
-                        new InlineKeyboardButton("" + objectionTime).callbackData(""),
+                        new InlineKeyboardButton(objectionTime + " 秒").callbackData("nop"),
                         new InlineKeyboardButton("+5").callbackData(String.format("flags:%s:%s:%s:%s", gid, turnTime, payTime, objectionTime + 5))
                 },
                 new InlineKeyboardButton[]{

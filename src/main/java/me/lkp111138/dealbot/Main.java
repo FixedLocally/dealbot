@@ -30,7 +30,7 @@ public class Main {
             return;
         }
         Class.forName("com.mysql.jdbc.Driver");
-        conn = DriverManager.getConnection(String.format("jdbc:mysql://%s/%s?user=%s&password=%s&useSSL=false", config.get("db.host"), config.get("db.name"), config.get("db.user"), config.get("db.pwd")));
+        conn = DriverManager.getConnection(String.format("jdbc:mysql://%s/%s?user=%s&password=%s&useSSL=false&allowPublicKeyRetrieval=true", config.get("db.host"), config.get("db.name"), config.get("db.user"), config.get("db.pwd")));
         OkHttpClient retrying_client = new OkHttpClient.Builder().retryOnConnectionFailure(true).build();
         TelegramBot bot = new TelegramBot.Builder(config.getProperty("bot.token")).okHttpClient(retrying_client).build();
         new DealBot(bot);
