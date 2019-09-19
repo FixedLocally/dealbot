@@ -50,7 +50,7 @@ public class DealBreakerActionCard extends ActionCard {
             GamePlayer victim = player.getGame().getGamePlayers().get(index);
             List<InlineKeyboardButton[]> buttons = new ArrayList<>();
             for (Integer group : victim.getPropertyDecks().keySet()) {
-                if (victim.getPropertyDecks().get(group).size() >= PropertyCard.propertySetCounts[group]) {
+                if (PropertyCard.realCount(victim.getPropertyDecks().get(group)) >= PropertyCard.propertySetCounts[group]) {
                     // is a full set
                     buttons.add(new InlineKeyboardButton[]{new InlineKeyboardButton(translation.PROPERTY_GROUP(group))
                             .callbackData(nonce + ":card_arg:" + index + ":" + group)});

@@ -93,7 +93,7 @@ public class SlyDealActionCard extends ActionCard {
         GamePlayer victim = player.getGame().getGamePlayers().get(index);
         List<InlineKeyboardButton[]> buttons = new ArrayList<>();
         for (Integer group : victim.getPropertyDecks().keySet()) {
-            if (victim.getPropertyDecks().get(group).size() >= PropertyCard.propertySetCounts[group]) {
+            if (PropertyCard.realCount(victim.getPropertyDecks().get(group)) >= PropertyCard.propertySetCounts[group]) {
                 // is a full set
                 continue;
             }

@@ -53,7 +53,7 @@ public class ForcedDealActionCard extends ActionCard {
             int index = Integer.parseInt(args[0]);
             List<InlineKeyboardButton[]> buttons = new ArrayList<>();
             for (Integer group : player.getPropertyDecks().keySet()) {
-                if (player.getPropertyDecks().get(group).size() >= PropertyCard.propertySetCounts[group]) {
+                if (PropertyCard.realCount(player.getPropertyDecks().get(group)) >= PropertyCard.propertySetCounts[group]) {
                     // is a full set
                     continue;
                 }
