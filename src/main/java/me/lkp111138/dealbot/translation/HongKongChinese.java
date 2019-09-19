@@ -335,23 +335,23 @@ public class HongKongChinese extends TraditionalChinese {
     }
 
     @Override
-    public String YOU_HAVE_USED_RENT_FOR(String card, int group) {
-        return String.format("你用咗 %s 收 %s 嘅租金。", card, PROPERTY_GROUP(group));
+    public String YOU_HAVE_USED_RENT_FOR(String card, int group, int amount) {
+        return String.format("你用咗 %s 收 %s 嘅租金，總共 $ %dM。", card, PROPERTY_GROUP(group), amount);
     }
 
     @Override
-    public String SOMEONE_HAVE_USED_RENT_FOR(String name, String card, int group) {
-        return String.format("%s 用咗 %s 收 %s 嘅租金。", name, card, PROPERTY_GROUP(group));
+    public String SOMEONE_HAVE_USED_RENT_FOR(String name, String card, int group, int amount) {
+        return String.format("%s 用咗 %s 收 %s 嘅租金，總共 $ %dM。", name, card, PROPERTY_GROUP(group), amount);
     }
 
     @Override
-    public String YOU_HAVE_USED_RENT_FOR_AGAINST(String card, String victim, int group) {
-        return String.format("你用咗 %1$s 向 %3$s 收取 %2$s 嘅租金。", card, PROPERTY_GROUP(group), victim);
+    public String YOU_HAVE_USED_RENT_FOR_AGAINST(String card, String victim, int group, int amount) {
+        return String.format("你用咗 %1$s 向 %3$s 收取 %2$s 嘅租金，總共 $ %4$dM。", card, PROPERTY_GROUP(group), victim, amount);
     }
 
     @Override
-    public String SOMEONE_HAVE_USED_RENT_FOR_AGAINST(String name, String card, String victim, int group) {
-        return String.format("%1$s 用咗 %2$s 向 %4$s 收取 %3$s 嘅租金。", name, card, PROPERTY_GROUP(group), victim);
+    public String SOMEONE_HAVE_USED_RENT_FOR_AGAINST(String name, String card, String victim, int group, int amount) {
+        return String.format("%1$s 用咗 %2$s 向 %4$s 收取 %3$s 嘅租金，總共 $ %5$dM。", name, card, PROPERTY_GROUP(group), victim, amount);
     }
 
     @Override

@@ -336,17 +336,17 @@ public class Translation {
     public String RAINBOW_RENT_CARD_DESC() {
         return "Collect rent for any set of properties from one player";
     }
-    public String YOU_HAVE_USED_RENT_FOR(String card, int group) {
-        return String.format("You have used %s for group %s.", card, PROPERTY_GROUP(group));
+    public String YOU_HAVE_USED_RENT_FOR(String card, int group, int amount) {
+        return String.format("You have used %s for group %s, collecting $ %dM.", card, PROPERTY_GROUP(group), amount);
     }
-    public String SOMEONE_HAVE_USED_RENT_FOR(String name, String card, int group) {
-        return String.format("%s has used %s for group %s.", name, card, PROPERTY_GROUP(group));
+    public String SOMEONE_HAVE_USED_RENT_FOR(String name, String card, int group, int amount) {
+        return String.format("%s has used %s for group %s, collecting $ %dM.", name, card, PROPERTY_GROUP(group), amount);
     }
-    public String YOU_HAVE_USED_RENT_FOR_AGAINST(String card, String victim, int group) {
-        return String.format("You have used %s for group %s against %s.", card, PROPERTY_GROUP(group), victim);
+    public String YOU_HAVE_USED_RENT_FOR_AGAINST(String card, String victim, int group, int amount) {
+        return String.format("You have used %s for group %s against %s, collecting $ %dM.", card, PROPERTY_GROUP(group), victim, amount);
     }
-    public String SOMEONE_HAVE_USED_RENT_FOR_AGAINST(String name, String card, String victim, int group) {
-        return String.format("%s has used %s for group %s against %s.", name, card, PROPERTY_GROUP(group), victim);
+    public String SOMEONE_HAVE_USED_RENT_FOR_AGAINST(String name, String card, String victim, int group, int amount) {
+        return String.format("%s has used %s for group %s against %s, collecting $ %dM.", name, card, PROPERTY_GROUP(group), victim, amount);
     }
     public String COLLECTING_RENT(String from, int group, int amount) {
         return String.format("Collecting rent of $ %dM from %s for %s", amount,  from == null ? "everybody" : from, PROPERTY_GROUP(group));

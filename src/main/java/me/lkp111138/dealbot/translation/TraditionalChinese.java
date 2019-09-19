@@ -343,17 +343,17 @@ public class TraditionalChinese extends Translation {
     public String RAINBOW_RENT_CARD_DESC() {
         return "向一名玩家收取任意一組物業的租金";
     }
-    public String YOU_HAVE_USED_RENT_FOR(String card, int group) {
-        return String.format("你使用了 %s 收取 %s 的租金。", card, PROPERTY_GROUP(group));
+    public String YOU_HAVE_USED_RENT_FOR(String card, int group, int amount) {
+        return String.format("你使用了 %s 收取 %s 的租金，合共 $ %dM。", card, PROPERTY_GROUP(group), amount);
     }
-    public String SOMEONE_HAVE_USED_RENT_FOR(String name, String card, int group) {
-        return String.format("%s 使用了 %s 收取 %s 的租金。", name, card, PROPERTY_GROUP(group));
+    public String SOMEONE_HAVE_USED_RENT_FOR(String name, String card, int group, int amount) {
+        return String.format("%s 使用了 %s 收取 %s 的租金，合共 $ %dM。", name, card, PROPERTY_GROUP(group), amount);
     }
-    public String YOU_HAVE_USED_RENT_FOR_AGAINST(String card, String victim, int group) {
-        return String.format("你使用了 %1$s 向 %3$s 收取 %2$s 的租金。", card, PROPERTY_GROUP(group), victim);
+    public String YOU_HAVE_USED_RENT_FOR_AGAINST(String card, String victim, int group, int amount) {
+        return String.format("你使用了 %1$s 向 %3$s 收取 %2$s 的租金，合共 $ %4$dM。", card, PROPERTY_GROUP(group), victim, amount);
     }
-    public String SOMEONE_HAVE_USED_RENT_FOR_AGAINST(String name, String card, String victim, int group) {
-        return String.format("%1$s 使用了 %2$s 向 %4$s 收取 %3$s 的租金。", name, card, PROPERTY_GROUP(group), victim);
+    public String SOMEONE_HAVE_USED_RENT_FOR_AGAINST(String name, String card, String victim, int group, int amount) {
+        return String.format("%1$s 使用了 %2$s 向 %4$s 收取 %3$s 的租金，合共 $ %5$dM。", name, card, PROPERTY_GROUP(group), victim, amount);
     }
     public String COLLECTING_RENT(String from, int group, int amount) {
         return String.format("向 %s 收取 %s 的租金，金額為 $ %dM。", from == null ? "所有人" : from, PROPERTY_GROUP(group), amount);
