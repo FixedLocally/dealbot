@@ -687,7 +687,6 @@ public class GamePlayer {
                         break;
                     }
                 }
-                System.out.println(removed);
                 if (removed != null) {
                     // did say no, notify sender
                     objectedActions.get(actionId).run();

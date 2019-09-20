@@ -801,7 +801,6 @@ public class Game {
             return true;
         }
         usedNonces.add(nonce);
-        logf("query from %s: %s\n", query.from().id(), query.data());
         String[] args = new String[_args.length - 1];
         System.arraycopy(_args, 1, args, 0, args.length);
         if (gamePlayers.get(currentTurn).getTgid() != query.from().id() && !args[0].startsWith("pay_")
@@ -820,9 +819,11 @@ public class Game {
                     usedDeck.add(this.currentCard);
                 }
                 player.play(this.currentCard);
+                logf("query from %s: %s, card=%s\n", query.from().id(), query.data(), this.currentCard);
                 return true;
             case "end_turn":
                 player.endTurnVoluntary();
+                logf("query from %s: %s\n", query.from().id(), query.data());
                 return true;
             case "card_arg":
                 String[] subarray = new String[args.length - 1];
@@ -832,6 +833,7 @@ public class Game {
                 } else {
                     currentCard.execute(gamePlayers.get(currentTurn), subarray);
                 }
+                logf("query from %s: %s, card=%s\n", query.from().id(), query.data(), this.currentCard);
                 return true;
             case "use_as":
                 if (args[1].equals("money")) {
@@ -845,6 +847,7 @@ public class Game {
                 } else {
                     ((ActionCard) this.currentCard).use(player, new String[0]);
                 }
+                logf("query from %s: %s, card=%s\n", query.from().id(), query.data(), this.currentCard);
                 return true;
             case "use_cancel":
                 player.addHand(this.currentCard);
@@ -852,6 +855,7 @@ public class Game {
                 this.currentCard = null;
                 player.addMove();
                 player.promptForCard();
+                logf("query from %s: %s\n", query.from().id(), query.data());
                 return true;
             case "dispose_card":
                 Card disposed = player.handCardAt(Integer.parseInt(args[1]));
@@ -860,6 +864,7 @@ public class Game {
                 player.endTurnVoluntary();
                 execute(new SendMessage(gid, translation.SB_DISPOSED(player.getName(), disposed.getCardTitle())));
                 execute(new SendMessage(player.getTgid(), translation.YOU_DISPOSED(disposed.getCardTitle())));
+                logf("query from %s: %s, card=%s\n", query.from().id(), query.data(), this.currentCard);
                 return true;
             case "pay_choose":
             case "pay_confirm":
@@ -871,6 +876,7 @@ public class Game {
                         break;
                     }
                 }
+                logf("query from %s: %s\n", query.from().id(), query.data());
                 return true;
             case "wildcard_menu":
                 tgid = query.from().id();
@@ -880,6 +886,7 @@ public class Game {
                         break;
                     }
                 }
+                logf("query from %s: %s\n", query.from().id(), query.data());
                 return true;
             case "say_no":
                 tgid = query.from().id();
@@ -889,6 +896,7 @@ public class Game {
                         break;
                     }
                 }
+                logf("query from %s: %s\n", query.from().id(), query.data());
                 return true;
         }
         return false;
