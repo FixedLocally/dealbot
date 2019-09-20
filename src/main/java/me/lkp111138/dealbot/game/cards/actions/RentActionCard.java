@@ -48,17 +48,17 @@ public class RentActionCard extends ActionCard {
         int doubleRentBuff = player.getDoubleRentBuff();
         if (args.length > 0) {
             int group = Integer.parseInt(args[0]);
-            int value = player.getGroupRent(group);
+            int value = player.getGroupRent(group) * doubleRentBuff;
             if (groups.length == 2) {
                 player.getGame().collectRentFromAll(value * doubleRentBuff, group);
                 player.setDoubleRentBuff(false);
                 EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
-                        translation.COLLECTING_RENT(null, group, value * doubleRentBuff));
+                        translation.COLLECTING_RENT(null, group, value));
                 player.getGame().execute(edit);
-                String msg = translation.YOU_HAVE_USED_RENT_FOR(getCardFunctionalTitle(), group);
+                String msg = translation.YOU_HAVE_USED_RENT_FOR(getCardFunctionalTitle(), group, value);
                 SendMessage send = new SendMessage(player.getTgid(), msg);
                 player.getGame().execute(send);
-                msg = translation.SOMEONE_HAVE_USED_RENT_FOR(player.getName(), getCardFunctionalTitle(), group);
+                msg = translation.SOMEONE_HAVE_USED_RENT_FOR(player.getName(), getCardFunctionalTitle(), group, value);
                 send = new SendMessage(player.getGame().getGid(), msg);
                 player.getGame().execute(send);
             } else {
@@ -72,10 +72,10 @@ public class RentActionCard extends ActionCard {
                     EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
                             translation.COLLECTING_RENT(victim, group, value * doubleRentBuff));
                     player.getGame().execute(edit);
-                    String msg = translation.YOU_HAVE_USED_RENT_FOR_AGAINST(getCardFunctionalTitle(), victim, group);
+                    String msg = translation.YOU_HAVE_USED_RENT_FOR_AGAINST(getCardFunctionalTitle(), victim, group, value);
                     SendMessage send = new SendMessage(player.getTgid(), msg);
                     player.getGame().execute(send);
-                    msg = translation.SOMEONE_HAVE_USED_RENT_FOR_AGAINST(player.getName(), getCardFunctionalTitle(), victim, group);
+                    msg = translation.SOMEONE_HAVE_USED_RENT_FOR_AGAINST(player.getName(), getCardFunctionalTitle(), victim, group, value);
                     send = new SendMessage(player.getGame().getGid(), msg);
                     player.getGame().execute(send);
                 } else {
