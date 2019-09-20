@@ -790,7 +790,12 @@ public class Game {
     public boolean callback(CallbackQuery query) {
         String payload = query.data();
         String[] _args = payload.split(":");
-        int nonce = Integer.parseInt(_args[0]);
+        int nonce;
+        try {
+            nonce = Integer.parseInt(_args[0]);
+        } catch (NumberFormatException e) {
+            return false;
+        }
         if (usedNonces.contains(nonce)) {
             logf("query %s ignored, repeated nonce", payload);
             return true;
