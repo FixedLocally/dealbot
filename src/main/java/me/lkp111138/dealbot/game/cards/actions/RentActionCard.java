@@ -50,7 +50,7 @@ public class RentActionCard extends ActionCard {
             int group = Integer.parseInt(args[0]);
             int value = player.getGroupRent(group) * doubleRentBuff;
             if (groups.length == 2) {
-                player.getGame().collectRentFromAll(value * doubleRentBuff, group);
+                player.getGame().collectRentFromAll(value, group);
                 player.setDoubleRentBuff(false);
                 EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
                         translation.COLLECTING_RENT(null, group, value));
