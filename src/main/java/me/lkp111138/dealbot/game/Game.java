@@ -49,7 +49,7 @@ public class Game {
     private long turnStartTime;
     private long turnTime;
     private boolean turnPaused = false;
-    private String broadcastMessageCache;
+    private String broadcastMessageCache = "";
     private ScheduledFuture sendMessageFuture;
 
     private boolean ended = false;
