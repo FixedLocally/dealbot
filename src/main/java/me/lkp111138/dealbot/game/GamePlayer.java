@@ -312,7 +312,7 @@ public class GamePlayer {
             }
             state.append("\n");
         }
-        return state.toString();
+        return state.toString().trim();
     }
 
     void sendState() {
