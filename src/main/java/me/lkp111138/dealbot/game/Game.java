@@ -956,9 +956,7 @@ public class Game {
             for (Card card : payment) {
                 if (card instanceof PropertyCard) {
                     PropertyCard pcard = (PropertyCard) card;
-                    List<Card> props = gamePlayers.get(currentTurn).getPropertyDecks().getOrDefault((pcard).getGroup(), new ArrayList<>());
-                    props.add(pcard);
-                    gamePlayers.get(currentTurn).getPropertyDecks().put(pcard.getGroup(), props);
+                    gamePlayers.get(currentTurn).addProperty(pcard, pcard.getGroup());
                 } else {
                     gamePlayers.get(currentTurn).addCurrency(card);
                 }

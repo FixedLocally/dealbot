@@ -109,10 +109,12 @@ public class GamePlayer {
     public boolean addProperty(PropertyCard card, int group) {
         group = getRealCardGroup(card, group);
         List<Card> deck = propertyDecks.getOrDefault(group, new ArrayList<>());
-        if (PropertyCard.realCount(deck) >= PropertyCard.propertySetCounts[group]) {
-            // this deck is full
-            return false;
-        }
+        // screw it, if you like your property to be 6/3 then go for it
+        // ill laugh if deal breaker strikes you
+//        if (PropertyCard.realCount(deck) >= PropertyCard.propertySetCounts[group]) {
+//            // this deck is full
+//            return false;
+//        }
         if (!deck.contains(card)) {
             deck.add(card);
             if (card instanceof WildcardPropertyCard) {
