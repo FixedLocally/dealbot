@@ -31,7 +31,7 @@ public class StatCommand implements Command {
                             String.format("Number of cards played: %d\n", rs.getInt(4)) +
                             String.format("Currency collected: $ %dM\n", rs.getInt(5)) +
                             String.format("Properties collected: %d\n", rs.getInt(6)) +
-                            String.format("Rent collected: $ %dM\n", rs.getInt(6));
+                            String.format("Rent collected: $ %dM\n", rs.getInt(7));
                     bot.execute(new SendMessage(msg.chat().id(), sb).replyToMessageId(msg.messageId()).parseMode(ParseMode.HTML));
                 } else {
                     bot.execute(new SendMessage(msg.chat().id(), "You haven't played a game yet!").replyToMessageId(msg.messageId()).parseMode(ParseMode.HTML));
