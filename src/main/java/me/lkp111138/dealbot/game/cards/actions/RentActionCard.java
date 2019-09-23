@@ -66,7 +66,7 @@ public class RentActionCard extends ActionCard {
                 if (args.length > 1) {
                     // send them a huge rental bill!
                     int order = Integer.parseInt(args[1]);
-                    player.getGame().collectRentFromOne(value * doubleRentBuff, group, order);
+                    player.getGame().collectRentFromOne(value, group, order);
                     player.setDoubleRentBuff(false);
                     String victim = players.get(order).getName();
                     EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
