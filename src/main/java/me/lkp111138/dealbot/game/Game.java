@@ -536,6 +536,12 @@ public class Game {
         usedDeck.add(card);
     }
 
+    void eliminate() {
+        currentTurn = (currentTurn + gamePlayers.size() - 1) % gamePlayers.size();
+        GamePlayer removed = gamePlayers.remove(currentTurn);
+        execute(new SendMessage(gid, translation.SB_IS_ELIMINATED(removed.getName())));
+    }
+
     // 0-9: normal groups
     // 10: birthday
     // 11: debt
@@ -691,10 +697,15 @@ public class Game {
         executor.schedule(() -> {
             // before we start, we check if the previous player had won
             GamePlayer player = gamePlayers.get(currentTurn);
-            if (player.checkWinCondition()) {
+            if (player.checkWinCondition() || gamePlayers.size() == 1) {
                 // won
-                String msg = translation.WON_ANNOUNCEMENT(player.getTgid(), player.getName());
-                execute(new SendMessage(gid, getGlobalState()).parseMode(ParseMode.HTML));
+                String msg;
+                if (gamePlayers.size() > 1) {
+                    msg = translation.WON_ANNOUNCEMENT(player.getTgid(), player.getName());
+                    execute(new SendMessage(gid, getGlobalState()).parseMode(ParseMode.HTML));
+                } else {
+                    msg = translation.LONE_WIN(player.getTgid(), player.getName());
+                }
                 this.execute(new SendMessage(gid, msg).parseMode(ParseMode.HTML));
                 this.kill(false);
                 return;

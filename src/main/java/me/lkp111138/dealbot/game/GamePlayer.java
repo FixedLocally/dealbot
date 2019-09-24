@@ -36,6 +36,7 @@ public class GamePlayer {
     private int doubleRentBuff = 1;
 
     private int actionCount;
+    private int afkCount = 0;
     private int messageId;
     private int stateMessageId;
     private int globalStateMessageId;
@@ -755,6 +756,7 @@ public class GamePlayer {
 
     void endTurnVoluntary() {
         game.logf("turn ended for %s, actionCount=%s", tgid, actionCount);
+        afkCount = 0;
         endTurn(true);
     }
 
@@ -795,6 +797,20 @@ public class GamePlayer {
                 game.execute(edit);
             }
         } else {
+            if (actionCount == 1) {
+                ++afkCount;
+                if (afkCount == 3) {
+                    currencyDeck.forEach(game::addToUsedDeck);
+                    hand.forEach(game::addToUsedDeck);
+                    propertyDecks.values().stream().flatMap(List::stream).forEach(game::addToUsedDeck);
+                    currencyDeck.clear();
+                    hand.clear();
+                    propertyDecks.clear();
+                    game.eliminate();
+                }
+            } else {
+                afkCount = 0;
+            }
             if (disposeMessageId > 0) {
                 game.execute(new DeleteMessage(tgid, disposeMessageId));
                 disposeMessageId = 0;

@@ -668,4 +668,12 @@ public class Translation {
     public String CANCEL() {
         return "Cancel";
     }
+
+    public String SB_IS_ELIMINATED(String name) {
+        return String.format("%s has been away for 3 turns. Out!", name);
+    }
+
+    public String LONE_WIN(int tgid, String name) {
+        return String.format("Everybody has been eliminated, <a href=\"tg://user?id=%1$s\">%2$s</a> remained and won.", tgid, name);
+    }
 }

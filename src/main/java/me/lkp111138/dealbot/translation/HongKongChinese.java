@@ -674,4 +674,14 @@ public class HongKongChinese extends TraditionalChinese {
     public String CANCEL() {
         return "取消";
     }
+
+    @Override
+    public String SB_IS_ELIMINATED(String name) {
+        return String.format("%s 連續掛咗三輪機！出局！", name);
+    }
+
+    @Override
+    public String LONE_WIN(int tgid, String name) {
+        return String.format("其他人均已出局，<a href=\"tg://user?id=%1$s\">%2$s</a> 尚未出局，並自動勝出遊戲！", tgid, name);
+    }
 }
