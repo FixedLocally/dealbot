@@ -799,6 +799,7 @@ public class GamePlayer {
         } else {
             if (actionCount == 1) {
                 ++afkCount;
+                game.logf("%s has been afk for %s turns", tgid, afkCount);
                 if (afkCount == 3) {
                     currencyDeck.forEach(game::addToUsedDeck);
                     hand.forEach(game::addToUsedDeck);
