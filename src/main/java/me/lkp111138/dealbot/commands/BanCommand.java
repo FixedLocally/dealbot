@@ -21,7 +21,7 @@ public class BanCommand implements Command {
                 int tgid = Integer.parseInt(args[1]);
                 int time = Integer.parseInt(args[2]);
                 String[] _args = new String[args.length - 3];
-                System.arraycopy(args, 2, _args, 0, args.length - 3);
+                System.arraycopy(args, 3, _args, 0, args.length - 3);
                 System.out.println("executing ban for " + tgid);
                 if (DealBot.executeBan(tgid, mode, time, String.join(" ", _args))) {
                     bot.execute(new SendMessage(msg.chat().id(), "Success").replyToMessageId(msg.messageId()));
