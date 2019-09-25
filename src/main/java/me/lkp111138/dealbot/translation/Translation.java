@@ -14,7 +14,7 @@ public class Translation {
         return "An error occurred: ";
     }
     public String JOIN_SUCCESS() {
-        return "You have successfully joined the game in *%s*! Game ID: %d";
+        return "You have successfully joined the game in <b>%s</b>! Game ID: %d";
     }
     public String BACK_TO() {
         return "Back to ";
@@ -572,13 +572,13 @@ public class Translation {
     }
 
     public String HELP() {
-        return "**Commands**\n" +
+        return "<b>Commands</b>\n" +
                 "\n" +
                 "/stats - View your stats.\n" +
                 "/achv - View your achievements.\n" +
                 "/help - Shows help.\n" +
                 "\n" +
-                "**Group only commands**\n" +
+                "<b>Group only commands</b>\n" +
                 "\n" +
                 "/play - Starts a new game.\n" +
                 "/startgame - Alias of /play\n" +
@@ -586,12 +586,12 @@ public class Translation {
                 "/flee - Leaves a game while it is still recruiting.\n" +
                 "/extend - Extend the recruiting period.\n" +
                 "\n" +
-                "**Group admin only commands**\n" +
+                "<b>Group admin only commands</b>\n" +
                 "\n" +
                 "/config - Changes game configuration, opens in PM.\n" +
                 "/setlang - Changes game language.\n" +
                 "\n" +
-                "**Technical**\n" +
+                "<b>Technical</b>\n" +
                 "\n" +
                 "/runinfo - Displays some info.\n" +
                 "/ping - Unknown command.";

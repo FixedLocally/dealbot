@@ -15,7 +15,7 @@ public class HongKongChinese extends TraditionalChinese {
     }
     @Override
     public String JOIN_SUCCESS() {
-        return "你成功加入咗 *%s* 嘅遊戲！遊戲編號：%d";
+        return "你成功加入咗 <b>%s</b> 嘅遊戲！遊戲編號：%d";
     }
     @Override
     public String BACK_TO() {
@@ -584,13 +584,13 @@ public class HongKongChinese extends TraditionalChinese {
 
     @Override
     public String HELP() {
-        return "**指令列表**\n" +
+        return "<b>指令列表</b>\n" +
                 "\n" +
                 "/stats - 顯示統計數據。\n" +
                 "/achv - 顯示你已解鎖的成就。\n" +
                 "/help - 顯示此列表。\n" +
                 "\n" +
-                "**群組指令**\n" +
+                "<b>群組指令</b>\n" +
                 "\n" +
                 "/play - 開始新遊戲。\n" +
                 "/startgame - 與 /play 相同\n" +
@@ -598,12 +598,12 @@ public class HongKongChinese extends TraditionalChinese {
                 "/flee - 在遊戲開始前離開遊戲。\n" +
                 "/extend - 延長加入遊戲階段\n" +
                 "\n" +
-                "**僅限群組管理員**\n" +
+                "<b>僅限群組管理員</b>\n" +
                 "\n" +
                 "/config - 在私訊中更改群組遊戲設定。\n" +
                 "/setlang - 更改群組語言\n" +
                 "\n" +
-                "**技術指令**\n" +
+                "<b>技術指令</b>\n" +
                 "\n" +
                 "/runinfo - 顯示某些資料。\n" +
                 "/ping - 未知的指令。";
