@@ -540,6 +540,13 @@ public class Game {
         currentTurn = (currentTurn + gamePlayers.size() - 1) % gamePlayers.size();
         GamePlayer removed = gamePlayers.remove(currentTurn);
         execute(new SendMessage(gid, translation.SB_IS_ELIMINATED(removed.getName())));
+        try (Connection conn = Main.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("update tg_users set game_count=game_count+1 where tgid=?");
+            stmt.setInt(1, removed.getTgid());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     // 0-9: normal groups
