@@ -63,6 +63,8 @@ public class DealBot {
         commands.put("nextgame", new NextGameCommand());
         commands.put("me", new MeCommand());
         commands.put("state", commands.get("me"));
+        commands.put("bana", new BanCommand("ADMIN"));
+        commands.put("banc", new BanCommand("COMMAND"));
 
         // bans
         try (PreparedStatement stmt = Main.getConnection().prepareStatement("SELECT tgid, until, type from bans WHERE until>?")) {
@@ -231,7 +233,7 @@ public class DealBot {
         return ban.type;
     }
 
-    private static void executeBan(long tgid, String type, int length, String reason) {
+    public static boolean executeBan(long tgid, String type, int length, String reason) {
         try (Connection conn = Main.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("INSERT into bans (tgid, until, count, type, reason) VALUES (?, ?, ?, ?, ?)");
             int expiry = (int) (System.currentTimeMillis() / 1000) + length;
@@ -247,8 +249,10 @@ public class DealBot {
             if (oldBan != null && oldBan.expiry < ban.expiry) {
                 bans.put(tgid, ban);
             }
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
