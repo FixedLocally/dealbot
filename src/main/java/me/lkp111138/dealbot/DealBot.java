@@ -10,6 +10,8 @@ import me.lkp111138.dealbot.commands.*;
 import me.lkp111138.dealbot.game.Game;
 import me.lkp111138.dealbot.translation.Translation;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,7 +37,14 @@ public class DealBot {
     private void init() {
         this.bot.setUpdatesListener(list -> {
             for (Update update : list) {
-                processUpdate(update);
+                try {
+                    processUpdate(update);
+                } catch (Exception e) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    bot.execute(new SendMessage(Main.BOT_OWNER, sw.toString()));
+                }
             }
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
