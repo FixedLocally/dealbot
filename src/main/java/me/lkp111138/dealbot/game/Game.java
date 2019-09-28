@@ -538,6 +538,7 @@ public class Game {
 
     void eliminate() {
         GamePlayer removed = gamePlayers.remove(currentTurn);
+        players.removeIf(user -> user.id() == removed.getTgid());
         currentTurn = (currentTurn + gamePlayers.size()) % (gamePlayers.size() + 1);
         execute(new SendMessage(gid, translation.SB_IS_ELIMINATED(removed.getName())));
         logf("%s has been afk for 3 turns, eliminating!", removed.getTgid());
