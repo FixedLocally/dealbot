@@ -10,7 +10,7 @@ public class HelpCommand implements Command {
     @Override
     public void respond(TelegramBot bot, Message msg, String[] args) {
         int sender = msg.from().id();
-        SendMessage req = new SendMessage(sender, Translation.get(null).HELP()).parseMode(ParseMode.Markdown);
+        SendMessage req = new SendMessage(sender, Translation.get(null).HELP()).parseMode(ParseMode.HTML);
         bot.execute(req);
     }
 }
