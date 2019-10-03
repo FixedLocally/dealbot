@@ -17,6 +17,7 @@ public abstract class Translation {
             translations.put("zh", new TraditionalChinese());
             translations.put("hk", new HongKongChinese());
             translations.put("en_us", new UnitedStatesEnglish());
+            translations.put("en_gb", new UnitedKingdomEnglish());
         }
         return translations.getOrDefault(lang, fallback);
     }
