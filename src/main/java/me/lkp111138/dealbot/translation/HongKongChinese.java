@@ -608,12 +608,6 @@ public class HongKongChinese extends TraditionalChinese {
                 "/runinfo - 顯示某些資料。\n" +
                 "/ping - 未知的指令。";
     }
-
-    @Override
-    public String ACHIEVEMENT_TITLE(String achv_key) {
-        return super.ACHIEVEMENT_TITLE(achv_key);
-    }
-
     @Override
     public String ACHIEVEMENT_DESC(String achv_key) {
         switch (achv_key) {

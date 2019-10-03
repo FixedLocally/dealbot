@@ -557,9 +557,6 @@ public class HongKongEnglish extends Translation {
         }
         return "";
     }
-    public String ACHV_MSG(DealBot.Achievement ach) {
-        return String.format("%s%s\n%s", ACHV_UNLOCKED(), ACHV_TITLE(ach), ACHV_DESC(ach));
-    }
 
     public String ACHV_UNLOCKED() {
         return "Achievement unlocked:\n";

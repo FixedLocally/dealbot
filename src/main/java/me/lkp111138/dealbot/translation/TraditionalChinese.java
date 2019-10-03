@@ -506,6 +506,7 @@ public class TraditionalChinese extends Translation {
     public String ACHIEVEMENT_UNLOCKED() {
         return "解鎖成就！\n";
     }
+    @Override
     public String ACHV_TITLE(DealBot.Achievement ach) {
         switch (ach) {
             case MASTER:

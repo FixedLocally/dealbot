@@ -147,11 +147,15 @@ public abstract class Translation {
     public abstract String ACHIEVEMENT_UNLOCKED();
     public abstract String ACHV_TITLE(DealBot.Achievement ach);
     public abstract String ACHV_DESC(DealBot.Achievement ach);
-    public abstract String ACHV_MSG(DealBot.Achievement ach);
+    public String ACHV_MSG(DealBot.Achievement ach) {
+        return String.format("%s%s\n%s", ACHV_UNLOCKED(), ACHV_TITLE(ach), ACHV_DESC(ach));
+    }
     public abstract String ACHV_UNLOCKED();
     public abstract String A_TOTAL_OF();
     public abstract String HELP();
-    public abstract String ACHIEVEMENT_TITLE(String achv_key);
+    public String ACHIEVEMENT_TITLE(String achv_key) {
+        return ACHV_TITLE(DealBot.Achievement.valueOf(achv_key));
+    }
     public abstract String ACHIEVEMENT_DESC(String achv_key);
     public abstract String JOIN_69_PROTEST();
     public abstract String GAME_ENDED_ERROR();
