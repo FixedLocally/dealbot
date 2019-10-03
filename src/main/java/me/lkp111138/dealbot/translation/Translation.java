@@ -7,6 +7,19 @@ import me.lkp111138.dealbot.game.cards.Card;
 import java.util.HashMap;
 
 public class Translation {
+    private static HashMap<String, Translation> translations;
+    private static final Translation DEFAULT = new Translation();
+
+    public static Translation get(String lang) {
+        if (translations == null) {
+            translations = new HashMap<>();
+            translations.put("en", DEFAULT);
+            translations.put("zh", new TraditionalChinese());
+            translations.put("hk", new HongKongChinese());
+        }
+        return translations.getOrDefault(lang, DEFAULT);
+    }
+
     public String BOT_NAME() {
         return "jokedealbot";
     }
@@ -630,19 +643,6 @@ public class Translation {
             default:
                 return achv_key;
         }
-    }
-
-    private static HashMap<String, Translation> translations;
-    private static final Translation DEFAULT = new Translation();
-
-    public static Translation get(String lang) {
-        if (translations == null) {
-            translations = new HashMap<>();
-            translations.put("en", DEFAULT);
-            translations.put("zh", new TraditionalChinese());
-            translations.put("hk", new HongKongChinese());
-        }
-        return translations.getOrDefault(lang, DEFAULT);
     }
 
     public String JOIN_69_PROTEST() {
