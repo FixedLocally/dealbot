@@ -90,6 +90,12 @@ public class Game {
             this.execute(new SendMessage(gid, this.translation.MAINT_MODE_NOTICE()).parseMode(ParseMode.HTML), new EmptyCallback<>());
             return;
         }
+        // refuse to start games on 5th oct 2019
+        long now = System.currentTimeMillis();
+        if (now >= 1570204800000L && now <= 1570291200000L) {
+            this.execute(new SendMessage(gid, this.translation.JOIN_69_PROTEST() + this.translation.OCT_5_STRIKE()).parseMode(ParseMode.HTML), new EmptyCallback<>());
+            return;
+        }
         // create game
         try (Connection conn = Main.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO games (gid) values (?)", Statement.RETURN_GENERATED_KEYS);

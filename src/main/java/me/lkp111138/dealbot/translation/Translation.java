@@ -158,6 +158,7 @@ public abstract class Translation {
     }
     public abstract String ACHIEVEMENT_DESC(String achv_key);
     public abstract String JOIN_69_PROTEST();
+    public abstract String OCT_5_STRIKE();
     public abstract String GAME_ENDED_ERROR();
     public abstract String NEXT_GAME_QUEUED(String name);
     public abstract String GAME_STARTING_IN(String name);

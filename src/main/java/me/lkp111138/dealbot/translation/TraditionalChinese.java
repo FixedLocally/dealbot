@@ -664,6 +664,11 @@ public class TraditionalChinese extends Translation {
     }
 
     @Override
+    public String OCT_5_STRIKE() {
+        return "\n\n本 bot 今日暫停服務。";
+    }
+
+    @Override
     public String GAME_ENDED_ERROR() {
         return "發生錯誤！遊戲提前結束！";
     }

@@ -637,6 +637,11 @@ public class HongKongEnglish extends Translation {
                 "Use /toggle69 to turn this message off.";
     }
 
+    @Override
+    public String OCT_5_STRIKE() {
+        return "\n\nThis bot has suspended its service today.";
+    }
+
     public String GAME_ENDED_ERROR() {
         return "An error occurred! The game is killed!";
     }
