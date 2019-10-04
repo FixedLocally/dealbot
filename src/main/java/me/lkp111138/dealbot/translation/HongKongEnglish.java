@@ -629,9 +629,11 @@ public class HongKongEnglish extends Translation {
 
     public String JOIN_69_PROTEST() {
         return "Hong Kong's situation is becoming worse - the police is out of control, " +
-                "and government is refusing to address the issue.\n" +
-                "Please tweet #StandWithHongKong to raise international awareness about my home.\n" +
-                "Thank you." +
+                "and government is refusing to address the five demands.\n" +
+                "We even have anti-mask laws in order to subdue the protests starting 5th October, " +
+                "thanks to Carrie Lam and the Emergency Regulations Ordinance," +
+                " which haven't been used for the past 50 years.\n" +
+                "While you are playing, please also think about what you can do for my home, thank you." +
                 "Use /toggle69 to turn this message off.";
     }
 

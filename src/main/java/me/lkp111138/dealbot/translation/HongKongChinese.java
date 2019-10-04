@@ -642,10 +642,11 @@ public class HongKongChinese extends TraditionalChinese {
 
     @Override
     public String JOIN_69_PROTEST() {
-        return "香港嘅情況日益嚴峻 - 警察肆意攻擊同拘捕市民，" +
-                "而政府一直拒絕回應五大訴求。\n" +
-                "請幫手去各大社交平台分享 #StandWithHongKong 嚟喚起國際關注。\n" +
-                "唔該曬你。" +
+        return "香港嘅情況日益嚴峻 - 警察肆意攻擊、拘捕，甚至企圖謀殺市民，" +
+                "而政府一直拒絕回應五大訴求。" +
+                "今日更加係五十年以來香港第一次動用緊急法嚟推出《反蒙面法》。\n" +
+                "希望大家玩之餘，都關心一下香港發生緊嘅事，" +
+                "做得幾多得幾多，唔該曬你。" +
                 "打 /toggle69 唔再顯示呢個訊息";
     }
 
