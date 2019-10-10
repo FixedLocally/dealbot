@@ -18,7 +18,7 @@ public class BanCommand implements Command {
         // only bot owner can ban people
         if (msg.from().id() == Main.BOT_OWNER) {
             try {
-                int tgid = Integer.parseInt(args[1]);
+                long tgid = Long.parseLong(args[1]);
                 int time = Integer.parseInt(args[2]);
                 String[] _args = new String[args.length - 3];
                 System.arraycopy(args, 3, _args, 0, args.length - 3);
@@ -26,7 +26,9 @@ public class BanCommand implements Command {
                 if (DealBot.executeBan(tgid, mode, time, String.join(" ", _args))) {
                     bot.execute(new SendMessage(msg.chat().id(), "Success").replyToMessageId(msg.messageId()));
                 }
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException e) {
+                bot.execute(new SendMessage(msg.chat().id(), "Error: " + e.getMessage()).replyToMessageId(msg.messageId()));
+            }
         }
     }
 }
