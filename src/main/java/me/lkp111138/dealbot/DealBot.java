@@ -231,7 +231,7 @@ public class DealBot {
 
     /**
      * Query user or group ban status
-     * @param tgid the id to be ueried
+     * @param tgid the id to be queried
      * @return the type of ban, or null if none
      */
     public static String queryBan(long tgid) {
@@ -243,6 +243,9 @@ public class DealBot {
     }
 
     public static boolean executeBan(long tgid, String type, int length, String reason) {
+        if (length < 0) {
+            return executeUnban(tgid);
+        }
         try (Connection conn = Main.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("INSERT into bans (tgid, until, count, type, reason) VALUES (?, ?, ?, ?, ?)");
             int expiry = (int) (System.currentTimeMillis() / 1000) + length;
@@ -255,9 +258,23 @@ public class DealBot {
             stmt.close();
             Ban ban = new Ban(tgid, expiry, type);
             Ban oldBan = bans.get(tgid);
-            if (oldBan != null && oldBan.expiry < ban.expiry) {
+            if (oldBan == null || oldBan.expiry < ban.expiry) {
                 bans.put(tgid, ban);
             }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private static boolean executeUnban(long tgid) {
+        try (Connection conn = Main.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("update bans set until=unix_timestamp() where until>unix_timestamp() and tgid=?");
+            stmt.setLong(1, tgid);
+            stmt.execute();
+            stmt.close();
+            bans.remove(tgid);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
