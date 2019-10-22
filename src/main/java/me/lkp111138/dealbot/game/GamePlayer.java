@@ -90,8 +90,11 @@ public class GamePlayer {
         currencyDeck.add(card);
     }
 
-    public void removeProperty(PropertyCard card, int group) {
-        group = getRealCardGroup(card, group);
+    public void removeProperty(Card card, int group) {
+        if (card instanceof PropertyCard) {
+            // this makes sense only when the card is a property
+            group = getRealCardGroup((PropertyCard) card, group);
+        }
         propertyDecks.getOrDefault(group, new ArrayList<>()).remove(card);
     }
 

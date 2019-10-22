@@ -65,7 +65,7 @@ public class SlyDealActionCard extends ActionCard {
                 List<Card> props = player.getPropertyDecks().getOrDefault(group, new ArrayList<>());
                 props.add(card);
                 player.getPropertyDecks().put(group, props);
-                victim.removeProperty((PropertyCard) card, group);
+                victim.removeProperty(card, group);
                 player.getGame().resumeTurn();
             }, player.getGame()::resumeTurn, player);
         }

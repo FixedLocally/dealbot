@@ -94,9 +94,9 @@ public class ForcedDealActionCard extends ActionCard {
                 List<Card> props = player.getPropertyDecks().getOrDefault(group, new ArrayList<>());
                 props.add(card);
                 player.getPropertyDecks().put(group, props);
-                victim.removeProperty((PropertyCard) card, group);
+                victim.removeProperty(card, group);
                 victim.addProperty((PropertyCard) selfCard, ((PropertyCard) selfCard).getGroup());
-                player.removeProperty((PropertyCard) selfCard, ((PropertyCard) selfCard).getGroup());
+                player.removeProperty(selfCard, ((PropertyCard) selfCard).getGroup());
                 player.getGame().resumeTurn();
             }, player.getGame()::resumeTurn, player);
         }
