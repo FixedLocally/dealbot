@@ -18,13 +18,18 @@ public class Toggle69Command implements Command {
         switch (msg.chat().type()) {
             case group:
             case supergroup:
-                try (PreparedStatement stmt = Main.getConnection().prepareStatement("UPDATE `groups` SET protest_mode=1-protest_mode WHERE gid=?")) {
-                    stmt.setLong(1, msg.chat().id());
-                    stmt.execute();
-                    SendMessage send = new SendMessage(msg.chat().id(), "Done.");
+                if (System.currentTimeMillis() > 1573488000000L) {
+                    try (PreparedStatement stmt = Main.getConnection().prepareStatement("UPDATE `groups` SET protest_mode=1-protest_mode WHERE gid=?")) {
+                        stmt.setLong(1, msg.chat().id());
+                        stmt.execute();
+                        SendMessage send = new SendMessage(msg.chat().id(), "Done.");
+                        bot.execute(send);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    SendMessage send = new SendMessage(msg.chat().id(), "Sorry I'm not letting you disable this until Nov 12.");
                     bot.execute(send);
-                } catch (SQLException e) {
-                    e.printStackTrace();
                 }
                 break;
         }

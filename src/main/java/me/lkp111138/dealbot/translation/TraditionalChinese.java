@@ -655,11 +655,8 @@ public class TraditionalChinese extends Translation {
 
     @Override
     public String JOIN_69_PROTEST() {
-        return "香港嘅情況日益嚴峻 - 警察肆意攻擊、拘捕，甚至企圖謀殺市民，" +
-                "而政府一直拒絕回應五大訴求。" +
-                "今日更加係五十年以來香港第一次動用緊急法嚟推出《反蒙面法》。\n" +
-                "希望大家玩之餘，都關心一下香港發生緊嘅事，" +
-                "做得幾多得幾多，唔該曬你。" +
+        return "He died because he fell off a carpark of a few meters high over a wall of over 4 feet, allegedly running avoid the police and tear gas.\n" +
+                "https://www.scmp.com/news/hong-kong/politics/article/3036833/hong-kong-student-who-suffered-severe-brain-injury-after\n" +
                 "打 /toggle69 唔再顯示呢個訊息";
     }
 
