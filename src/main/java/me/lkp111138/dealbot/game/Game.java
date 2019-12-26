@@ -170,7 +170,7 @@ public class Game {
         if (!started && !players.contains(from) && !uidGames.containsKey(from.id()) && playerCount() < 5) {
             // notify player
             // .replyMarkup(new InlineKeyboardMarkup(new InlineKeyboardButton[]{}
-            SendMessage send = new SendMessage(msg.from().id(), String.format(this.translation.JOIN_SUCCESS(), msg.chat().title().replace("*", "\\*"), this.id)).parseMode(ParseMode.Markdown);
+            SendMessage send = new SendMessage(msg.from().id(), String.format(Translation.get(DealBot.lang(msg.from().id())).JOIN_SUCCESS(), msg.chat().title().replace("*", "\\*"), this.id)).parseMode(ParseMode.Markdown);
             if (msg.chat().username() != null) {
                 send.replyMarkup(new InlineKeyboardMarkup(new InlineKeyboardButton[]{new InlineKeyboardButton(this.translation.BACK_TO() + msg.chat().title()).url("https://t.me/" + msg.chat().username())}));
             }
@@ -894,7 +894,7 @@ public class Game {
                 if (args[1].equals("money")) {
                     player.addCurrency(this.currentCard);
                     player.playedCurrency(this.currentCard.currencyValue());
-                    SendMessage send = new SendMessage(player.getTgid(), translation.YOU_DEPOSITED(this.currentCard.getCardTitle()));
+                    SendMessage send = new SendMessage(player.getTgid(), Translation.get(DealBot.lang(player.getTgid())).YOU_DEPOSITED(this.currentCard.getCardTitle()));
                     player.getGame().execute(send);
                     send = new SendMessage(gid, translation.SOMEONE_DEPOSITED(player.getName(), this.currentCard.getCardTitle()));
                     player.getGame().execute(send);
@@ -918,7 +918,7 @@ public class Game {
                 addToMainDeck(disposed);
                 player.endTurnVoluntary();
                 execute(new SendMessage(gid, translation.SB_DISPOSED(player.getName(), disposed.getCardTitle())));
-                execute(new SendMessage(player.getTgid(), translation.YOU_DISPOSED(disposed.getCardTitle())));
+                execute(new SendMessage(player.getTgid(), Translation.get(DealBot.lang(player.getTgid())).YOU_DISPOSED(disposed.getCardTitle())));
                 logf("query from %s: %s, card=%s\n", query.from().id(), query.data(), this.currentCard);
                 return true;
             case "pay_choose":
@@ -989,12 +989,12 @@ public class Game {
                 }
             }
             gamePlayers.get(currentTurn).rentCollected(payment.stream().mapToInt(Card::currencyValue).sum());
-            SendMessage send = new SendMessage(id, translation.SB_PAID_YOU(name, paymentStr));
+            SendMessage send = new SendMessage(id, Translation.get(DealBot.lang(id)).SB_PAID_YOU(name, paymentStr));
             execute(send);
             send = new SendMessage(gid, translation.SB_PAID_SB(name, gamePlayers.get(currentTurn).getName(), paymentStr));
             execute(send);
         } else {
-            SendMessage send = new SendMessage(id, translation.VICTIM_SAID_NO(name));
+            SendMessage send = new SendMessage(id, Translation.get(DealBot.lang(id)).VICTIM_SAID_NO(name));
             execute(send);
         }
         if (paymentConfirmationCount == gamePlayers.size() - 1) {
