@@ -165,4 +165,5 @@ public abstract class Translation {
     public abstract String CANCEL();
     public abstract String SB_IS_ELIMINATED(String name);
     public abstract String LONE_WIN(int tgid, String name);
+    public abstract String HOW_TO_PLAY();
 }

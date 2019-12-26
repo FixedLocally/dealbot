@@ -269,7 +269,7 @@ public class TraditionalChinese extends Translation {
         return String.format("將此 %s 放置於哪一組物業？", name);
     }
     public String DEAL_BREAKER_DESC() {
-        return "從一名玩家取去一套完整物業，包括任何建築物";
+        return "從一名玩家取去一套完整物業，包括任何建築物。";
     }
     public String WHOSE_DEAL_TO_BREAK() {
         return "要接管誰的物業？";
@@ -694,5 +694,29 @@ public class TraditionalChinese extends Translation {
     @Override
     public String LONE_WIN(int tgid, String name) {
         return String.format("其他人均已出局，<a href=\"tg://user?id=%1$s\">%2$s</a> 尚未出局，並自動勝出遊戲！", tgid, name);
+    }
+
+    @Override
+    public String HOW_TO_PLAY() {
+        return "遊戲規則：\n" +
+                "Monopoly Deal 為回合制遊戲，遊戲開始時隨機安排出牌次序。\n" +
+                "每人每回合會從牌堆抽兩張牌，並可以出最多三張牌。如果回合開始時玩家沒有任何手牌，將可以抽五張牌。\n" +
+                "所有貨幣牌和功能牌均可以存入銀行，用作稍後繳交租金。\n" +
+                "玩家在繳交租金時，可以繳交在桌上的任何貨幣牌和物業，但不設找贖。\n" +
+                "玩家在完成該回合所有操作後，需要自行按 “" + PASS() + "”。\n" +
+                "手牌上限為7張，如玩家在回合結束時手牌數超過上限，則需要棄置部分手牌直到手牌數目為7張。\n" +
+                "勝利條件為收集三套物業。\n" +
+                "\n" +
+                "功能牌：\n" +
+                "1. " + SLY_DEAL() + "：" + SLY_DEAL_DESC() + "\n" +
+                "2. " + FORCED_DEAL() + "：" + FORCED_DEAL_DESC() + "\n" +
+                "3. " + DEAL_BREAKER() + "：" + DEAL_BREAKER_DESC() + "\n" +
+                "4. " + JUST_SAY_NO() + "：" + JUST_SAY_NO_DESC() + "\n" +
+                "5. " + DEBT_COLLECTOR() + "：" + DEBT_COLLECTOR() + "\n" +
+                "6. " + ITS_MY_BDAY() + "：" + BDAY_DESC() + "\n" +
+                "7. " + DBL_RENT() + "：" + DBL_RENT() + "\n" +
+                "8. " + GO_PASS() + "：" + GO_PASS_DESC() + "\n" +
+                "9. " + HOUSE() + "：" + BUILDING_DESC(HOUSE(), 3) + "\n" +
+                "10. " + HOTEL() + "：" + BUILDING_DESC(HOTEL(), 4);
     }
 }

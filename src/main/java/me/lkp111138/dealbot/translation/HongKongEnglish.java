@@ -662,4 +662,28 @@ public class HongKongEnglish extends Translation {
     public String LONE_WIN(int tgid, String name) {
         return String.format("Everybody has been eliminated, <a href=\"tg://user?id=%1$s\">%2$s</a> remained and won.", tgid, name);
     }
+
+    @Override
+    public String HOW_TO_PLAY() {
+        return "遊戲規則：\n" +
+                "Monopoly Deal is a round-based game. Playing order is determined randomly at the start of the game.\n" +
+                "You will draw 2 cards from the deck and can play at most 3 cards. If you start the turn with no cards in hand, you will draw 5 cards instead.\n" +
+                "All currency cards and action cards can be deposited into your Bank for later use.\n" +
+                "When paying rents and fees, you can use all currency and properties on the table but nothing else. No change will be provided.\n" +
+                "When you are done for the turn, press \"" + PASS() + "\".\n" +
+                "You can hold a maximum of 7 cards. If you have more than 7 cards when your turn ends, you must dispose some of your cards in hand to stay within the limit.\n" +
+                "The winning condition is to collect 3 complete sets of properties.\n" +
+                "\n" +
+                "功能牌：\n" +
+                "1. " + SLY_DEAL() + "：" + SLY_DEAL_DESC() + "\n" +
+                "2. " + FORCED_DEAL() + "：" + FORCED_DEAL_DESC() + "\n" +
+                "3. " + DEAL_BREAKER() + "：" + DEAL_BREAKER_DESC() + "\n" +
+                "4. " + JUST_SAY_NO() + "：" + JUST_SAY_NO_DESC() + "\n" +
+                "5. " + DEBT_COLLECTOR() + "：" + DEBT_COLLECTOR() + "\n" +
+                "6. " + ITS_MY_BDAY() + "：" + BDAY_DESC() + "\n" +
+                "7. " + DBL_RENT() + "：" + DBL_RENT() + "\n" +
+                "8. " + GO_PASS() + "：" + GO_PASS_DESC() + "\n" +
+                "9. " + HOUSE() + "：" + BUILDING_DESC(HOUSE(), 3) + "\n" +
+                "10. " + HOTEL() + "：" + BUILDING_DESC(HOTEL(), 4);
+    }
 }

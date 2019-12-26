@@ -72,6 +72,7 @@ public class DealBot {
         commands.put("nextgame", new NextGameCommand());
         commands.put("me", new MeCommand());
         commands.put("state", commands.get("me"));
+        commands.put("howto", new HowToCommand());
         commands.put("bana", new BanCommand("ADMIN"));
         commands.put("banc", new BanCommand("COMMAND"));
 
