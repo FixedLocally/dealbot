@@ -665,7 +665,7 @@ public class HongKongEnglish extends Translation {
 
     @Override
     public String HOW_TO_PLAY() {
-        return "遊戲規則：\n" +
+        return "How to play:\n" +
                 "Monopoly Deal is a round-based game. Playing order is determined randomly at the start of the game.\n" +
                 "You will draw 2 cards from the deck and can play at most 3 cards. If you start the turn with no cards in hand, you will draw 5 cards instead.\n" +
                 "All currency cards and action cards can be deposited into your Bank for later use.\n" +
@@ -674,7 +674,7 @@ public class HongKongEnglish extends Translation {
                 "You can hold a maximum of 7 cards. If you have more than 7 cards when your turn ends, you must dispose some of your cards in hand to stay within the limit.\n" +
                 "The winning condition is to collect 3 complete sets of properties.\n" +
                 "\n" +
-                "功能牌：\n" +
+                "Action cards:\n" +
                 "1. " + SLY_DEAL() + "：" + SLY_DEAL_DESC() + "\n" +
                 "2. " + FORCED_DEAL() + "：" + FORCED_DEAL_DESC() + "\n" +
                 "3. " + DEAL_BREAKER() + "：" + DEAL_BREAKER_DESC() + "\n" +

@@ -47,20 +47,16 @@ public class SetLangCommand implements Command {
     }
 
     private static void sendResponse(TelegramBot bot, Message msg) {
-        switch (msg.chat().type()) {
-            case group:
-            case supergroup:
-                long gid = msg.chat().id();
-                int uid = msg.from().id();
-                bot.execute(new SendMessage(gid, "語言設定 / Language Settings").replyMarkup(new InlineKeyboardMarkup(
-                        new InlineKeyboardButton[]{new InlineKeyboardButton("繁體中文").callbackData("lang:zh:" + uid)},
-                        new InlineKeyboardButton[]{new InlineKeyboardButton("廣東話").callbackData("lang:hk:" + uid)},
-                        new InlineKeyboardButton[]{new InlineKeyboardButton("English (HK)").callbackData("lang:en:" + uid)},
-                        new InlineKeyboardButton[]{new InlineKeyboardButton("English (US)").callbackData("lang:en_us:" + uid)},
-                        new InlineKeyboardButton[]{new InlineKeyboardButton("English (UK)").callbackData("lang:en_gb:" + uid)},
-                        new InlineKeyboardButton[]{new InlineKeyboardButton(Translation.get(DealBot.lang(gid)).CLOSE()).callbackData("lang:close:" + uid)}
-                )));
-        }
+        long gid = msg.chat().id();
+        int uid = msg.from().id();
+        bot.execute(new SendMessage(gid, "語言設定 / Language Settings").replyMarkup(new InlineKeyboardMarkup(
+                new InlineKeyboardButton[]{new InlineKeyboardButton("繁體中文").callbackData("lang:zh:" + uid)},
+                new InlineKeyboardButton[]{new InlineKeyboardButton("廣東話").callbackData("lang:hk:" + uid)},
+                new InlineKeyboardButton[]{new InlineKeyboardButton("English (HK)").callbackData("lang:en:" + uid)},
+                new InlineKeyboardButton[]{new InlineKeyboardButton("English (US)").callbackData("lang:en_us:" + uid)},
+                new InlineKeyboardButton[]{new InlineKeyboardButton("English (UK)").callbackData("lang:en_gb:" + uid)},
+                new InlineKeyboardButton[]{new InlineKeyboardButton(Translation.get(DealBot.lang(gid)).CLOSE()).callbackData("lang:close:" + uid)}
+        )));
     }
 
     public static boolean callback(TelegramBot bot, CallbackQuery query) {
