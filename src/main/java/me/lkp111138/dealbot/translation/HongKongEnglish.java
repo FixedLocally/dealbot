@@ -686,4 +686,15 @@ public class HongKongEnglish extends Translation {
                 "9. " + HOUSE() + "：" + BUILDING_DESC(HOUSE(), 3) + "\n" +
                 "10. " + HOTEL() + "：" + BUILDING_DESC(HOTEL(), 4);
     }
+
+    @Override
+    public String STATS(int id, String name, int win, int total, float timePlayed, int cardsPlayed, int currency, int properties, int rent) {
+        return String.format("Monopoly Deal Statistics for <a href=\"tg://user?id=%d\">%s</a>:\n", id, name) +
+                String.format("Won/Total games: %d / %d (%.2f%%)\n", win, total, 100.0 * win / total) +
+                String.format("Total in game minutes: %.1f\n", timePlayed) +
+                String.format("Number of cards played: %d\n", cardsPlayed) +
+                String.format("Currency collected: $ %dM\n", currency) +
+                String.format("Properties collected: %d\n", properties) +
+                String.format("Rent collected: $ %dM\n", rent);
+    }
 }

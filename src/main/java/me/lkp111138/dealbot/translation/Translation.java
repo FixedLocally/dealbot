@@ -166,4 +166,5 @@ public abstract class Translation {
     public abstract String SB_IS_ELIMINATED(String name);
     public abstract String LONE_WIN(int tgid, String name);
     public abstract String HOW_TO_PLAY();
+    public abstract String STATS(int id, String name, int win, int total, float timePlayed, int cardsPlayed, int currency, int properties, int rent);
 }

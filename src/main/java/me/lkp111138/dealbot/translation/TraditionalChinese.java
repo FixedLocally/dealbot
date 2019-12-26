@@ -719,4 +719,15 @@ public class TraditionalChinese extends Translation {
                 "9. " + HOUSE() + "：" + BUILDING_DESC(HOUSE(), 3) + "\n" +
                 "10. " + HOTEL() + "：" + BUILDING_DESC(HOTEL(), 4);
     }
+
+    @Override
+    public String STATS(int id, String name, int win, int total, float timePlayed, int cardsPlayed, int currency, int properties, int rent) {
+         return String.format("<a href=\"tg://user?id=%d\">%s</a> 的 Monopoly Deal 統計資料：\n", id, name) +
+                String.format("勝出 / 總共遊戲場數: %d / %d (%.2f%%)\n", win, total, 100.0 * win / total) +
+                String.format("遊戲時間（分鐘）：%.1f\n", timePlayed) +
+                String.format("出牌數量：%d\n", cardsPlayed) +
+                String.format("已收集貨幣：$ %dM\n", currency) +
+                String.format("已收集物業：%d\n", properties) +
+                String.format("已收取租金：$ %dM\n", rent);
+    }
 }
