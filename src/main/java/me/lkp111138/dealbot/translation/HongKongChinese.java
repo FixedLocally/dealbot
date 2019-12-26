@@ -589,6 +589,7 @@ public class HongKongChinese extends TraditionalChinese {
                 "/stats - 顯示統計數據。\n" +
                 "/achv - 顯示你已解鎖的成就。\n" +
                 "/help - 顯示此列表。\n" +
+                "/howto - 顯示遊戲規則\n" +
                 "\n" +
                 "<b>群組指令</b>\n" +
                 "\n" +

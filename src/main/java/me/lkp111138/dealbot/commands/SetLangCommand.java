@@ -3,6 +3,7 @@ package me.lkp111138.dealbot.commands;
 import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.CallbackQuery;
+import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.ChatMember;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
@@ -21,26 +22,31 @@ import java.io.IOException;
 public class SetLangCommand implements Command {
     public void respond(TelegramBot bot, Message msg, String[] args) {
         if (msg.from().id() == Main.BOT_OWNER) {
-            send(bot, msg);
+            sendResponse(bot, msg);
             return;
         }
-        bot.execute(new GetChatMember(msg.chat().id(), msg.from().id()), new Callback<GetChatMember, GetChatMemberResponse>() {
-            @Override
-            public void onResponse(GetChatMember request, GetChatMemberResponse response) {
-                ChatMember chatMember = response.chatMember();
-                if (chatMember.status() == ChatMember.Status.administrator || chatMember.status() == ChatMember.Status.creator) {
-                    send(bot, msg);
+        if (msg.chat().type() != Chat.Type.Private) {
+            bot.execute(new GetChatMember(msg.chat().id(), msg.from().id()), new Callback<GetChatMember, GetChatMemberResponse>() {
+                @Override
+                public void onResponse(GetChatMember request, GetChatMemberResponse response) {
+                    ChatMember chatMember = response.chatMember();
+                    if (chatMember.status() == ChatMember.Status.administrator || chatMember.status() == ChatMember.Status.creator) {
+                        sendResponse(bot, msg);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(GetChatMember request, IOException e) {
+                @Override
+                public void onFailure(GetChatMember request, IOException e) {
 
-            }
-        });
+                }
+            });
+        } else {
+            // set personal language
+            sendResponse(bot, msg);
+        }
     }
 
-    private static void send(TelegramBot bot, Message msg) {
+    private static void sendResponse(TelegramBot bot, Message msg) {
         switch (msg.chat().type()) {
             case group:
             case supergroup:

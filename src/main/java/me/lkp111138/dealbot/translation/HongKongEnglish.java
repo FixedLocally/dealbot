@@ -572,6 +572,7 @@ public class HongKongEnglish extends Translation {
                 "/stats - View your stats.\n" +
                 "/achv - View your achievements.\n" +
                 "/help - Shows help.\n" +
+                "/howto - Shows the rules.\n" +
                 "\n" +
                 "<b>Group only commands</b>\n" +
                 "\n" +
