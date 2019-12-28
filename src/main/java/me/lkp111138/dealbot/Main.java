@@ -2,10 +2,7 @@ package me.lkp111138.dealbot;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -17,7 +14,7 @@ public class Main {
     private static BasicDataSource ds = new BasicDataSource();
     private static Properties config = new Properties();
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+    public static void main(String[] args) throws ClassNotFoundException, FileNotFoundException {
         // read config
         try {
             File file = new File("dealbot.cfg");
@@ -37,7 +34,7 @@ public class Main {
         ds.setMaxIdle(30);
         ds.setMaxOpenPreparedStatements(3000);
         DealBot bot = new DealBot(config.getProperty("bot.token"));
-        System.out.println("Initialization complete\n");
+        System.out.println("Initialization complete");
     }
 
     public static Connection getConnection() throws SQLException {
