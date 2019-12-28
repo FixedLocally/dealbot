@@ -1,0 +1,18 @@
+{
+  "en": {
+    "game.created": "<a href=\"tg://user?id=%s\">%s</a> has started a new Monopoly Deal game! You have %s seconds to join."
+  },
+  "zh": {
+    "game.created": "<a href=\"tg://user?id=%s\">%s</a> 開始了一場 Monopoly Deal 遊戲！你有 %s 秒加入。"
+  },
+  "hk": {
+    "inherits": "zh",
+    "game.created": "<a href=\"tg://user?id=%s\">%s</a> 開始咗一場 Monopoly Deal 遊戲！你有 %s 秒加入。"
+  },
+  "us": {
+    "inherits": "en"
+  },
+  "uk": {
+    "inherits": "en"
+  }
+}

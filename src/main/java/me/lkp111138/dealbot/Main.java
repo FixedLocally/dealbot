@@ -1,20 +1,20 @@
 package me.lkp111138.dealbot;
 
-import com.pengrad.telegrambot.TelegramBot;
-import me.lkp111138.dealbot.game.Game;
-import okhttp3.OkHttpClient;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Properties;
 
 public class Main {
     public static final int BOT_OWNER = 389061708;
 
     private static Connection conn;
+    private static BasicDataSource ds = new BasicDataSource();
     private static Properties config = new Properties();
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
@@ -30,33 +30,18 @@ public class Main {
             return;
         }
         Class.forName("com.mysql.jdbc.Driver");
-        conn = DriverManager.getConnection(String.format("jdbc:mysql://%s/%s?user=%s&password=%s&useSSL=false&allowPublicKeyRetrieval=true", config.get("db.host"), config.get("db.name"), config.get("db.user"), config.get("db.pwd")));
-        OkHttpClient retrying_client = new OkHttpClient.Builder().retryOnConnectionFailure(true).build();
-        TelegramBot bot = new TelegramBot.Builder(config.getProperty("bot.token")).okHttpClient(retrying_client).build();
-        new DealBot(bot);
-        Game.init(bot);
+        ds.setUrl(String.format("jdbc:mysql://%s/%s?user=%s&password=%s&useSSL=false&allowPublicKeyRetrieval=true", config.get("db.host"), config.get("db.name"), config.get("db.user"), config.get("db.pwd")));
+        ds.setUsername(config.getProperty("db.user"));
+        ds.setPassword(config.getProperty("db.pass"));
+        ds.setMinIdle(3);
+        ds.setMaxIdle(30);
+        ds.setMaxOpenPreparedStatements(3000);
+        DealBot bot = new DealBot(config.getProperty("bot.token"));
         System.out.println("Initialization complete\n");
     }
 
     public static Connection getConnection() throws SQLException {
-        try {
-            PreparedStatement stmt = conn.prepareStatement("select ? as num");
-            stmt.setInt(1, 42);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next() && rs.getInt("num") == 42) {
-                return conn;
-            }
-            return getConnection();
-        } catch (SQLException e) {
-            try {
-                conn = DriverManager.getConnection(String.format("jdbc:mysql://%s/%s?user=%s&password=%s&useSSL=false&autoReconnect=true", config.get("db.host"), config.get("db.name"), config.get("db.user"), config.get("db.pwd")));
-                return conn;
-            } catch (SQLException e1) {
-                System.err.println("Couldn't reconnect!");
-                e1.printStackTrace();
-                throw e;
-            }
-        }
+        return ds.getConnection();
     }
 
     public static String getConfig(String key) {
