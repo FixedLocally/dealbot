@@ -33,6 +33,7 @@ public class DealBot extends TelegramBot implements UpdatesListener {
         super(botToken);
         setUpdatesListener(this);
         initTranslations();
+        initCommands();
     }
 
     @Override
@@ -43,6 +44,10 @@ public class DealBot extends TelegramBot implements UpdatesListener {
 
     private void initTranslations() throws FileNotFoundException {
         translations = new Gson().fromJson(new FileReader(new File("translations.json")), Map.class);
+    }
+
+    private void initCommands() {
+        commands.put("play", new PlayCommand());
     }
 
     private void processUpdate(Update update) {
