@@ -1,23 +1,26 @@
 {
   "en": {
     "game.created": "<a href=\"tg://user?id=%s\">%s</a> has started a new Monopoly Deal game! You have %s seconds to /join\nGame ID: %s",
-    "game.join_reminder": "You have %s seconds left to /join",
     "game.is_running": "Another game (#%s) is already running here.",
+    "game.join_extended": "Extended for %s seconds, you have %s seconds left to /join",
+    "game.join_reminder": "You have %s seconds left to /join",
     "error.generic": "An error occurred: %s",
     "misc.unknown_cmd": "Unknown command."
   },
   "zh": {
     "game.created": "<a href=\"tg://user?id=%s\">%s</a> 開始了一場 Monopoly Deal 遊戲！你有 %s 秒加入。",
-    "game.join_reminder": "You have %s seconds left to /join",
     "game.is_running": "Another game (#%s) is already running here.",
+    "game.join_extended": "Extended for %s seconds, you have %s seconds left to /join",
+    "game.join_reminder": "You have %s seconds left to /join",
     "error.generic": "An error occurred: %s",
     "misc.unknown_cmd": "Unknown command."
   },
   "hk": {
     "inherits": "zh",
     "game.created": "<a href=\"tg://user?id=%s\">%s</a> 開始咗一場 Monopoly Deal 遊戲！你有 %s 秒加入。",
-    "game.join_reminder": "你仲有 %s 秒加入遊戲 /join",
     "game.is_running": "呢度已經玩緊另外一場遊戲啦（#%s）",
+    "game.join_extended": "加入時間延長咗 %s 秒，你仲有 %s 秒加入遊戲 /join",
+    "game.join_reminder": "你仲有 %s 秒加入遊戲 /join",
     "error.generic": "出事：%s",
     "misc.unknown_cmd": "未知的指令"
   },
