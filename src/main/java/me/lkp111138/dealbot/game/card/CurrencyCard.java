@@ -1,5 +1,6 @@
 package me.lkp111138.dealbot.game.card;
 
+import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.game.CardArgumentRequest;
 import me.lkp111138.dealbot.game.Player;
 import me.lkp111138.dealbot.game.card.state.CardState;
@@ -35,7 +36,7 @@ public class CurrencyCard implements Card {
     }
 
     @Override
-    public CardArgumentRequest execute(Player player, String[] arg) {
+    public CardArgumentRequest execute(DealBot bot, Player player, String[] arg) {
         setState(new CardStateInPlayerCurrency(player));
         return null;
     }
