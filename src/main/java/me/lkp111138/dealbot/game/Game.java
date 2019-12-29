@@ -17,6 +17,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Represents a Monopoly Deal game
+ */
 public class Game {
     private static Map<Long, Game> gidGames = new HashMap<>();
 
