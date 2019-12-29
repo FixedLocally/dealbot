@@ -1,6 +1,6 @@
 package me.lkp111138.dealbot.game.card;
 
-import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import me.lkp111138.dealbot.game.CardArgumentRequest;
 import me.lkp111138.dealbot.game.Player;
 import me.lkp111138.dealbot.game.card.state.CardState;
 
@@ -31,5 +31,5 @@ public interface Card {
      * @param arg The optional argument to be passed to the card
      * @return An inline keyboard if the card needs further arguments or null
      */
-    InlineKeyboardMarkup execute(Player player, String[] arg);
+    CardArgumentRequest execute(Player player, String[] arg);
 }

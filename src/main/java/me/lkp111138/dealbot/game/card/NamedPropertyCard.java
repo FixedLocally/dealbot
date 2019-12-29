@@ -1,6 +1,6 @@
 package me.lkp111138.dealbot.game.card;
 
-import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import me.lkp111138.dealbot.game.CardArgumentRequest;
 import me.lkp111138.dealbot.game.Player;
 import me.lkp111138.dealbot.game.card.state.CardState;
 import me.lkp111138.dealbot.game.card.state.CardStateInMainDeck;
@@ -39,7 +39,7 @@ public class NamedPropertyCard implements PropertyCard {
     }
 
     @Override
-    public InlineKeyboardMarkup execute(Player player, String[] arg) {
+    public CardArgumentRequest execute(Player player, String[] arg) {
         setState(new CardStateInPlayerProperty(player, colour));
         return null;
     }
