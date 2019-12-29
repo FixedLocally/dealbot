@@ -10,6 +10,7 @@ import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.card.Card;
 import me.lkp111138.dealbot.game.card.CurrencyCard;
 import me.lkp111138.dealbot.game.card.NamedPropertyCard;
+import me.lkp111138.dealbot.game.card.TwoColourWildcardPropertyCard;
 import me.lkp111138.dealbot.game.exception.ConcurrentGameException;
 
 import java.sql.*;
@@ -155,6 +156,7 @@ public class Game {
         cards.add(new CurrencyCard(5));
         cards.add(new CurrencyCard(5));
         cards.add(new CurrencyCard(10));
+
         // named property cards
         cards.add(new NamedPropertyCard(0, 0, 1));
         cards.add(new NamedPropertyCard(1, 0, 1));
@@ -193,6 +195,17 @@ public class Game {
 
         cards.add(new NamedPropertyCard(26, 9, 2));
         cards.add(new NamedPropertyCard(27, 9, 2));
+
+        // two colour wildcard propperties
+        cards.add(new TwoColourWildcardPropertyCard(4, 5, 3));
+        cards.add(new TwoColourWildcardPropertyCard(4, 5, 3));
+        cards.add(new TwoColourWildcardPropertyCard(6, 7, 4));
+        cards.add(new TwoColourWildcardPropertyCard(0, 1, 1));
+        cards.add(new TwoColourWildcardPropertyCard(2, 3, 2));
+        cards.add(new TwoColourWildcardPropertyCard(2, 3, 2));
+        cards.add(new TwoColourWildcardPropertyCard(6, 8, 4));
+        cards.add(new TwoColourWildcardPropertyCard(1, 8, 4));
+        cards.add(new TwoColourWildcardPropertyCard(8, 9, 2));
     }
 
     public void extend(int secs) {
@@ -285,5 +298,9 @@ public class Game {
 
     public boolean isStarted() {
         return started;
+    }
+
+    List<Card> getCards() {
+        return cards;
     }
 }

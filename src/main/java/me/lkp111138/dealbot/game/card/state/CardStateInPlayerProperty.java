@@ -13,6 +13,14 @@ public class CardStateInPlayerProperty implements CardState {
         this.colour = colour;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public int getColour() {
+        return colour;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof CardStateInPlayerProperty) {

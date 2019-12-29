@@ -30,7 +30,7 @@ public interface Card {
      * Defines the actions when the card is used
      * @param bot The bot instance
      * @param player The Player that attempted to use this card
-     * @param arg The optional argument to be passed to the card
+     * @param arg The optional argument to be passed to the card, all prefixes are stripped
      * @return An inline keyboard if the card needs further arguments or null
      */
     CardArgumentRequest execute(DealBot bot, Player player, String[] arg);
