@@ -6,10 +6,7 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.*;
 import com.pengrad.telegrambot.request.AnswerCallbackQuery;
 import com.pengrad.telegrambot.request.AnswerPreCheckoutQuery;
-import me.lkp111138.dealbot.command.Command;
-import me.lkp111138.dealbot.command.ExtendCommand;
-import me.lkp111138.dealbot.command.FallbackCommand;
-import me.lkp111138.dealbot.command.PlayCommand;
+import me.lkp111138.dealbot.command.*;
 import me.lkp111138.dealbot.game.Game;
 
 import java.io.File;
@@ -50,6 +47,7 @@ public class DealBot extends TelegramBot implements UpdatesListener {
     private void initCommands() {
         commands.put("play", new PlayCommand());
         commands.put("extend", new ExtendCommand());
+        commands.put("join", new JoinCommand());
     }
 
     private void processUpdate(Update update) {

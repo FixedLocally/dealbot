@@ -50,6 +50,8 @@
     "game.is_running": "Another game (#%s) is already running here.",
     "game.join_extended": "Extended for %s seconds, you have %s seconds left to /join",
     "game.join_reminder": "You have %s seconds left to /join",
+    "game.joined_announcement": "<a href=\"tg://user?id=%s\">%s</a> has joined the game! %s players has joined, the maximum is 5.",
+    "game.joined_successfully": "You have successfully joined the game in %s\nGame ID: %s",
     "game.property.colour.0": "\uD83D\uDCDC",
     "game.property.colour.1": "\uD83D\uDC8E",
     "game.property.colour.2": "\uD83D\uDC96",
@@ -62,6 +64,8 @@
     "game.property.colour.9": "\uD83D\uDEB0",
     "game.starting": "The game is starting, please wait...",
     "error.generic": "An error occurred: %s",
+    "misc.please_start_me": "Please start me first!",
+    "misc.start_me": "Start me",
     "misc.unknown_cmd": "Unknown command."
   },
   "zh": {
@@ -115,6 +119,8 @@
     "game.is_running": "Another game (#%s) is already running here.",
     "game.join_extended": "Extended for %s seconds, you have %s seconds left to /join",
     "game.join_reminder": "You have %s seconds left to /join",
+    "game.joined_announcement": "<a href=\"tg://user?id=%s\">%s</a> 加入了遊戲！目前有 %s 人，最多可以有 5 人。",
+    "game.joined_successfully": "You have successfully joined the game in %s\nGame ID: %s",
     "game.property.colour.0": "\uD83D\uDCDC",
     "game.property.colour.1": "\uD83D\uDC8E",
     "game.property.colour.2": "\uD83D\uDC96",
@@ -127,6 +133,8 @@
     "game.property.colour.9": "\uD83D\uDEB0",
     "game.starting": "The game is starting, please wait...",
     "error.generic": "An error occurred: %s",
+    "misc.please_start_me": "Please start me first!",
+    "misc.start_me": "Start me",
     "misc.unknown_cmd": "Unknown command."
   },
   "hk": {
@@ -139,6 +147,8 @@
     "game.is_running": "呢度已經玩緊另外一場遊戲啦（#%s）",
     "game.join_extended": "加入時間延長咗 %s 秒，你仲有 %s 秒加入遊戲 /join",
     "game.join_reminder": "你仲有 %s 秒加入遊戲 /join",
+    "game.joined_announcement": "<a href=\"tg://user?id=%s\">%s</a> 加入咗遊戲！而家有 %s 人，最多可以有 5 人。",
+    "game.joined_successfully": "你成功加入咗 %s 嘅遊戲\n遊戲編號：%s",
     "game.property.colour.0": "\uD83D\uDCDC",
     "game.property.colour.1": "\uD83D\uDC8E",
     "game.property.colour.2": "\uD83D\uDC96",
@@ -151,6 +161,8 @@
     "game.property.colour.9": "\uD83D\uDEB0",
     "game.starting": "遊戲開始緊，請等等...",
     "error.generic": "出事：%s",
+    "misc.please_start_me": "請先啟動我！",
+    "misc.start_me": "㩒呢度！",
     "misc.unknown_cmd": "未知的指令"
   },
   "en_us": {

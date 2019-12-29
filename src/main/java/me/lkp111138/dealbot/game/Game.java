@@ -1,15 +1,20 @@
 package me.lkp111138.dealbot.game;
 
+import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.EmptyCallback;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.card.*;
 import me.lkp111138.dealbot.game.exception.ConcurrentGameException;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +47,7 @@ public class Game {
     private long startTime;
     private boolean started = false;
     private List<Card> cards = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
 
     // broadcast fields
     private ScheduledExecutorService broadcastExecutor = new ScheduledThreadPoolExecutor(1);
@@ -128,6 +134,41 @@ public class Game {
     }
 
     /**
+     * Adds a player to the game by their request
+     * @param message The message that requested the join
+     */
+    public void addPlayer(Message message) {
+        if (started || players.stream().anyMatch(p -> p.getUserId() == message.from().id())) {
+            // No joining if the player already joined or if is started
+            return;
+        }
+        SendMessage send = new SendMessage(message.from().id(), bot.translate(message.from().id(), "game.joined_successfully", message.chat().title(), id));
+        bot.execute(send, new Callback<SendMessage, SendResponse>() {
+            @Override
+            public void onResponse(SendMessage request, SendResponse response) {
+                if (response.isOk()) {
+                    players.add(new Player(Game.this, message.from().id()));
+                    broadcast(bot.translate(lang, "game.joined_announcement", message.from().id(), message.from().firstName(), players.size()));
+                } else {
+                    requestStart();
+                }
+            }
+
+            @Override
+            public void onFailure(SendMessage request, IOException e) {
+            }
+
+            private void requestStart() {
+                // ask the player to start the bot
+                InlineKeyboardButton button = new InlineKeyboardButton(bot.translate(lang, "misc.start_me"));
+                button.url(String.format("https://t.me/%s?start=join_%s", Main.getConfig("bot.username"), gid));
+                InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(new InlineKeyboardButton[]{button});
+                broadcast(bot.translate(lang, "misc.please_start_me"), keyboard, true);
+            }
+        });
+    }
+
+    /**
      * Starts the game
      */
     public void startGame() {
@@ -206,6 +247,7 @@ public class Game {
         cards.add(new TwoColourWildcardPropertyCard(8, 9, 2));
 
         cards.add(new RainbowWildcardPropertyCard());
+        cards.add(new RainbowWildcardPropertyCard());
     }
 
     public void extend(int secs) {
@@ -224,6 +266,13 @@ public class Game {
             schedule(this::startGame, millis);
         }
         broadcast(bot.translate(this.lang, "game.join_extended", secs, millis / 1000));
+    }
+
+    /**
+     * Starts a new turn
+     */
+    private void startTurn() {
+
     }
 
     /**
