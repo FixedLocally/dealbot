@@ -19,16 +19,21 @@ import java.util.concurrent.TimeUnit;
 public class Game {
     private static Map<Long, Game> gidGames = new HashMap<>();
 
+    // operational fields
     private int id;
     private long gid;
     private DealBot bot;
 
+    // game params
     private int playTime;
     private int objectionTime;
     private int payTime;
     private String lang;
     private boolean protestMode;
+
+    // game status
     private long startTime;
+    private boolean started = false;
 
     // broadcast fields
     private ScheduledExecutorService broadcastExecutor = new ScheduledThreadPoolExecutor(1);
@@ -97,19 +102,6 @@ public class Game {
         return gidGames.get(gid);
     }
 
-    /**
-     * Schedule a task to be ran in the future for this game
-     * @param task The task to run
-     * @param time The number of milliseconds to wait to run the task
-     */
-    private void schedule(Runnable task, long time) {
-        System.out.println(time);
-        if (scheduledFuture != null) {
-            scheduledFuture.cancel(true);
-        }
-        scheduledExecutor.schedule(task, time, TimeUnit.MILLISECONDS);
-    }
-
     private void joinReminder() {
         long millis = startTime - System.currentTimeMillis();
         int secs = (int) ((millis + 500) / 1000);
@@ -131,7 +123,28 @@ public class Game {
      * Starts the game
      */
     public void start() {
+        started = true;
         broadcast("starting...", false);
+    }
+
+    public void extend(int secs) {
+        cancelFuture();
+        startTime += 1000 * secs;
+        long millis = startTime - System.currentTimeMillis();
+        if (millis > 30000) {
+            schedule(this::joinReminder, (millis - 100) % 30000);
+        } else if (millis > 15) {
+            schedule(this::joinReminder, (millis - 100) % 15000);
+        } else {
+            schedule(this::start, millis);
+        }
+    }
+
+    /**
+     * Stops the game prematurely.
+     */
+    public void kill() {
+        // TODO
     }
 
     private void broadcast(String message) {
@@ -174,14 +187,24 @@ public class Game {
         }
     }
 
-    public int getId() {
-        return id;
+    /**
+     * Schedule a task to be ran in the future for this game
+     * @param task The task to run
+     * @param time The number of milliseconds to wait to run the task
+     */
+    private void schedule(Runnable task, long time) {
+        System.out.println(time);
+        cancelFuture();
+        scheduledExecutor.schedule(task, time, TimeUnit.MILLISECONDS);
     }
 
-    /**
-     * Stops the game prematurely.
-     */
-    public void kill() {
-        // TODO
+    private void cancelFuture() {
+        if (scheduledFuture != null) {
+            scheduledFuture.cancel(true);
+        }
+    }
+
+    public int getId() {
+        return id;
     }
 }
