@@ -1,7 +1,10 @@
 package me.lkp111138.dealbot.game.card;
 
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import me.lkp111138.dealbot.game.Player;
 import me.lkp111138.dealbot.game.card.state.CardState;
 import me.lkp111138.dealbot.game.card.state.CardStateInMainDeck;
+import me.lkp111138.dealbot.game.card.state.CardStateInPlayerCurrency;
 
 public class CurrencyCard implements Card {
     private int value;
@@ -18,12 +21,23 @@ public class CurrencyCard implements Card {
 
     @Override
     public String getDescriptionKey() {
-        return "card.desc.currency." + value;
+        return "card.desc.currency";
     }
 
     @Override
     public CardState getState() {
         return state;
+    }
+
+    @Override
+    public int getCurrencyValue() {
+        return value;
+    }
+
+    @Override
+    public InlineKeyboardMarkup execute(Player player, String arg) {
+        setState(new CardStateInPlayerCurrency(player));
+        return null;
     }
 
     public void setState(CardState state) {
