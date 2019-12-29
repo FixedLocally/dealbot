@@ -128,7 +128,14 @@ public class DealBot extends TelegramBot implements UpdatesListener {
      */
     public String translate(String language, String key, Object... args) {
         Map<String, String> lang = translations.getOrDefault(language, translations.get("en"));
-        String s = lang.getOrDefault(key, key);
+        String s = lang.get(key);
+        if (s == null) {
+            if (lang.containsKey("inherits")) {
+                s = translations.get(lang.get("inherits")).getOrDefault(key, key);
+            } else {
+                s = key;
+            }
+        }
         for (Object arg : args) {
             s = s.replaceFirst("%s", arg.toString());
         }
