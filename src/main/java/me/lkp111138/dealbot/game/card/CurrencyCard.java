@@ -35,7 +35,7 @@ public class CurrencyCard implements Card {
     }
 
     @Override
-    public InlineKeyboardMarkup execute(Player player, String arg) {
+    public InlineKeyboardMarkup execute(Player player, String[] arg) {
         setState(new CardStateInPlayerCurrency(player));
         return null;
     }

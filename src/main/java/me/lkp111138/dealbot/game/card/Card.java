@@ -31,5 +31,5 @@ public interface Card {
      * @param arg The optional argument to be passed to the card
      * @return An inline keyboard if the card needs further arguments or null
      */
-    InlineKeyboardMarkup execute(Player player, String arg);
+    InlineKeyboardMarkup execute(Player player, String[] arg);
 }
