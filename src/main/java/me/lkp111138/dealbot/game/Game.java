@@ -7,10 +7,15 @@ import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.EmptyCallback;
 import me.lkp111138.dealbot.Main;
+import me.lkp111138.dealbot.game.card.Card;
+import me.lkp111138.dealbot.game.card.CurrencyCard;
+import me.lkp111138.dealbot.game.card.NamedPropertyCard;
 import me.lkp111138.dealbot.game.exception.ConcurrentGameException;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -38,6 +43,7 @@ public class Game {
     // game status
     private long startTime;
     private boolean started = false;
+    private List<Card> cards = new ArrayList<>();
 
     // broadcast fields
     private ScheduledExecutorService broadcastExecutor = new ScheduledThreadPoolExecutor(1);
@@ -128,7 +134,65 @@ public class Game {
      */
     public void start() {
         started = true;
-        broadcast("starting...", false);
+        broadcast(bot.translate(lang, "game.starting"), false);
+        generateCards();
+    }
+
+    private void generateCards() {
+        // currency cards
+        for (int i = 0; i < 6; i++) {
+            cards.add(new CurrencyCard(1));
+        }
+        for (int i = 0; i < 5; i++) {
+            cards.add(new CurrencyCard(2));
+        }
+        for (int i = 0; i < 3; i++) {
+            cards.add(new CurrencyCard(3));
+        }
+        for (int i = 0; i < 3; i++) {
+            cards.add(new CurrencyCard(4));
+        }
+        cards.add(new CurrencyCard(5));
+        cards.add(new CurrencyCard(5));
+        cards.add(new CurrencyCard(10));
+        // named property cards
+        cards.add(new NamedPropertyCard(0, 0, 1));
+        cards.add(new NamedPropertyCard(1, 0, 1));
+
+        cards.add(new NamedPropertyCard(2, 1, 1));
+        cards.add(new NamedPropertyCard(3, 1, 1));
+        cards.add(new NamedPropertyCard(4, 1, 1));
+
+        cards.add(new NamedPropertyCard(5, 2, 2));
+        cards.add(new NamedPropertyCard(6, 2, 2));
+        cards.add(new NamedPropertyCard(7, 2, 2));
+
+        cards.add(new NamedPropertyCard(8, 3, 2));
+        cards.add(new NamedPropertyCard(9, 3, 2));
+        cards.add(new NamedPropertyCard(10, 3, 2));
+
+        cards.add(new NamedPropertyCard(11, 4, 3));
+        cards.add(new NamedPropertyCard(12, 4, 3));
+        cards.add(new NamedPropertyCard(13, 4, 3));
+
+        cards.add(new NamedPropertyCard(14, 5, 3));
+        cards.add(new NamedPropertyCard(15, 5, 3));
+        cards.add(new NamedPropertyCard(16, 5, 3));
+
+        cards.add(new NamedPropertyCard(17, 6, 4));
+        cards.add(new NamedPropertyCard(18, 6, 4));
+        cards.add(new NamedPropertyCard(19, 6, 4));
+
+        cards.add(new NamedPropertyCard(20, 7, 4));
+        cards.add(new NamedPropertyCard(21, 7, 4));
+
+        cards.add(new NamedPropertyCard(22, 8, 2));
+        cards.add(new NamedPropertyCard(23, 8, 2));
+        cards.add(new NamedPropertyCard(24, 8, 2));
+        cards.add(new NamedPropertyCard(25, 8, 2));
+
+        cards.add(new NamedPropertyCard(26, 9, 2));
+        cards.add(new NamedPropertyCard(27, 9, 2));
     }
 
     public void extend(int secs) {
