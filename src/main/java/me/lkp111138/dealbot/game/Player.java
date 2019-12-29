@@ -1,6 +1,7 @@
 package me.lkp111138.dealbot.game;
 
 import me.lkp111138.dealbot.game.card.Card;
+import me.lkp111138.dealbot.game.card.state.CardStateInPlayerProperty;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,5 +23,31 @@ public class Player {
     public Player(Game game, long userId) {
         this.game = game;
         this.userId = userId;
+    }
+
+    public Map<Integer, Integer> getPropertyCounts() {
+        Map<Integer, Integer> counts = new HashMap<>();
+        for (int i = 0; i < 10; i++) {
+            counts.put(i, 0);
+        }
+        for (Card card : game.getCards()) {
+            if (card.getState() instanceof CardStateInPlayerProperty) {
+                CardStateInPlayerProperty state = (CardStateInPlayerProperty) card.getState();
+                if (!state.getPlayer().equals(this)) {
+                    continue;
+                }
+                int colour = state.getColour();
+                counts.put(colour, counts.get(colour) + 1);
+            }
+        }
+        return counts;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public long getUserId() {
+        return userId;
     }
 }
