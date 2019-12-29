@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.DealBot;
+import me.lkp111138.dealbot.EmptyCallback;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.exception.ConcurrentGameException;
 
@@ -108,13 +109,13 @@ public class Game {
         System.out.println(millis);
         switch (secs) {
             case 30:
-                schedule(this::joinReminder, (millis - 100) % 15000);
+                schedule(this::joinReminder, (millis - 1000) % 15000 + 1000);
                 break;
             case 15:
                 schedule(this::start, millis);
                 break;
             default:
-                schedule(this::joinReminder, (millis - 100) % 30000);
+                schedule(this::joinReminder, (millis - 1000) % 30000 + 1000);
         }
         broadcast(bot.translate(this.lang, "game.join_reminder", secs), true);
     }
@@ -128,16 +129,21 @@ public class Game {
     }
 
     public void extend(int secs) {
+        if (isStarted()) {
+            // What are extending is the game is started?
+            return;
+        }
         cancelFuture();
         startTime += 1000 * secs;
         long millis = startTime - System.currentTimeMillis();
         if (millis > 30000) {
-            schedule(this::joinReminder, (millis - 100) % 30000);
+            schedule(this::joinReminder, (millis - 1000) % 30000 + 1000);
         } else if (millis > 15) {
-            schedule(this::joinReminder, (millis - 100) % 15000);
+            schedule(this::joinReminder, (millis - 1000) % 15000 + 1000);
         } else {
             schedule(this::start, millis);
         }
+        broadcast(bot.translate(this.lang, "game.join_extended", secs, millis / 1000));
     }
 
     /**
@@ -174,15 +180,17 @@ public class Game {
                 send.replyMarkup(keyboard);
             }
             broadcastMessage = "";
-            bot.execute(send);
+            System.out.println("flush sending " + broadcastMessage + message);
+            bot.execute(send, new EmptyCallback<>());
+            System.out.println("flush sent");
         } else {
             // wait a second
             broadcastMessage += message + "\n\n";
             broadcastFuture = broadcastExecutor.schedule(() -> {
-                SendMessage send = new SendMessage(this.gid, message);
+                SendMessage send = new SendMessage(this.gid, broadcastMessage);
                 send.parseMode(ParseMode.HTML);
                 broadcastMessage = "";
-                bot.execute(send);
+                bot.execute(send, new EmptyCallback<>());
             }, 1000, TimeUnit.MILLISECONDS);
         }
     }
@@ -195,7 +203,7 @@ public class Game {
     private void schedule(Runnable task, long time) {
         System.out.println(time);
         cancelFuture();
-        scheduledExecutor.schedule(task, time, TimeUnit.MILLISECONDS);
+        scheduledFuture = scheduledExecutor.schedule(task, time, TimeUnit.MILLISECONDS);
     }
 
     private void cancelFuture() {
@@ -206,5 +214,9 @@ public class Game {
 
     public int getId() {
         return id;
+    }
+
+    public boolean isStarted() {
+        return started;
     }
 }
