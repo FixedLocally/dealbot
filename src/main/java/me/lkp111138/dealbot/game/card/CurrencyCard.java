@@ -18,7 +18,7 @@ public class CurrencyCard implements Card {
 
     @Override
     public String getDescriptionKey() {
-        return "card.name.currency." + value;
+        return "card.desc.currency." + value;
     }
 
     @Override
