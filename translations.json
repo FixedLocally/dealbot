@@ -2,6 +2,7 @@
   "en": {
     "card.desc.currency": "Deposit this card into your bank",
     "card.desc.property": "Put this card in your property area",
+    "card.desc.property.wildcard": "Put this card in your property area of one of the colours of this card",
     "card.name.currency.1": "$ 1M",
     "card.name.currency.2": "$ 2M",
     "card.name.currency.3": "$ 3M",
@@ -57,6 +58,7 @@
   "zh": {
     "card.desc.currency": "Deposit this card into your bank",
     "card.desc.property": "Put this card in your property area",
+    "card.desc.property.wildcard": "Put this card in your property area of one of the colours of this card",
     "card.name.currency.1": "$ 1M",
     "card.name.currency.2": "$ 2M",
     "card.name.currency.3": "$ 3M",
@@ -113,6 +115,7 @@
     "inherits": "zh",
     "card.desc.currency": "將呢張卡存入銀行",
     "card.desc.property": "將呢張卡放喺你嘅物業區",
+    "card.desc.property.wildcard": "Put this card in your property area of one of the colours of this card",
     "card.name.currency.1": "$ 1M",
     "card.name.currency.2": "$ 2M",
     "card.name.currency.3": "$ 3M",
