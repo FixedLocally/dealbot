@@ -48,6 +48,7 @@ public class DealBot extends TelegramBot implements UpdatesListener {
         commands.put("play", new PlayCommand());
         commands.put("extend", new ExtendCommand());
         commands.put("join", new JoinCommand());
+        commands.put("flee", new FleeCommand());
     }
 
     private void processUpdate(Update update) {

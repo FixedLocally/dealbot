@@ -16,10 +16,7 @@ import me.lkp111138.dealbot.game.exception.ConcurrentGameException;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -166,6 +163,21 @@ public class Game {
                 broadcast(bot.translate(lang, "misc.please_start_me"), keyboard, true);
             }
         });
+    }
+
+    public void removePlayer(Message message) {
+        if (started || players.stream().noneMatch(p -> p.getUserId() == message.from().id())) {
+            // disallow fleeing if game has started or player didn't join
+            return;
+        }
+        for (Iterator<Player> iterator = players.iterator(); iterator.hasNext(); ) {
+            Player player = iterator.next();
+            if (player.getUserId() == message.from().id()) {
+                iterator.remove();
+                break;
+            }
+        }
+        broadcast(bot.translate(lang, "game.player_fled", message.from().id(), message.from().firstName(), players.size()));
     }
 
     /**
