@@ -11,21 +11,12 @@ import me.lkp111138.dealbot.game.card.state.CardStateInPlayerProperty;
 
 import java.util.Map;
 
-public class TwoColourWildcardPropertyCard implements PropertyCard {
-    private int colour1;
-    private int colour2;
-    private int value;
+public class RainbowWildcardPropertyCard implements PropertyCard {
     private CardState state = new CardStateInMainDeck();
-
-    public TwoColourWildcardPropertyCard(int colour1, int colour2, int value) {
-        this.colour1 = colour1;
-        this.colour2 = colour2;
-        this.value = value;
-    }
 
     @Override
     public String getNameKey() {
-        return "card.name.property.wildcard" + colour1 + colour2;
+        return "card.name.property.wildcard";
     }
 
     @Override
@@ -44,7 +35,7 @@ public class TwoColourWildcardPropertyCard implements PropertyCard {
 
     @Override
     public int getCurrencyValue() {
-        return value;
+        return 0;
     }
 
     @Override
@@ -52,10 +43,10 @@ public class TwoColourWildcardPropertyCard implements PropertyCard {
         if (arg.length == 0) {
             Map<Integer, Integer> counts = player.getPropertyCounts();
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][1];
-            buttons[0][0] = new InlineKeyboardButton(bot.translate(player.getUserId(), "game.property.colour." + colour1) + String.format("(%d / %d)", counts.get(colour1), PropertyCard.propertySetCounts[colour1]))
-                    .callbackData("arg:" + colour1);
-            buttons[1][0] = new InlineKeyboardButton(bot.translate(player.getUserId(), "game.property.colour." + colour2) + String.format("(%d / %d)", counts.get(colour2), PropertyCard.propertySetCounts[colour2]))
-                    .callbackData("arg:" + colour2);
+            for (int i = 0; i < 10; i++) {
+                buttons[i][0] = new InlineKeyboardButton(bot.translate(player.getUserId(), "game.property.colour." + i) + String.format("(%d / %d)", counts.get(i), PropertyCard.propertySetCounts[i]))
+                        .callbackData("arg:" + i);
+            }
             InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(buttons);
             return new CardArgumentRequest(keyboard, bot.translate(player.getUserId(), "game.choose_wildcard_colour"));
         }

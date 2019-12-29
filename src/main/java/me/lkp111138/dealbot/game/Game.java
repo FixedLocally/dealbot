@@ -7,10 +7,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.EmptyCallback;
 import me.lkp111138.dealbot.Main;
-import me.lkp111138.dealbot.game.card.Card;
-import me.lkp111138.dealbot.game.card.CurrencyCard;
-import me.lkp111138.dealbot.game.card.NamedPropertyCard;
-import me.lkp111138.dealbot.game.card.TwoColourWildcardPropertyCard;
+import me.lkp111138.dealbot.game.card.*;
 import me.lkp111138.dealbot.game.exception.ConcurrentGameException;
 
 import java.sql.*;
@@ -56,9 +53,9 @@ public class Game {
     private ScheduledFuture scheduledFuture;
 
     /**
-     * Constructs the game in preparation to start it
+     * Constructs the game in preparation to startGame it
      * @param bot The DealBot instance
-     * @param gid The group ID that attempted to start the game
+     * @param gid The group ID that attempted to startGame the game
      * @param message The message that triggered the creation
      * @throws ConcurrentGameException when a game for the group already exists
      * @throws SQLException when the database connection returned an error
@@ -122,7 +119,7 @@ public class Game {
                 schedule(this::joinReminder, (millis - 1000) % 15000 + 1000);
                 break;
             case 15:
-                schedule(this::start, millis);
+                schedule(this::startGame, millis);
                 break;
             default:
                 schedule(this::joinReminder, (millis - 1000) % 30000 + 1000);
@@ -133,7 +130,7 @@ public class Game {
     /**
      * Starts the game
      */
-    public void start() {
+    public void startGame() {
         started = true;
         broadcast(bot.translate(lang, "game.starting"), false);
         generateCards();
@@ -206,6 +203,9 @@ public class Game {
         cards.add(new TwoColourWildcardPropertyCard(6, 8, 4));
         cards.add(new TwoColourWildcardPropertyCard(1, 8, 4));
         cards.add(new TwoColourWildcardPropertyCard(8, 9, 2));
+        cards.add(new TwoColourWildcardPropertyCard(8, 9, 2));
+
+        cards.add(new RainbowWildcardPropertyCard());
     }
 
     public void extend(int secs) {
@@ -221,7 +221,7 @@ public class Game {
         } else if (millis > 15) {
             schedule(this::joinReminder, (millis - 1000) % 15000 + 1000);
         } else {
-            schedule(this::start, millis);
+            schedule(this::startGame, millis);
         }
         broadcast(bot.translate(this.lang, "game.join_extended", secs, millis / 1000));
     }
