@@ -9,25 +9,17 @@ import me.lkp111138.dealbot.game.exception.ConcurrentGameException;
 
 import java.sql.SQLException;
 
-public class PlayCommand implements Command {
+public class PlayCommand extends GroupOnlyCommand {
     @Override
-    public void respond(TelegramBot bot, Message message, String[] args) {
+    public void respondInGroup(TelegramBot bot, Message message, String[] args) {
         DealBot dealBot = (DealBot) bot;
         long gid = message.chat().id();
-        switch (message.chat().type()) {
-            case group:
-            case supergroup:
-                try {
-                    new Game(dealBot, message.chat().id(), message);
-                } catch (ConcurrentGameException e) {
-                    bot.execute(new SendMessage(gid, dealBot.translate(gid, "game.is_running", e.getGid())));
-                } catch (SQLException e) {
-                    bot.execute(new SendMessage(gid, dealBot.translate(gid, "error.generic", e.getMessage())));
-                }
-                break;
-            default:
-                bot.execute(new SendMessage(gid, dealBot.translate(gid, "misc.run_in_group")));
-                break;
+        try {
+            new Game(dealBot, message.chat().id(), message);
+        } catch (ConcurrentGameException e) {
+            bot.execute(new SendMessage(gid, dealBot.translate(gid, "game.is_running", e.getGid())));
+        } catch (SQLException e) {
+            bot.execute(new SendMessage(gid, dealBot.translate(gid, "error.generic", e.getMessage())));
         }
     }
 }
