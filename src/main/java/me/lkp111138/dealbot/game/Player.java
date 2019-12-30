@@ -1,6 +1,7 @@
 package me.lkp111138.dealbot.game;
 
 import me.lkp111138.dealbot.game.card.Card;
+import me.lkp111138.dealbot.game.card.state.CardStateInPlayerHand;
 import me.lkp111138.dealbot.game.card.state.CardStateInPlayerProperty;
 
 import java.util.ArrayList;
@@ -41,6 +42,18 @@ public class Player {
             }
         }
         return counts;
+    }
+
+    public int getHandCount() {
+        int count = 0;
+        for (Card card : game.getCards()) {
+            if (card.getState() instanceof CardStateInPlayerHand) {
+                if (((CardStateInPlayerHand) card.getState()).getPlayer().equals(this)) {
+                    ++count;
+                }
+            }
+        }
+        return count;
     }
 
     public Game getGame() {
