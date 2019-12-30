@@ -8,11 +8,18 @@ import me.lkp111138.dealbot.game.card.state.CardStateInMainDeck;
 import me.lkp111138.dealbot.game.card.state.CardStateInPlayerCurrency;
 
 public class CurrencyCard implements Card {
+    private int id;
     private int value;
     private CardState state = new CardStateInMainDeck();
 
-    public CurrencyCard(int value) {
+    public CurrencyCard(int id, int value) {
+        this.id = id;
         this.value = value;
+    }
+
+    @Override
+    public int getId() {
+        return id;
     }
 
     @Override

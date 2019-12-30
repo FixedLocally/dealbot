@@ -12,6 +12,9 @@ import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.EmptyCallback;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.card.*;
+import me.lkp111138.dealbot.game.card.state.CardStateInMainDeck;
+import me.lkp111138.dealbot.game.card.state.CardStateInPlayerHand;
+import me.lkp111138.dealbot.game.card.state.CardStateInUsedDeck;
 import me.lkp111138.dealbot.game.exception.ConcurrentGameException;
 
 import java.io.IOException;
@@ -56,9 +59,10 @@ public class Game {
     private ScheduledFuture scheduledFuture;
 
     /**
-     * Constructs the game in preparation to startGame it
+     * Constructs the game in preparation to start it
+     * @see #startGame()
      * @param bot The DealBot instance
-     * @param gid The group ID that attempted to startGame the game
+     * @param gid The group ID that attempted to start the game
      * @param message The message that triggered the creation
      * @throws ConcurrentGameException when a game for the group already exists
      * @throws SQLException when the database connection returned an error
@@ -192,74 +196,77 @@ public class Game {
     private void generateCards() {
         // currency cards
         for (int i = 0; i < 6; i++) {
-            cards.add(new CurrencyCard(1));
+            cards.add(new CurrencyCard(1 + i, 1));
         }
         for (int i = 0; i < 5; i++) {
-            cards.add(new CurrencyCard(2));
+            cards.add(new CurrencyCard(7 + i, 2));
         }
         for (int i = 0; i < 3; i++) {
-            cards.add(new CurrencyCard(3));
+            cards.add(new CurrencyCard(12 + i, 3));
         }
         for (int i = 0; i < 3; i++) {
-            cards.add(new CurrencyCard(4));
+            cards.add(new CurrencyCard(15 + i, 4));
         }
-        cards.add(new CurrencyCard(5));
-        cards.add(new CurrencyCard(5));
-        cards.add(new CurrencyCard(10));
+        cards.add(new CurrencyCard(18, 5));
+        cards.add(new CurrencyCard(19, 5));
+        cards.add(new CurrencyCard(20, 10));
 
         // named property cards
-        cards.add(new NamedPropertyCard(0, 0, 1));
-        cards.add(new NamedPropertyCard(1, 0, 1));
+        cards.add(new NamedPropertyCard(21, 0, 0, 1));
+        cards.add(new NamedPropertyCard(22, 1, 0, 1));
 
-        cards.add(new NamedPropertyCard(2, 1, 1));
-        cards.add(new NamedPropertyCard(3, 1, 1));
-        cards.add(new NamedPropertyCard(4, 1, 1));
+        cards.add(new NamedPropertyCard(23, 2, 1, 1));
+        cards.add(new NamedPropertyCard(24, 3, 1, 1));
+        cards.add(new NamedPropertyCard(25, 4, 1, 1));
 
-        cards.add(new NamedPropertyCard(5, 2, 2));
-        cards.add(new NamedPropertyCard(6, 2, 2));
-        cards.add(new NamedPropertyCard(7, 2, 2));
+        cards.add(new NamedPropertyCard(26, 5, 2, 2));
+        cards.add(new NamedPropertyCard(27, 6, 2, 2));
+        cards.add(new NamedPropertyCard(28, 7, 2, 2));
 
-        cards.add(new NamedPropertyCard(8, 3, 2));
-        cards.add(new NamedPropertyCard(9, 3, 2));
-        cards.add(new NamedPropertyCard(10, 3, 2));
+        cards.add(new NamedPropertyCard(29, 8, 3, 2));
+        cards.add(new NamedPropertyCard(30, 9, 3, 2));
+        cards.add(new NamedPropertyCard(31, 10, 3, 2));
 
-        cards.add(new NamedPropertyCard(11, 4, 3));
-        cards.add(new NamedPropertyCard(12, 4, 3));
-        cards.add(new NamedPropertyCard(13, 4, 3));
+        cards.add(new NamedPropertyCard(32, 11, 4, 3));
+        cards.add(new NamedPropertyCard(33, 12, 4, 3));
+        cards.add(new NamedPropertyCard(34, 13, 4, 3));
 
-        cards.add(new NamedPropertyCard(14, 5, 3));
-        cards.add(new NamedPropertyCard(15, 5, 3));
-        cards.add(new NamedPropertyCard(16, 5, 3));
+        cards.add(new NamedPropertyCard(35, 14, 5, 3));
+        cards.add(new NamedPropertyCard(36, 15, 5, 3));
+        cards.add(new NamedPropertyCard(37, 16, 5, 3));
 
-        cards.add(new NamedPropertyCard(17, 6, 4));
-        cards.add(new NamedPropertyCard(18, 6, 4));
-        cards.add(new NamedPropertyCard(19, 6, 4));
+        cards.add(new NamedPropertyCard(38, 17, 6, 4));
+        cards.add(new NamedPropertyCard(39, 18, 6, 4));
+        cards.add(new NamedPropertyCard(40, 19, 6, 4));
 
-        cards.add(new NamedPropertyCard(20, 7, 4));
-        cards.add(new NamedPropertyCard(21, 7, 4));
+        cards.add(new NamedPropertyCard(41, 20, 7, 4));
+        cards.add(new NamedPropertyCard(42, 21, 7, 4));
 
-        cards.add(new NamedPropertyCard(22, 8, 2));
-        cards.add(new NamedPropertyCard(23, 8, 2));
-        cards.add(new NamedPropertyCard(24, 8, 2));
-        cards.add(new NamedPropertyCard(25, 8, 2));
+        cards.add(new NamedPropertyCard(43, 22, 8, 2));
+        cards.add(new NamedPropertyCard(44, 23, 8, 2));
+        cards.add(new NamedPropertyCard(45, 24, 8, 2));
+        cards.add(new NamedPropertyCard(46, 25, 8, 2));
 
-        cards.add(new NamedPropertyCard(26, 9, 2));
-        cards.add(new NamedPropertyCard(27, 9, 2));
+        cards.add(new NamedPropertyCard(47, 26, 9, 2));
+        cards.add(new NamedPropertyCard(48, 27, 9, 2));
 
-        // two colour wildcard propperties
-        cards.add(new TwoColourWildcardPropertyCard(4, 5, 3));
-        cards.add(new TwoColourWildcardPropertyCard(4, 5, 3));
-        cards.add(new TwoColourWildcardPropertyCard(6, 7, 4));
-        cards.add(new TwoColourWildcardPropertyCard(0, 1, 1));
-        cards.add(new TwoColourWildcardPropertyCard(2, 3, 2));
-        cards.add(new TwoColourWildcardPropertyCard(2, 3, 2));
-        cards.add(new TwoColourWildcardPropertyCard(6, 8, 4));
-        cards.add(new TwoColourWildcardPropertyCard(1, 8, 4));
-        cards.add(new TwoColourWildcardPropertyCard(8, 9, 2));
-        cards.add(new TwoColourWildcardPropertyCard(8, 9, 2));
+        // two colour wildcard properties
+        cards.add(new TwoColourWildcardPropertyCard(49, 4, 5, 3));
+        cards.add(new TwoColourWildcardPropertyCard(50, 4, 5, 3));
+        cards.add(new TwoColourWildcardPropertyCard(51, 6, 7, 4));
+        cards.add(new TwoColourWildcardPropertyCard(52, 0, 1, 1));
+        cards.add(new TwoColourWildcardPropertyCard(53, 2, 3, 2));
+        cards.add(new TwoColourWildcardPropertyCard(54, 2, 3, 2));
+        cards.add(new TwoColourWildcardPropertyCard(55, 6, 8, 4));
+        cards.add(new TwoColourWildcardPropertyCard(56, 1, 8, 4));
+        cards.add(new TwoColourWildcardPropertyCard(57, 8, 9, 2));
+        cards.add(new TwoColourWildcardPropertyCard(58, 8, 9, 2));
 
-        cards.add(new RainbowWildcardPropertyCard());
-        cards.add(new RainbowWildcardPropertyCard());
+        cards.add(new RainbowWildcardPropertyCard(59));
+        cards.add(new RainbowWildcardPropertyCard(60));
+
+        // TODO action cards
+        Collections.shuffle(cards);
     }
 
     public void extend(int secs) {

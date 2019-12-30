@@ -7,6 +7,11 @@ import me.lkp111138.dealbot.game.card.state.CardState;
 
 public interface Card {
     /**
+     * @return The identifier of this card in the game. Must be unique in a game.
+     */
+    int getId();
+
+    /**
      * @return The translation key for this card's name
      */
     String getNameKey();
@@ -20,6 +25,12 @@ public interface Card {
      * @return The card's current state
      */
     CardState getState();
+
+    /**
+     * Set the card's current state
+     * @param state the card's state
+     */
+    void setState(CardState state);
 
     /**
      * @return The card's currency value

@@ -12,6 +12,17 @@ import me.lkp111138.dealbot.game.card.state.CardStateInPlayerProperty;
 import java.util.Map;
 
 public class RainbowWildcardPropertyCard implements PropertyCard {
+    private int id;
+
+    public RainbowWildcardPropertyCard(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
     private CardState state = new CardStateInMainDeck();
 
     @Override

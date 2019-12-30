@@ -12,15 +12,22 @@ import me.lkp111138.dealbot.game.card.state.CardStateInPlayerProperty;
 import java.util.Map;
 
 public class TwoColourWildcardPropertyCard implements PropertyCard {
+    private int id;
     private int colour1;
     private int colour2;
     private int value;
     private CardState state = new CardStateInMainDeck();
 
-    public TwoColourWildcardPropertyCard(int colour1, int colour2, int value) {
+    public TwoColourWildcardPropertyCard(int id, int colour1, int colour2, int value) {
+        this.id = id;
         this.colour1 = colour1;
         this.colour2 = colour2;
         this.value = value;
+    }
+
+    @Override
+    public int getId() {
+        return id;
     }
 
     @Override

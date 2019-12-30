@@ -9,19 +9,30 @@ import me.lkp111138.dealbot.game.card.state.CardStateInPlayerProperty;
 
 public class NamedPropertyCard implements PropertyCard {
     private int id;
+    private int propertyId;
     private int colour;
     private int value;
     private CardState state = new CardStateInMainDeck();
 
-    public NamedPropertyCard(int id, int colour, int value) {
+    public NamedPropertyCard(int id, int propertyId, int colour, int value) {
         this.id = id;
+        this.propertyId = propertyId;
         this.colour = colour;
         this.value = value;
     }
 
     @Override
+    public int getId() {
+        return id;
+    }
+
+    public int getPropertyId() {
+        return propertyId;
+    }
+
+    @Override
     public String getNameKey() {
-        return "card.name.property." + id;
+        return "card.name.property." + propertyId;
     }
 
     @Override
