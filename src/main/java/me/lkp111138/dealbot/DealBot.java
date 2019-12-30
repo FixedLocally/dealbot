@@ -130,7 +130,7 @@ public class DealBot extends TelegramBot implements UpdatesListener {
         String s = lang.get(key);
         if (s == null) {
             if (lang.containsKey("inherits")) {
-                s = translations.get(lang.get("inherits")).getOrDefault(key, key);
+                s = translate(lang.get("inherits"), key, args);
             } else {
                 s = key;
             }
