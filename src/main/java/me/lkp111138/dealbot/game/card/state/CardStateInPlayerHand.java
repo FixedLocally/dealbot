@@ -9,6 +9,10 @@ public class CardStateInPlayerHand implements CardState {
         this.player = player;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof CardStateInPlayerHand) {
