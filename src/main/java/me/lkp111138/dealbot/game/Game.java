@@ -24,6 +24,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Represents a Monopoly Deal game
@@ -48,6 +49,13 @@ public class Game {
     private boolean started = false;
     private List<Card> cards = new ArrayList<>();
     private List<Player> players = new ArrayList<>();
+    private int currentPlayerIndex = -1;
+    private int deckPointer = 0;
+
+    // current turn status
+    private int actionCount = 0;
+    private long turnRestartTime;
+    private int turnElapsedTime;
 
     // broadcast fields
     private ScheduledExecutorService broadcastExecutor = new ScheduledThreadPoolExecutor(1);
@@ -191,6 +199,16 @@ public class Game {
         started = true;
         broadcast(bot.translate(lang, "game.starting"), false);
         generateCards();
+        Collections.shuffle(players);
+        // 5 cards per player
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+            for (int j = 0; j < 5; j++) {
+                cards.get(i * 5 + j).setState(new CardStateInPlayerHand(player));
+            }
+        }
+        deckPointer += 5 * players.size();
+        startTurn();
     }
 
     private void generateCards() {
@@ -291,7 +309,68 @@ public class Game {
      * Starts a new turn
      */
     private void startTurn() {
+        actionCount = 0;
+        ++currentPlayerIndex;
+        Player player = players.get(currentPlayerIndex);
 
+        // draw cards
+        int cardsToDraw = 2;
+        if (player.getHandCount() == 0) {
+            cardsToDraw = 3;
+        }
+        for (int i = 0; i < cardsToDraw; i++) {
+            if (draw() == null) {
+                // we just can't draw a card anymore
+                // TODO state the fact
+                break;
+            }
+        }
+
+        promptForCard(player);
+    }
+
+    private void promptForCard(Player player) {
+        // prompt to play cards
+        int millis = playTime * 1000 - turnElapsedTime;
+        String msg = bot.translate(player.getUserId(), "game.play_prompt", 3 - actionCount, millis / 1000);
+        InlineKeyboardButton[][] buttons = cards.stream()
+                .filter(c -> c.getState().equals(new CardStateInPlayerHand(player)))
+                .map(card -> new InlineKeyboardButton[]{
+                        new InlineKeyboardButton(bot.translate(player.getUserId(), card.getNameKey()))
+                                .callbackData("card:" + card.getId())
+                })
+                .toArray(InlineKeyboardButton[][]::new);
+        bot.execute(new SendMessage(player.getUserId(), msg).replyMarkup(new InlineKeyboardMarkup(buttons)));
+        // TODO process callbacks
+    }
+
+    /**
+     * Makes the current player draw a card
+     * @return the card drawn if the player successfully drew a card, null otherwise
+     */
+    private Card draw() {
+        if (deckPointer == cards.size()) {
+            if (reshuffle() == 0) {
+                return null;
+            }
+        }
+        Card drawn = cards.get(deckPointer);
+        drawn.setState(new CardStateInPlayerHand(players.get(currentPlayerIndex)));
+        return drawn;
+    }
+
+    /**
+     * Recycle all used cards and resets the deck pointer accordingly.
+     * @return the number of cards recycled
+     */
+    private int reshuffle() {
+        List<Card> used = cards.stream().filter(c -> c.getState() instanceof CardStateInUsedDeck).collect(Collectors.toList());
+        cards.removeAll(used);
+        Collections.shuffle(used);
+        used.forEach(c -> c.setState(new CardStateInMainDeck()));
+        cards.addAll(used);
+        deckPointer -= used.size();
+        return used.size();
     }
 
     /**

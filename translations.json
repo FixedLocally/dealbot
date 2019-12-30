@@ -52,6 +52,7 @@
     "game.join_reminder": "You have %s seconds left to /join",
     "game.joined_announcement": "<a href=\"tg://user?id=%s\">%s</a> has joined the game! %s players has joined, the maximum is 5.",
     "game.joined_successfully": "You have successfully joined the game in %s\nGame ID: %s",
+    "game.play_prompt": "Choose a card to play (%s left), you have %s seconds.",
     "game.player_fled": "<a href=\"tg://user?id=%s\">%s</a> has fled from the game, %s players remaining.",
     "game.property.colour.0": "\uD83D\uDCDC",
     "game.property.colour.1": "\uD83D\uDC8E",
@@ -70,6 +71,7 @@
     "misc.unknown_cmd": "Unknown command."
   },
   "zh": {
+    "inherits": "en",
     "card.desc.currency": "Deposit this card into your bank",
     "card.desc.property": "Put this card in your property area",
     "card.desc.property.wildcard": "Put this card in your property area of one of the colours of this card",
