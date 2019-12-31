@@ -53,7 +53,7 @@ public class RainbowWildcardPropertyCard implements PropertyCard {
     public CardArgumentRequest execute(DealBot bot, Player player, String[] arg) {
         if (arg.length == 0) {
             Map<Integer, Integer> counts = player.getPropertyCounts();
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][1];
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[10][1];
             for (int i = 0; i < 10; i++) {
                 buttons[i][0] = new InlineKeyboardButton(bot.translate(player.getUserId(), "game.property.colour." + i) + String.format("(%d / %d)", counts.get(i), PropertyCard.propertySetCounts[i]))
                         .callbackData("arg:" + i);
