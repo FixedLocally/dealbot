@@ -47,6 +47,7 @@
     "card.name.property.wildcard": "Wildcard Property card",
     "game.choose_wildcard_colour": "Choose a colour for this wildcard property:",
     "game.created": "<a href=\"tg://user?id=%s\">%s</a> has started a new Monopoly Deal game! You have %s seconds to /join\nGame ID: %s",
+    "game.end_turn": "End turn",
     "game.is_running": "Another game (#%s) is already running here.",
     "game.join_extended": "Extended for %s seconds, you have %s seconds left to /join",
     "game.join_reminder": "You have %s seconds left to /join",
@@ -67,6 +68,7 @@
     "game.starting": "The game is starting, please wait...",
     "game.turn_ended": "Your turn has ended.",
     "error.generic": "An error occurred: %s",
+    "misc.cancel": "Cancel",
     "misc.please_start_me": "Please start me first!",
     "misc.start_me": "Start me",
     "misc.unknown_cmd": "Unknown command."

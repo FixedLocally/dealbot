@@ -375,7 +375,9 @@ public class Game {
                         new InlineKeyboardButton(bot.translate(player.getUserId(), card.getNameKey()))
                                 .callbackData("card:" + card.getId())
                 })
-                .toArray(InlineKeyboardButton[][]::new);
+                .toArray(i -> new InlineKeyboardButton[i + 1][1]);
+        buttons[buttons.length - 1][0] = new InlineKeyboardButton(bot.translate(currentPlayer.getUserId(), "game.end_turn"))
+                .callbackData("end");
         if (messageId == 0) {
             bot.execute(new SendMessage(player.getUserId(), msg).replyMarkup(new InlineKeyboardMarkup(buttons)), new Callback<SendMessage, SendResponse>() {
                 @Override
@@ -436,9 +438,13 @@ public class Game {
                     }
                 }
                 return true;
+            case "end":
+                endTurn();
+                return true;
             case "cancel":
                 --actionCount;
                 promptForCard(currentPlayer);
+                return true;
         }
         return false;
     }
