@@ -102,7 +102,12 @@ public class DealBot extends TelegramBot implements UpdatesListener {
         }
         if (query != null) {
 //            System.out.printf("query from %s: %s\n", query.from().id(), query.data());
-
+            Game game = Game.byUser(query.from().id());
+            if (game != null) {
+                if (game.callback(query)) {
+                    return;
+                }
+            }
             System.out.println("unknown query from " + query.from().id() + ": " + query.data());
             this.execute(new AnswerCallbackQuery(query.id()));
             return;

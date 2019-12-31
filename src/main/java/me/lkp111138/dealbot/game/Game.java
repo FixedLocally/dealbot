@@ -1,6 +1,7 @@
 package me.lkp111138.dealbot.game;
 
 import com.pengrad.telegrambot.Callback;
+import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -358,6 +359,54 @@ public class Game {
                 .toArray(InlineKeyboardButton[][]::new);
         bot.execute(new SendMessage(player.getUserId(), msg).replyMarkup(new InlineKeyboardMarkup(buttons)));
         // TODO process callbacks
+    }
+
+    private void endTurn() {
+        // tell them their turn has ended
+        System.out.println(bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, bot.translate(currentPlayer.getUserId(), "game.turn_ended"))));
+
+        startTurn();
+    }
+
+    public boolean callback(CallbackQuery query) {
+        int from = query.from().id();
+        String[] payload = query.data().split(":");
+        System.out.println(query.data());
+        switch (payload[0]) {
+            case "card":
+                // attempt to play a card
+                ++actionCount;
+                Card card = idCards.get(Integer.parseInt(payload[1]));
+                if (card.getState().equals(new CardStateInPlayerHand(currentPlayer))) {
+                    String[] args = new String[payload.length - 2];
+                    System.arraycopy(payload, 2, args, 0, args.length);
+                    currentCard = card;
+                    CardArgumentRequest req = card.execute(bot, currentPlayer, args);
+                    if (req == null) {
+                        promptForCard(currentPlayer);
+                    } else {
+                        bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, req.getMessage()).replyMarkup(req.getKeyboard()));
+                    }
+                }
+                System.out.println(card.getState());
+                return true;
+            case "arg":
+                if (currentCard != null) {
+                    String[] args = new String[payload.length - 1];
+                    System.arraycopy(payload, 1, args, 0, args.length);
+                    CardArgumentRequest req = currentCard.execute(bot, currentPlayer, args);
+                    if (req == null) {
+                        promptForCard(currentPlayer);
+                    } else {
+                        bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, req.getMessage()).replyMarkup(req.getKeyboard()));
+                    }
+                }
+                return true;
+            case "cancel":
+                --actionCount;
+                promptForCard(currentPlayer);
+        }
+        return false;
     }
 
     /**
