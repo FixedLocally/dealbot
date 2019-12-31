@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  */
 public class Game {
     private static Map<Long, Game> gidGames = new HashMap<>();
+    private static Map<Integer, Game> uidGames = new HashMap<>();
 
     // operational fields
     private int id;
@@ -125,6 +126,15 @@ public class Game {
         return gidGames.get(gid);
     }
 
+    /**
+     * Queries a game running by user ID
+     * @param uid the group ID to query
+     * @return The running game if any or null
+     */
+    public static Game byUser(int uid) {
+        return uidGames.get(uid);
+    }
+
     private void joinReminder() {
         long millis = startTime - System.currentTimeMillis();
         int secs = (int) ((millis + 500) / 1000);
@@ -151,12 +161,17 @@ public class Game {
             // No joining if the player already joined or if is started
             return;
         }
+        if (uidGames.containsKey(message.from().id())) {
+            // No joining if the user is already in game
+            return;
+        }
         SendMessage send = new SendMessage(message.from().id(), bot.translate(message.from().id(), "game.joined_successfully", message.chat().title(), id));
         bot.execute(send, new Callback<SendMessage, SendResponse>() {
             @Override
             public void onResponse(SendMessage request, SendResponse response) {
                 if (response.isOk()) {
                     players.add(new Player(Game.this, message.from().id()));
+                    uidGames.put(message.from().id(), Game.this);
                     broadcast(bot.translate(lang, "game.joined_announcement", message.from().id(), message.from().firstName(), players.size()));
                 } else {
                     requestStart();
@@ -186,6 +201,7 @@ public class Game {
             Player player = iterator.next();
             if (player.getUserId() == message.from().id()) {
                 iterator.remove();
+                uidGames.remove(player.getUserId());
                 break;
             }
         }

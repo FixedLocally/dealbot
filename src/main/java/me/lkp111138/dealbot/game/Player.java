@@ -14,14 +14,14 @@ import java.util.Map;
  */
 public class Player {
     private Game game;
-    private long userId;
+    private int userId;
 
     // decks
     private List<Card> currencyDeck = new ArrayList<>();
     private Map<Integer, List<Card>> propertyDecks = new HashMap<>();
     private List<Card> handDeck = new ArrayList<>();
 
-    public Player(Game game, long userId) {
+    public Player(Game game, int userId) {
         this.game = game;
         this.userId = userId;
     }
@@ -60,7 +60,7 @@ public class Player {
         return game;
     }
 
-    public long getUserId() {
+    public int getUserId() {
         return userId;
     }
 }
