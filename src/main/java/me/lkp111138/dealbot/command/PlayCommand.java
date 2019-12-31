@@ -15,7 +15,7 @@ public class PlayCommand extends GroupOnlyCommand {
         DealBot dealBot = (DealBot) bot;
         long gid = message.chat().id();
         try {
-            new Game(dealBot, message.chat().id(), message);
+            new Game(dealBot, message.chat().id(), message).addPlayer(message);
         } catch (ConcurrentGameException e) {
             bot.execute(new SendMessage(gid, dealBot.translate(gid, "game.is_running", e.getGid())));
         } catch (SQLException e) {
