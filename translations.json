@@ -65,6 +65,7 @@
     "game.property.colour.8": "\uD83D\uDE8A",
     "game.property.colour.9": "\uD83D\uDEB0",
     "game.starting": "The game is starting, please wait...",
+    "game.turn_ended": "Your turn has ended.",
     "error.generic": "An error occurred: %s",
     "misc.please_start_me": "Please start me first!",
     "misc.start_me": "Start me",

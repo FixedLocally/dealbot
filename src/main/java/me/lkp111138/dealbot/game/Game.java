@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
@@ -50,14 +51,18 @@ public class Game {
     private long startTime;
     private boolean started = false;
     private List<Card> cards = new ArrayList<>();
+    private Map<Integer, Card> idCards = new HashMap<>();
     private List<Player> players = new ArrayList<>();
     private int currentPlayerIndex = -1;
+    private Player currentPlayer;
     private int deckPointer = 0;
 
     // current turn status
-    private int actionCount = 0;
+    private int actionCount = -1;
     private long turnRestartTime;
     private int turnElapsedTime;
+    private int messageId;
+    private Card currentCard;
 
     // broadcast fields
     private ScheduledExecutorService broadcastExecutor = new ScheduledThreadPoolExecutor(1);
@@ -112,9 +117,9 @@ public class Game {
             }
         }
         gidGames.put(gid, this);
-        startTime = System.currentTimeMillis() + 120000;
-        schedule(this::joinReminder, 30000);
-        broadcast(bot.translate(this.lang, "game.created", message.from().id(), message.from().firstName(), 120, this.id), true);
+        startTime = System.currentTimeMillis() + 18000;
+        schedule(this::joinReminder, 3000);
+        broadcast(bot.translate(this.lang, "game.created", message.from().id(), message.from().firstName(), 18, this.id), true);
         conn.close();
     }
 
@@ -302,6 +307,10 @@ public class Game {
 
         // TODO action cards
         Collections.shuffle(cards);
+
+        for (Card card : cards) {
+            idCards.put(card.getId(), card);
+        }
     }
 
     public void extend(int secs) {
@@ -326,27 +335,37 @@ public class Game {
      * Starts a new turn
      */
     private void startTurn() {
+        // reset turn params
         actionCount = 0;
         ++currentPlayerIndex;
-        Player player = players.get(currentPlayerIndex);
+        currentPlayerIndex %= players.size();
+        messageId = 0;
+        currentPlayer = players.get(currentPlayerIndex);
 
         // draw cards
         int cardsToDraw = 2;
-        if (player.getHandCount() == 0) {
-            cardsToDraw = 3;
+        if (currentPlayer.getHandCount() == 0) {
+            cardsToDraw = 5;
         }
         for (int i = 0; i < cardsToDraw; i++) {
             if (draw() == null) {
                 // we just can't draw a card anymore
                 // TODO state the fact
+                System.out.println("deck empty!");
                 break;
             }
         }
 
-        promptForCard(player);
+        promptForCard(currentPlayer);
     }
 
     private void promptForCard(Player player) {
+        if (actionCount >= 3) {
+            // end turn
+            endTurn();
+            return;
+        }
+        currentCard = null;
         // prompt to play cards
         int millis = playTime * 1000 - turnElapsedTime;
         String msg = bot.translate(player.getUserId(), "game.play_prompt", 3 - actionCount, millis / 1000);
@@ -357,8 +376,23 @@ public class Game {
                                 .callbackData("card:" + card.getId())
                 })
                 .toArray(InlineKeyboardButton[][]::new);
-        bot.execute(new SendMessage(player.getUserId(), msg).replyMarkup(new InlineKeyboardMarkup(buttons)));
-        // TODO process callbacks
+        if (messageId == 0) {
+            bot.execute(new SendMessage(player.getUserId(), msg).replyMarkup(new InlineKeyboardMarkup(buttons)), new Callback<SendMessage, SendResponse>() {
+                @Override
+                public void onResponse(SendMessage request, SendResponse response) {
+                    if (response.isOk()) {
+                        messageId = response.message().messageId();
+                    }
+                }
+
+                @Override
+                public void onFailure(SendMessage request, IOException e) {
+
+                }
+            });
+        } else {
+            bot.execute(new EditMessageText(player.getUserId(), messageId, msg).replyMarkup(new InlineKeyboardMarkup(buttons)));
+        }
     }
 
     private void endTurn() {
@@ -419,7 +453,7 @@ public class Game {
                 return null;
             }
         }
-        Card drawn = cards.get(deckPointer);
+        Card drawn = cards.get(deckPointer++);
         drawn.setState(new CardStateInPlayerHand(players.get(currentPlayerIndex)));
         return drawn;
     }
