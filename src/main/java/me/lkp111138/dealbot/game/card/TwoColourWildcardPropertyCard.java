@@ -1,7 +1,6 @@
 package me.lkp111138.dealbot.game.card;
 
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
-import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.game.CardArgumentRequest;
 import me.lkp111138.dealbot.game.Player;
@@ -63,8 +62,7 @@ public class TwoColourWildcardPropertyCard implements PropertyCard {
                     .callbackData("arg:" + colour1);
             buttons[1][0] = new InlineKeyboardButton(bot.translate(player.getUserId(), "game.property.colour." + colour2) + String.format("(%d / %d)", counts.get(colour2), PropertyCard.propertySetCounts[colour2]))
                     .callbackData("arg:" + colour2);
-            InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(buttons);
-            return new CardArgumentRequest(keyboard, bot.translate(player.getUserId(), "game.choose_wildcard_colour"));
+            return new CardArgumentRequest(buttons, bot.translate(player.getUserId(), "game.choose_wildcard_colour"));
         }
         int colour = Integer.parseInt(arg[0]);
         setState(new CardStateInPlayerProperty(player, colour));
