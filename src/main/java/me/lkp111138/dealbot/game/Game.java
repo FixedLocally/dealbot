@@ -9,6 +9,7 @@ import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.EmptyCallback;
@@ -421,7 +422,9 @@ public class Game {
                     if (req == null) {
                         promptForCard(currentPlayer);
                     } else {
-                        bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, req.getMessage()).replyMarkup(req.getKeyboard()));
+                        BaseResponse execute = bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, req.getMessage()).replyMarkup(new InlineKeyboardMarkup(addCancelButton(req.getKeyboard()))));
+                        System.out.println(new InlineKeyboardMarkup(addCancelButton(req.getKeyboard())));
+                        System.out.println(execute.description());
                     }
                 }
                 System.out.println(card.getState());
@@ -434,7 +437,7 @@ public class Game {
                     if (req == null) {
                         promptForCard(currentPlayer);
                     } else {
-                        bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, req.getMessage()).replyMarkup(req.getKeyboard()));
+                        bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, req.getMessage()).replyMarkup(new InlineKeyboardMarkup(addCancelButton(req.getKeyboard()))));
                     }
                 }
                 return true;
@@ -525,6 +528,13 @@ public class Game {
                 bot.execute(send, new EmptyCallback<>());
             }, 1000, TimeUnit.MILLISECONDS);
         }
+    }
+
+    private InlineKeyboardButton[][] addCancelButton(InlineKeyboardButton[][] keyboard) {
+        InlineKeyboardButton[][] buttons = new InlineKeyboardButton[keyboard.length + 1][1];
+        System.arraycopy(keyboard, 0, buttons, 0, keyboard.length);
+        buttons[keyboard.length][0] = new InlineKeyboardButton(bot.translate(currentPlayer.getUserId(), "misc.cancel")).callbackData("cancel");
+        return buttons;
     }
 
     /**
