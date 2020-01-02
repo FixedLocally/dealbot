@@ -15,6 +15,7 @@ import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.EmptyCallback;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.card.*;
+import me.lkp111138.dealbot.game.card.action.GoPassActionCard;
 import me.lkp111138.dealbot.game.card.state.CardStateInMainDeck;
 import me.lkp111138.dealbot.game.card.state.CardStateInPlayerHand;
 import me.lkp111138.dealbot.game.card.state.CardStateInUsedDeck;
@@ -307,6 +308,10 @@ public class Game {
         cards.add(new RainbowWildcardPropertyCard(60));
 
         // TODO action cards
+        for (int i = 0; i < 10; i++) {
+            cards.add(new GoPassActionCard(61 + i));
+        }
+
         Collections.shuffle(cards);
 
         for (Card card : cards) {
@@ -456,7 +461,7 @@ public class Game {
      * Makes the current player draw a card
      * @return the card drawn if the player successfully drew a card, null otherwise
      */
-    private Card draw() {
+    public Card draw() {
         if (deckPointer == cards.size()) {
             if (reshuffle() == 0) {
                 return null;
