@@ -1,9 +1,10 @@
-package me.lkp111138.dealbot.game.card;
+package me.lkp111138.dealbot.game.card.action;
 
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.game.CardArgumentRequest;
 import me.lkp111138.dealbot.game.Player;
+import me.lkp111138.dealbot.game.card.Card;
 import me.lkp111138.dealbot.game.card.state.CardStateInPlayerCurrency;
 
 public abstract class ActionCard implements Card {
@@ -17,7 +18,7 @@ public abstract class ActionCard implements Card {
                 InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][1];
                 buttons[0][0] = new InlineKeyboardButton(bot.translate(player.getUserId(), "card.use_as_action"))
                         .callbackData("arg:action");
-                buttons[0][0] = new InlineKeyboardButton(bot.translate(player.getUserId(), "card.use_as_currency"))
+                buttons[1][0] = new InlineKeyboardButton(bot.translate(player.getUserId(), "card.use_as_currency"))
                         .callbackData("arg:money");
                 return new CardArgumentRequest(buttons, message);
             case 1:
@@ -36,5 +37,12 @@ public abstract class ActionCard implements Card {
         }
     }
 
-    public abstract CardArgumentRequest executeAction(DealBot bot, Player player, String[] arg);
+    /**
+     * Runs the action corresponds to this card
+     * @param bot The bot instance
+     * @param player The user of this card
+     * @param arg Arguments passed to this card
+     * @return An inline keyboard if the card needs further arguments or null
+     */
+    abstract CardArgumentRequest executeAction(DealBot bot, Player player, String[] arg);
 }
