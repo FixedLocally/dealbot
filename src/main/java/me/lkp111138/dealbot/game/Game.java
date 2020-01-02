@@ -353,13 +353,20 @@ public class Game {
         if (currentPlayer.getHandCount() == 0) {
             cardsToDraw = 5;
         }
+        StringBuilder msg = new StringBuilder(bot.translate(currentPlayer.getUserId(), "game.have_drawn"));
         for (int i = 0; i < cardsToDraw; i++) {
-            if (draw() == null) {
+            Card drawn = draw();
+            if (drawn == null) {
                 // we just can't draw a card anymore
                 // TODO state the fact
                 System.out.println("deck empty!");
                 break;
+            } else {
+                msg.append("\n- ").append(bot.translate(currentPlayer.getUserId(), drawn.getNameKey()));
             }
+        }
+        if (msg.indexOf("\n") > 0) {
+            bot.execute(new SendMessage(currentPlayer.getUserId(), msg.toString()));
         }
 
         promptForCard(currentPlayer);
