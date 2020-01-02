@@ -1,5 +1,7 @@
 {
   "en": {
+    "card.use_as_action": "\uD83D\uDE4B\uD83C\uDFFB\u200D♂️ Use as action",
+    "card.use_as_currency": "\uD83D\uDCB5 Use as currency",
     "card.desc.currency": "Deposit this card into your bank",
     "card.desc.property": "Put this card in your property area",
     "card.desc.property.wildcard": "Put this card in your property area of one of the colours of this card",
@@ -45,6 +47,8 @@
     "card.name.property.wildcard18": "[\uD83D\uDC8E\uD83D\uDE8A] Wildcard Property card",
     "card.name.property.wildcard89": "[\uD83D\uDE8A\uD83D\uDEB0] Wildcard Property card",
     "card.name.property.wildcard": "Wildcard Property card",
+    "game.action_card_prompt": "Use %s as action or currency?",
+    "game.card_desc": "Card description: ",
     "game.choose_wildcard_colour": "Choose a colour for this wildcard property:",
     "game.created": "<a href=\"tg://user?id=%s\">%s</a> has started a new Monopoly Deal game! You have %s seconds to /join\nGame ID: %s",
     "game.end_turn": "End turn",
