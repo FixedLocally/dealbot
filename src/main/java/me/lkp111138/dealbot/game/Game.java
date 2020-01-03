@@ -9,7 +9,6 @@ import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import me.lkp111138.dealbot.DealBot;
 import me.lkp111138.dealbot.EmptyCallback;
@@ -65,6 +64,7 @@ public class Game {
     private int turnElapsedTime;
     private int messageId;
     private Card currentCard;
+    private boolean paused = false;
 
     // broadcast fields
     private ScheduledExecutorService broadcastExecutor = new ScheduledThreadPoolExecutor(1);
@@ -347,6 +347,8 @@ public class Game {
         currentPlayerIndex %= players.size();
         messageId = 0;
         currentPlayer = players.get(currentPlayerIndex);
+        turnRestartTime = System.currentTimeMillis();
+        paused = false;
 
         // draw cards
         int cardsToDraw = 2;
@@ -370,6 +372,7 @@ public class Game {
         }
 
         promptForCard(currentPlayer);
+        schedule(this::endTurn, playTime * 1000);
     }
 
     private void promptForCard(Player player) {
@@ -431,13 +434,7 @@ public class Game {
                     System.arraycopy(payload, 2, args, 0, args.length);
                     currentCard = card;
                     CardArgumentRequest req = card.execute(bot, currentPlayer, args);
-                    if (req == null) {
-                        promptForCard(currentPlayer);
-                    } else {
-                        BaseResponse execute = bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, req.getMessage()).replyMarkup(new InlineKeyboardMarkup(addCancelButton(req.getKeyboard()))));
-                        System.out.println(new InlineKeyboardMarkup(addCancelButton(req.getKeyboard())));
-                        System.out.println(execute.description());
-                    }
+                    processCardArgReq(req);
                 }
                 System.out.println(card.getState());
                 return true;
@@ -446,11 +443,7 @@ public class Game {
                     String[] args = new String[payload.length - 1];
                     System.arraycopy(payload, 1, args, 0, args.length);
                     CardArgumentRequest req = currentCard.execute(bot, currentPlayer, args);
-                    if (req == null) {
-                        promptForCard(currentPlayer);
-                    } else {
-                        bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, req.getMessage()).replyMarkup(new InlineKeyboardMarkup(addCancelButton(req.getKeyboard()))));
-                    }
+                    processCardArgReq(req);
                 }
                 return true;
             case "end":
@@ -479,6 +472,21 @@ public class Game {
         return drawn;
     }
 
+    private void processCardArgReq(CardArgumentRequest req) {
+        if (req == null) {
+            promptForCard(currentPlayer);
+        } else {
+            switch (req.getType()) {
+                case UPDATE:
+                    bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, req.getMessage()).replyMarkup(new InlineKeyboardMarkup(addCancelButton(req.getKeyboard()))));
+                    break;
+                case OBJECTION:
+                    // TODO
+
+            }
+        }
+    }
+
     /**
      * Recycle all used cards and resets the deck pointer accordingly.
      * @return the number of cards recycled
@@ -491,6 +499,24 @@ public class Game {
         cards.addAll(used);
         deckPointer -= used.size();
         return used.size();
+    }
+
+    private void pauseTurn() {
+        if (paused) {
+            return;
+        }
+        cancelFuture();
+        turnElapsedTime += (int) (System.currentTimeMillis() - turnRestartTime);
+        paused = true;
+    }
+
+    private void resumeTurn() {
+        if (!paused) {
+            return;
+        }
+        cancelFuture();
+        schedule(this::endTurn, playTime * 1000 - turnElapsedTime);
+        paused = false;
     }
 
     /**
