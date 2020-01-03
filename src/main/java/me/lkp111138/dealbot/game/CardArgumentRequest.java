@@ -6,6 +6,7 @@ public class CardArgumentRequest {
     private InlineKeyboardButton[][] keyboard;
     private String message;
     private Runnable objectionable;
+    private Player target;
     private Type type;
 
     /**
@@ -20,8 +21,10 @@ public class CardArgumentRequest {
     /**
      * Constructs an object that pauses the turn and starts the objection process
      */
-    public CardArgumentRequest(Runnable objectionable) {
+    public CardArgumentRequest(Runnable objectionable, Player target, String message) {
         this.objectionable = objectionable;
+        this.target = target;
+        this.message = message;
         this.type = Type.OBJECTION;
     }
 
@@ -35,6 +38,10 @@ public class CardArgumentRequest {
 
     public Runnable getObjectionable() {
         return objectionable;
+    }
+
+    public Player getTarget() {
+        return target;
     }
 
     public Type getType() {
