@@ -178,7 +178,7 @@ public class Game {
             @Override
             public void onResponse(SendMessage request, SendResponse response) {
                 if (response.isOk()) {
-                    players.add(new Player(Game.this, message.from().id()));
+                    players.add(new Player(Game.this, message.from()));
                     uidGames.put(message.from().id(), Game.this);
                     broadcast(bot.translate(lang, "game.joined_announcement", message.from().id(), message.from().firstName(), players.size()));
                 } else {
@@ -427,6 +427,10 @@ public class Game {
         switch (payload[0]) {
             case "card":
                 // attempt to play a card
+                if (from != currentPlayer.getUserId()) {
+                    // impersonation?
+                    return true;
+                }
                 ++actionCount;
                 Card card = idCards.get(Integer.parseInt(payload[1]));
                 if (card.getState().equals(new CardStateInPlayerHand(currentPlayer))) {
@@ -439,6 +443,10 @@ public class Game {
                 System.out.println(card.getState());
                 return true;
             case "arg":
+                if (from != currentPlayer.getUserId()) {
+                    // impersonation?
+                    return true;
+                }
                 if (currentCard != null) {
                     String[] args = new String[payload.length - 1];
                     System.arraycopy(payload, 1, args, 0, args.length);
@@ -447,9 +455,17 @@ public class Game {
                 }
                 return true;
             case "end":
+                if (from != currentPlayer.getUserId()) {
+                    // impersonation?
+                    return true;
+                }
                 endTurn();
                 return true;
             case "cancel":
+                if (from != currentPlayer.getUserId()) {
+                    // impersonation?
+                    return true;
+                }
                 --actionCount;
                 promptForCard(currentPlayer);
                 return true;
