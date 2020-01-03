@@ -62,6 +62,7 @@
     "game.join_reminder": "You have %s seconds left to /join",
     "game.joined_announcement": "<a href=\"tg://user?id=%s\">%s</a> has joined the game! %s players has joined, the maximum is 5.",
     "game.joined_successfully": "You have successfully joined the game in %s\nGame ID: %s",
+    "game.objection_card_prompt": "Use %s as currency?",
     "game.play_prompt": "Choose a card to play (%s left), you have %s seconds.",
     "game.player_fled": "<a href=\"tg://user?id=%s\">%s</a> has fled from the game, %s players remaining.",
     "game.property.colour.0": "\uD83D\uDCDC",
