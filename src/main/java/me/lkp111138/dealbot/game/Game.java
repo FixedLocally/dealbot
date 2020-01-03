@@ -65,6 +65,8 @@ public class Game {
     private int messageId;
     private Card currentCard;
     private boolean paused = false;
+    private CardArgumentRequest activeRequest;
+    private boolean objected = false;
 
     // broadcast fields
     private ScheduledExecutorService broadcastExecutor = new ScheduledThreadPoolExecutor(1);
@@ -349,6 +351,8 @@ public class Game {
         currentPlayer = players.get(currentPlayerIndex);
         turnRestartTime = System.currentTimeMillis();
         paused = false;
+        activeRequest = null;
+        objected = false;
 
         // draw cards
         int cardsToDraw = 2;
@@ -469,6 +473,25 @@ public class Game {
                 --actionCount;
                 promptForCard(currentPlayer);
                 return true;
+            case "obj":
+                if (from == currentPlayer.getUserId() && !objected) {
+                    return true;
+                }
+                if (from == activeRequest.getTarget().getUserId() && objected) {
+                    return true;
+                }
+                switch (payload[1]) {
+                    case "yes":
+                        objected = true;
+                        promptForObjection();
+                        break;
+                    case "no":
+                        if (!objected) {
+                            activeRequest.getObjectionable().run();
+                        }
+                        resumeTurn();
+                        break;
+                }
         }
         return false;
     }
@@ -498,8 +521,41 @@ public class Game {
                     break;
                 case OBJECTION:
                     // TODO
+                    pauseTurn();
+                    activeRequest = req;
+                    // ask if target wants to object
+                    promptForObjection();
+                    break;
 
             }
+        }
+    }
+
+    private void promptForObjection() {
+        if (objected) {
+            // ask original caster
+            int objectionCount = (int) cards.stream().filter(card -> card instanceof JustSayNoCard).filter(card -> card.getState().equals(new CardStateInPlayerHand(currentPlayer))).count();
+            InlineKeyboardButton[][] buttons;
+            if (objectionCount > 0) {
+                buttons = new InlineKeyboardButton[2][1];
+                buttons[0][0] = new InlineKeyboardButton(bot.translate(currentPlayer.getUserId(), "game.use_objection", objectionCount)).callbackData("obj:yes");
+            } else {
+                buttons = new InlineKeyboardButton[1][1];
+            }
+            buttons[buttons.length - 1][0] = new InlineKeyboardButton(bot.translate(currentPlayer.getUserId(), "misc.nope")).callbackData("obj:no");
+            bot.execute(new SendMessage(currentPlayer.getUserId(), bot.translate(currentPlayer.getUserId(), "{{game.was_objected}} {{game.say_no_prompt}}", activeRequest.getTarget().getName())).replyMarkup(new InlineKeyboardMarkup(buttons)));
+        } else {
+            // ask the target
+            int objectionCount = (int) cards.stream().filter(card -> card instanceof JustSayNoCard).filter(card -> card.getState().equals(new CardStateInPlayerHand(activeRequest.getTarget()))).count();
+            InlineKeyboardButton[][] buttons;
+            if (objectionCount > 0) {
+                buttons = new InlineKeyboardButton[2][1];
+                buttons[0][0] = new InlineKeyboardButton(bot.translate(activeRequest.getTarget().getUserId(), "game.use_objection", objectionCount)).callbackData("obj:yes");
+            } else {
+                buttons = new InlineKeyboardButton[1][1];
+            }
+            buttons[buttons.length - 1][0] = new InlineKeyboardButton(bot.translate(activeRequest.getTarget().getUserId(), "misc.nope")).callbackData("obj:no");
+            bot.execute(new SendMessage(activeRequest.getTarget().getUserId(), bot.translate(activeRequest.getTarget().getUserId(), "%s {{game.say_no_prompt}}", activeRequest.getMessage(), activeRequest.getTarget().getName())).replyMarkup(new InlineKeyboardMarkup(buttons)));
         }
     }
 

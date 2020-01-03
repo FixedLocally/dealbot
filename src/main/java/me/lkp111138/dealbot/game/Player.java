@@ -1,5 +1,6 @@
 package me.lkp111138.dealbot.game;
 
+import com.pengrad.telegrambot.model.User;
 import me.lkp111138.dealbot.game.card.Card;
 import me.lkp111138.dealbot.game.card.state.CardStateInPlayerHand;
 import me.lkp111138.dealbot.game.card.state.CardStateInPlayerProperty;
@@ -14,16 +15,16 @@ import java.util.Map;
  */
 public class Player {
     private Game game;
-    private int userId;
+    private User user;
 
     // decks
     private List<Card> currencyDeck = new ArrayList<>();
     private Map<Integer, List<Card>> propertyDecks = new HashMap<>();
     private List<Card> handDeck = new ArrayList<>();
 
-    public Player(Game game, int userId) {
+    public Player(Game game, User user) {
         this.game = game;
-        this.userId = userId;
+        this.user = user;
     }
 
     public Map<Integer, Integer> getPropertyCounts() {
@@ -61,6 +62,10 @@ public class Player {
     }
 
     public int getUserId() {
-        return userId;
+        return user.id();
+    }
+
+    public String getName() {
+        return user.firstName();
     }
 }
