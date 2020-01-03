@@ -52,8 +52,8 @@ public class JustSayNoCard implements Card {
             String message = String.format("%s\n%s%s",
                     bot.translate(player.getUserId(), "game.objection_card_prompt", bot.translate(player.getUserId(), getNameKey())),
                     bot.translate(player.getUserId(), "game.card_desc"), bot.translate(player.getUserId(), getDescriptionKey()));
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][1];
-            buttons[1][0] = new InlineKeyboardButton(bot.translate(player.getUserId(), "card.use_as_currency"))
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][1];
+            buttons[0][0] = new InlineKeyboardButton(bot.translate(player.getUserId(), "card.use_as_currency"))
                     .callbackData("arg:money");
             return new CardArgumentRequest(buttons, message);
         } else {

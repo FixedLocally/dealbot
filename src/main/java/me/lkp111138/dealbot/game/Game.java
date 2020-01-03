@@ -313,6 +313,8 @@ public class Game {
         for (int i = 0; i < 10; i++) {
             cards.add(new GoPassActionCard(61 + i));
         }
+        cards.add(new JustSayNoCard(71));
+        cards.add(new JustSayNoCard(72));
 
         Collections.shuffle(cards);
 
@@ -387,7 +389,7 @@ public class Game {
         }
         currentCard = null;
         // prompt to play cards
-        int millis = playTime * 1000 - turnElapsedTime;
+        int millis = (int) (playTime * 1000 - turnElapsedTime - (System.currentTimeMillis() - turnRestartTime));
         String msg = bot.translate(player.getUserId(), "game.play_prompt", 3 - actionCount, millis / 1000);
         InlineKeyboardButton[][] buttons = cards.stream()
                 .filter(c -> c.getState().equals(new CardStateInPlayerHand(player)))
