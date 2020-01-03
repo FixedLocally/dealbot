@@ -19,6 +19,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DealBot extends TelegramBot implements UpdatesListener {
     private Map<String, Map<String, String>> translations = new HashMap<>();
@@ -124,13 +126,38 @@ public class DealBot extends TelegramBot implements UpdatesListener {
     }
 
     /**
-     * Translates a string by key
+     * Translates a string with keys surrounded by "{{" and "}}"
      * @param language the language to translate to
+     * @param str the str to be translated
+     * @param args arguments to the translated string
+     * @return the translated string with appropriate substitutions, or the str itself if cannot be translated
+     */
+    public String translate(String language, String str, Object... args) {
+        Pattern pattern = Pattern.compile("\\{\\{([a-zA-z0-9\\.]+)\\}\\}");
+        Matcher matcher = pattern.matcher(str);
+        while (matcher.find()) {
+            String key = matcher.group(1);
+            str = str.replace(matcher.group(), getString(language, key, args));
+        }
+        for (Object arg : args) {
+            str = str.replaceFirst("%s", arg.toString());
+        }
+        return str;
+    }
+
+    /**
+     * Translates a string by key
+     * @param gid the group or user id to translate for
      * @param key the key to be translated
      * @param args arguments to the translated string
      * @return the translated string with appropriate substitutions, or the key itself if cannot be translated
      */
-    public String translate(String language, String key, Object... args) {
+    public String translate(long gid, String key, Object... args) {
+        String lang = getLanguage(gid);
+        return translate(lang, key, args);
+    }
+
+    private String getString(String language, String key, Object... args) {
         Map<String, String> lang = translations.getOrDefault(language, translations.get("en"));
         String s = lang.get(key);
         if (s == null) {
@@ -144,18 +171,6 @@ public class DealBot extends TelegramBot implements UpdatesListener {
             s = s.replaceFirst("%s", arg.toString());
         }
         return s;
-    }
-
-    /**
-     * Translates a string by key
-     * @param gid the group or user id to translate for
-     * @param key the key to be translated
-     * @param args arguments to the translated string
-     * @return the translated string with appropriate substitutions, or the key itself if cannot be translated
-     */
-    public String translate(long gid, String key, Object... args) {
-        String lang = getLanguage(gid);
-        return translate(lang, key, args);
     }
 
     /**
