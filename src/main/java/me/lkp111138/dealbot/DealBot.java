@@ -133,6 +133,10 @@ public class DealBot extends TelegramBot implements UpdatesListener {
      * @return the translated string with appropriate substitutions, or the str itself if cannot be translated
      */
     public String translate(String language, String str, Object... args) {
+        String translation = getString(language, str, args);
+        if (!translation.equals(str)) {
+            return translation;
+        }
         Pattern pattern = Pattern.compile("\\{\\{([a-zA-z0-9\\.]+)\\}\\}");
         Matcher matcher = pattern.matcher(str);
         while (matcher.find()) {
