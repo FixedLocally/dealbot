@@ -54,10 +54,10 @@ public class RainbowWildcardPropertyCard implements PropertyCard {
             Map<Integer, Integer> counts = player.getPropertyCounts();
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[10][1];
             for (int i = 0; i < 10; i++) {
-                buttons[i][0] = new InlineKeyboardButton(bot.translate(player.getUserId(), "game.property.colour." + i) + String.format("(%d / %d)", counts.get(i), PropertyCard.propertySetCounts[i]))
+                buttons[i][0] = new InlineKeyboardButton(bot.translate(player.getGame().getLang(), "game.property.colour." + i) + String.format("(%d / %d)", counts.get(i), PropertyCard.propertySetCounts[i]))
                         .callbackData("arg:" + i);
             }
-            return new CardArgumentRequest(buttons, bot.translate(player.getUserId(), "game.choose_wildcard_colour"));
+            return new CardArgumentRequest(buttons, bot.translate(player.getGame().getLang(), "game.choose_wildcard_colour"));
         }
         int colour = Integer.parseInt(arg[0]);
         setState(new CardStateInPlayerProperty(player, colour));

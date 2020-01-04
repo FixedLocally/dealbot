@@ -181,7 +181,7 @@ public class Game {
             // No joining if the user is already in game
             return;
         }
-        SendMessage send = new SendMessage(message.from().id(), bot.translate(message.from().id(), "game.joined_successfully", message.chat().title(), id));
+        SendMessage send = new SendMessage(message.from().id(), bot.translate(lang, "game.joined_successfully", message.chat().title(), id));
         bot.execute(send, new Callback<SendMessage, SendResponse>() {
             @Override
             public void onResponse(SendMessage request, SendResponse response) {
@@ -366,7 +366,7 @@ public class Game {
         if (currentPlayer.getHandCount() == 0) {
             cardsToDraw = 5;
         }
-        StringBuilder msg = new StringBuilder(bot.translate(currentPlayer.getUserId(), "game.have_drawn"));
+        StringBuilder msg = new StringBuilder(bot.translate(lang, "game.have_drawn"));
         for (int i = 0; i < cardsToDraw; i++) {
             Card drawn = draw();
             if (drawn == null) {
@@ -375,7 +375,7 @@ public class Game {
                 System.out.println("deck empty!");
                 break;
             } else {
-                msg.append("\n- ").append(bot.translate(currentPlayer.getUserId(), drawn.getNameKey()));
+                msg.append("\n- ").append(bot.translate(lang, drawn.getNameKey()));
             }
         }
         if (msg.indexOf("\n") > 0) {
@@ -395,15 +395,15 @@ public class Game {
         currentCard = null;
         // prompt to play cards
         int millis = (int) (playTime * 1000 - turnElapsedTime - (System.currentTimeMillis() - turnRestartTime));
-        String msg = bot.translate(player.getUserId(), "game.play_prompt", 3 - actionCount, millis / 1000);
+        String msg = bot.translate(lang, "game.play_prompt", 3 - actionCount, millis / 1000);
         InlineKeyboardButton[][] buttons = cards.stream()
                 .filter(c -> c.getState().equals(new CardStateInPlayerHand(player)))
                 .map(card -> new InlineKeyboardButton[]{
-                        new InlineKeyboardButton(bot.translate(player.getUserId(), card.getNameKey()))
+                        new InlineKeyboardButton(bot.translate(lang, card.getNameKey()))
                                 .callbackData("card:" + card.getId())
                 })
                 .toArray(i -> new InlineKeyboardButton[i + 1][1]);
-        buttons[buttons.length - 1][0] = new InlineKeyboardButton(bot.translate(currentPlayer.getUserId(), "game.end_turn"))
+        buttons[buttons.length - 1][0] = new InlineKeyboardButton(bot.translate(lang, "game.end_turn"))
                 .callbackData("end");
         if (messageId == 0) {
             bot.execute(new SendMessage(player.getUserId(), msg).replyMarkup(new InlineKeyboardMarkup(buttons)), new Callback<SendMessage, SendResponse>() {
@@ -426,7 +426,7 @@ public class Game {
 
     private void endTurn() {
         // tell them their turn has ended
-        System.out.println(bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, bot.translate(currentPlayer.getUserId(), "game.turn_ended"))));
+        System.out.println(bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, bot.translate(lang, "game.turn_ended"))));
 
         startTurn();
     }
@@ -508,9 +508,9 @@ public class Game {
                             objections.get(0).setState(new CardStateInUsedDeck());
                             int objector = Integer.parseInt(payload[2]);
                             if (objected) {
-                                promptForObjection("obj", currentPlayer, bot.translate(currentPlayer.getUserId(), "game.was_objected", players.get(objector).getName()));
+                                promptForObjection("obj", currentPlayer, bot.translate(lang, "game.was_objected", players.get(objector).getName()));
                             } else {
-                                promptForObjection("obj", activeRequest.getTarget(), bot.translate(activeRequest.getTarget().getUserId(), activeRequest.getMessage()));
+                                promptForObjection("obj", activeRequest.getTarget(), bot.translate(lang, activeRequest.getMessage()));
                             }
                             break;
                         }
@@ -609,12 +609,12 @@ public class Game {
         InlineKeyboardButton[][] buttons;
         if (objectionCount > 0) {
             buttons = new InlineKeyboardButton[2][1];
-            buttons[0][0] = new InlineKeyboardButton(bot.translate(target.getUserId(), "game.use_objection", objectionCount)).callbackData(prefix + ":yes:" + players.indexOf(target));
+            buttons[0][0] = new InlineKeyboardButton(bot.translate(lang, "game.use_objection", objectionCount)).callbackData(prefix + ":yes:" + players.indexOf(target));
         } else {
             buttons = new InlineKeyboardButton[1][1];
         }
-        buttons[buttons.length - 1][0] = new InlineKeyboardButton(bot.translate(target.getUserId(), "misc.nope")).callbackData(prefix + ":no:");
-        bot.execute(new SendMessage(target.getUserId(), bot.translate(target.getUserId(), "%s {{game.say_no_prompt}}", message)).replyMarkup(new InlineKeyboardMarkup(buttons)));
+        buttons[buttons.length - 1][0] = new InlineKeyboardButton(bot.translate(lang, "misc.nope")).callbackData(prefix + ":no:");
+        bot.execute(new SendMessage(target.getUserId(), bot.translate(lang, "%s {{game.say_no_prompt}}", message)).replyMarkup(new InlineKeyboardMarkup(buttons)));
     }
 
     /**
@@ -640,6 +640,10 @@ public class Game {
         confirmedCount = 0;
         confirmedPlayers.clear();
         paymentAmount = amount;
+
+        if (group < 10) {
+            paymentRequestMessage = bot.translate(lang, "game.payment_requested", currentPlayer.getName(), amount, bot.translate(lang, "game.property.colour.long." + group));
+        }
         if (playerIndex == -1) {
             requiredPaymentCount = players.size() - 1;
             // all
@@ -648,19 +652,13 @@ public class Game {
                     continue;
                 }
                 Player target = players.get(i);
-                if (group < 10) {
-                    paymentRequestMessage = bot.translate(target.getUserId(), "game.payment_requested", currentPlayer.getName(), amount, bot.translate(target.getUserId(), "game.property.colour.long." + group));
-                    promptForObjection("payobj", target, paymentRequestMessage);
-                }
+                promptForObjection("payobj", target, paymentRequestMessage);
             }
             return;
         }
         requiredPaymentCount = 1;
         Player target = players.get(playerIndex);
-        if (group < 10) {
-            paymentRequestMessage = bot.translate(target.getUserId(), "game.payment_requested", currentPlayer.getName(), amount, bot.translate(target.getUserId(), "game.property.colour.long." + group));
-            promptForObjection("payobj", target, paymentRequestMessage);
-        }
+        promptForObjection("payobj", target, paymentRequestMessage);
     }
 
     /**
@@ -681,10 +679,10 @@ public class Game {
             return false;
         }).forEach(paymentOptions::add);
         InlineKeyboardButton[][] buttons = paymentOptions.stream().map(card -> new InlineKeyboardButton[]{
-                new InlineKeyboardButton((paymentCards.getOrDefault(playerIndex, new HashSet<>()).contains(card.getId()) ? "✅ " : "") + bot.translate(target.getUserId(), card instanceof CurrencyCard ? card.getNameKey() : "[$ %sM] {{" + card.getNameKey() + "}}"))
+                new InlineKeyboardButton((paymentCards.getOrDefault(playerIndex, new HashSet<>()).contains(card.getId()) ? "✅ " : "") + bot.translate(lang, card instanceof CurrencyCard ? card.getNameKey() : "[$ %sM] {{" + card.getNameKey() + "}}"))
                         .callbackData("pay:" + card.getId())
         }).toArray(i -> new InlineKeyboardButton[i + 1][1]);
-        buttons[buttons.length - 1][0] = new InlineKeyboardButton(bot.translate(target.getUserId(), "game.pay", 0)).callbackData("pay:confirm");
+        buttons[buttons.length - 1][0] = new InlineKeyboardButton(bot.translate(lang, "game.pay", 0)).callbackData("pay:confirm");
         if (messageId == 0) {
             bot.execute(new SendMessage(target.getUserId(), paymentRequestMessage).replyMarkup(new InlineKeyboardMarkup(buttons)));
         } else {
@@ -797,7 +795,7 @@ public class Game {
     private InlineKeyboardButton[][] addCancelButton(InlineKeyboardButton[][] keyboard) {
         InlineKeyboardButton[][] buttons = new InlineKeyboardButton[keyboard.length + 1][1];
         System.arraycopy(keyboard, 0, buttons, 0, keyboard.length);
-        buttons[keyboard.length][0] = new InlineKeyboardButton(bot.translate(currentPlayer.getUserId(), "misc.cancel")).callbackData("cancel");
+        buttons[keyboard.length][0] = new InlineKeyboardButton(bot.translate(lang, "misc.cancel")).callbackData("cancel");
         return buttons;
     }
 
@@ -820,6 +818,10 @@ public class Game {
 
     public int getId() {
         return id;
+    }
+
+    public String getLang() {
+        return lang;
     }
 
     public boolean isStarted() {

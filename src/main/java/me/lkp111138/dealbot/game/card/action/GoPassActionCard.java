@@ -51,10 +51,10 @@ public class GoPassActionCard extends ActionCard {
         Card card1 = player.getGame().draw();
         Card card2 = player.getGame().draw();
         if (card1 != null) {
-            String msg = bot.translate(player.getUserId(), "game.have_drawn");
-            msg += "\n- " + bot.translate(player.getUserId(), card1.getNameKey());
+            String msg = bot.translate(player.getGame().getLang(), "game.have_drawn");
+            msg += "\n- " + bot.translate(player.getGame().getLang(), card1.getNameKey());
             if (card2 != null) {
-                msg += "\n- " + bot.translate(player.getUserId(), card2.getNameKey());
+                msg += "\n- " + bot.translate(player.getGame().getLang(), card2.getNameKey());
             }
             bot.execute(new SendMessage(player.getUserId(), msg));
         }

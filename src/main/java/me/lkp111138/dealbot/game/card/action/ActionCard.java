@@ -13,12 +13,12 @@ public abstract class ActionCard implements Card {
         switch (arg.length) {
             case 0:
                 String message = String.format("%s\n%s%s",
-                        bot.translate(player.getUserId(), "game.action_card_prompt", bot.translate(player.getUserId(), getNameKey())),
-                        bot.translate(player.getUserId(), "game.card_desc"), bot.translate(player.getUserId(), getDescriptionKey()));
+                        bot.translate(player.getGame().getLang(), "game.action_card_prompt", bot.translate(player.getGame().getLang(), getNameKey())),
+                        bot.translate(player.getGame().getLang(), "game.card_desc"), bot.translate(player.getGame().getLang(), getDescriptionKey()));
                 InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][1];
-                buttons[0][0] = new InlineKeyboardButton(bot.translate(player.getUserId(), "card.use_as_action"))
+                buttons[0][0] = new InlineKeyboardButton(bot.translate(player.getGame().getLang(), "card.use_as_action"))
                         .callbackData("arg:action");
-                buttons[1][0] = new InlineKeyboardButton(bot.translate(player.getUserId(), "card.use_as_currency"))
+                buttons[1][0] = new InlineKeyboardButton(bot.translate(player.getGame().getLang(), "card.use_as_currency"))
                         .callbackData("arg:money");
                 return new CardArgumentRequest(buttons, message);
             case 1:
