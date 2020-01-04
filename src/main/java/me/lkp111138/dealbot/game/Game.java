@@ -426,7 +426,7 @@ public class Game {
 
     private void endTurn() {
         // tell them their turn has ended
-        System.out.println(bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, bot.translate(lang, "game.turn_ended"))));
+        bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, bot.translate(lang, "game.turn_ended")));
 
         startTurn();
     }
@@ -747,7 +747,10 @@ public class Game {
      * Stops the game prematurely.
      */
     public void kill() {
-        // TODO
+        // kill the active turn
+        cancelFuture();
+        bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, bot.translate(lang, "game.game_ended")));
+        broadcast(bot.translate(lang, "game.game_ended_announcement"));
     }
 
     private void broadcast(String message) {

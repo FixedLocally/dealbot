@@ -56,6 +56,8 @@
     "game.choose_wildcard_colour": "Choose a colour for this wildcard property:",
     "game.created": "<a href=\"tg://user?id=%s\">%s</a> has started a new Monopoly Deal game! You have %s seconds to /join\nGame ID: %s",
     "game.end_turn": "End turn",
+    "game.game_ended": "Game ended.",
+    "game.game_ended_announcement": "Game ended. Press /play to start a new one.",
     "game.have_drawn": "You have drawn the following cards from the deck:",
     "game.is_running": "Another game (#%s) is already running here.",
     "game.join_extended": "Extended for %s seconds, you have %s seconds left to /join",
