@@ -5,10 +5,7 @@ import me.lkp111138.dealbot.game.card.Card;
 import me.lkp111138.dealbot.game.card.state.CardStateInPlayerHand;
 import me.lkp111138.dealbot.game.card.state.CardStateInPlayerProperty;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents a player in the game
@@ -67,5 +64,19 @@ public class Player {
 
     public String getName() {
         return user.firstName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return game.equals(player.game) &&
+                user.equals(player.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(game, user);
     }
 }
