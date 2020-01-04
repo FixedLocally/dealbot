@@ -21,4 +21,9 @@ public class CardStateInPlayerCurrency implements CardState {
     public int hashCode() {
         return player.hashCode() + 342978177;
     }
+
+    @Override
+    public boolean isOwnedBy(Player player) {
+        return player.equals(this.player);
+    }
 }

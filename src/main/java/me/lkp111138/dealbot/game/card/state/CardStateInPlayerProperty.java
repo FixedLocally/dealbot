@@ -33,4 +33,9 @@ public class CardStateInPlayerProperty implements CardState {
     public int hashCode() {
         return Objects.hash(player, colour) + 342978177;
     }
+
+    @Override
+    public boolean isOwnedBy(Player player) {
+        return this.player.equals(player);
+    }
 }
