@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.request.EditMessageReplyMarkup;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
@@ -15,9 +16,7 @@ import me.lkp111138.dealbot.EmptyCallback;
 import me.lkp111138.dealbot.Main;
 import me.lkp111138.dealbot.game.card.*;
 import me.lkp111138.dealbot.game.card.action.GoPassActionCard;
-import me.lkp111138.dealbot.game.card.state.CardStateInMainDeck;
-import me.lkp111138.dealbot.game.card.state.CardStateInPlayerHand;
-import me.lkp111138.dealbot.game.card.state.CardStateInUsedDeck;
+import me.lkp111138.dealbot.game.card.state.*;
 import me.lkp111138.dealbot.game.exception.ConcurrentGameException;
 
 import java.io.IOException;
@@ -66,7 +65,14 @@ public class Game {
     private Card currentCard;
     private boolean paused = false;
     private CardArgumentRequest activeRequest;
-    private boolean objected = false;
+
+    // payment request status
+    private int confirmedCount = 0;
+    private int requiredPaymentCount = 0;
+    private Set<Integer> confirmedPlayers = new HashSet<>();
+    private int paymentAmount = 0;
+    private String paymentRequestMessage;
+    private Map<Integer, Set<Integer>> paymentCards = new HashMap<>();
 
     // broadcast fields
     private ScheduledExecutorService broadcastExecutor = new ScheduledThreadPoolExecutor(1);
@@ -325,7 +331,7 @@ public class Game {
 
     public void extend(int secs) {
         if (isStarted()) {
-            // What are extending is the game is started?
+            // What are we extending is the game is started?
             return;
         }
         cancelFuture();
@@ -333,7 +339,7 @@ public class Game {
         long millis = startTime - System.currentTimeMillis();
         if (millis > 30000) {
             schedule(this::joinReminder, (millis - 1000) % 30000 + 1000);
-        } else if (millis > 15) {
+        } else if (millis > 15000) {
             schedule(this::joinReminder, (millis - 1000) % 15000 + 1000);
         } else {
             schedule(this::startGame, millis);
@@ -354,7 +360,6 @@ public class Game {
         turnRestartTime = System.currentTimeMillis();
         paused = false;
         activeRequest = null;
-        objected = false;
 
         // draw cards
         int cardsToDraw = 2;
@@ -449,6 +454,7 @@ public class Game {
                 System.out.println(card.getState());
                 return true;
             case "arg":
+                // specify args for a card
                 if (from != currentPlayer.getUserId()) {
                     // impersonation?
                     return true;
@@ -461,6 +467,7 @@ public class Game {
                 }
                 return true;
             case "end":
+                // end turn
                 if (from != currentPlayer.getUserId()) {
                     // impersonation?
                     return true;
@@ -468,6 +475,7 @@ public class Game {
                 endTurn();
                 return true;
             case "cancel":
+                // cancel and return to main menu
                 if (from != currentPlayer.getUserId()) {
                     // impersonation?
                     return true;
@@ -476,24 +484,83 @@ public class Game {
                 promptForCard(currentPlayer);
                 return true;
             case "obj":
-                if (from == currentPlayer.getUserId() && !objected) {
-                    return true;
-                }
-                if (from == activeRequest.getTarget().getUserId() && objected) {
-                    return true;
-                }
+            case "payobj":
+                // normal objection
+                boolean objected = from != currentPlayer.getUserId();
                 switch (payload[1]) {
                     case "yes":
-                        objected = true;
-                        promptForObjection();
-                        break;
-                    case "no":
-                        if (!objected) {
-                            activeRequest.getObjectionable().run();
+                        // find the player
+                        Player player = null;
+                        for (Player player1 : players) {
+                            if (player1.getUserId() == from) {
+                                player = player1;
+                                break;
+                            }
                         }
-                        resumeTurn();
+                        if (player == null) {
+                            return true;
+                        }
+                        CardState inHand = new CardStateInPlayerHand(player);
+                        List<Card> objections = cards.stream().filter(c -> c.getState().equals(inHand))
+                                .filter(c -> c instanceof JustSayNoCard).collect(Collectors.toList());
+                        if (objections.size() > 0) {
+                            objected = !objected;
+                            objections.get(0).setState(new CardStateInUsedDeck());
+                            int objector = Integer.parseInt(payload[2]);
+                            if (objected) {
+                                promptForObjection("obj", currentPlayer, bot.translate(currentPlayer.getUserId(), "game.was_objected", players.get(objector).getName()));
+                            } else {
+                                promptForObjection("obj", activeRequest.getTarget(), bot.translate(activeRequest.getTarget().getUserId(), activeRequest.getMessage()));
+                            }
+                            break;
+                        }
+                        // intentional fallthrough
+                    case "no":
+                        objected = !objected;
+                        if (payload[0].equals("obj")) {
+                            if (!objected) {
+                                activeRequest.getObjectionable().run();
+                            }
+                            resumeTurn();
+                        } else {
+                            if (!objected) {
+                                collectPayment(players.indexOf(new Player(this, query.from())));
+                            } else {
+                                incrementConfirmPayments();
+                            }
+                        }
                         break;
                 }
+                return true;
+            case "pay":
+                // todo
+                if (paymentAmount <= 0) {
+                    return true;
+                }
+                int index = -1;
+                for (int i = 0; i < players.size(); i++) {
+                    if (players.get(i).getUserId() == from) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (payload[1].equals("confirm")) {
+                    // confirm payment
+                    confirmPayment(index);
+                } else {
+                    int id = Integer.parseInt(payload[1]);
+                    Card selected = cards.get(id);
+                    if (selected.getState().isOwnedBy(players.get(index)) && !(selected.getState() instanceof CardStateInPlayerHand)) {
+                        Set<Integer> selectedCards = paymentCards.getOrDefault(index, new HashSet<>());
+                        if (!selectedCards.add(id)) {
+                            selectedCards.remove(id);
+                        } else {
+                            paymentCards.put(index, selectedCards);
+                            updatePaymentButtons(index, query.message().messageId());
+                        }
+                    }
+                }
+                return true;
         }
         return false;
     }
@@ -522,43 +589,32 @@ public class Game {
                     bot.execute(new EditMessageText(currentPlayer.getUserId(), messageId, req.getMessage()).replyMarkup(new InlineKeyboardMarkup(addCancelButton(req.getKeyboard()))));
                     break;
                 case OBJECTION:
-                    // TODO
                     pauseTurn();
                     activeRequest = req;
                     // ask if target wants to object
-                    promptForObjection();
+                    promptForObjection("obj", activeRequest.getTarget(), activeRequest.getMessage());
                     break;
 
             }
         }
     }
 
-    private void promptForObjection() {
-        if (objected) {
-            // ask original caster
-            int objectionCount = (int) cards.stream().filter(card -> card instanceof JustSayNoCard).filter(card -> card.getState().equals(new CardStateInPlayerHand(currentPlayer))).count();
-            InlineKeyboardButton[][] buttons;
-            if (objectionCount > 0) {
-                buttons = new InlineKeyboardButton[2][1];
-                buttons[0][0] = new InlineKeyboardButton(bot.translate(currentPlayer.getUserId(), "game.use_objection", objectionCount)).callbackData("obj:yes");
-            } else {
-                buttons = new InlineKeyboardButton[1][1];
-            }
-            buttons[buttons.length - 1][0] = new InlineKeyboardButton(bot.translate(currentPlayer.getUserId(), "misc.nope")).callbackData("obj:no");
-            bot.execute(new SendMessage(currentPlayer.getUserId(), bot.translate(currentPlayer.getUserId(), "{{game.was_objected}} {{game.say_no_prompt}}", activeRequest.getTarget().getName())).replyMarkup(new InlineKeyboardMarkup(buttons)));
+    /**
+     * Prompt a player for objection
+     * @param prefix The prefix for the query
+     * @param target the target player to prompt
+     */
+    private void promptForObjection(String prefix, Player target, String message) {
+        int objectionCount = (int) cards.stream().filter(card -> card instanceof JustSayNoCard).filter(card -> card.getState().equals(new CardStateInPlayerHand(target))).count();
+        InlineKeyboardButton[][] buttons;
+        if (objectionCount > 0) {
+            buttons = new InlineKeyboardButton[2][1];
+            buttons[0][0] = new InlineKeyboardButton(bot.translate(target.getUserId(), "game.use_objection", objectionCount)).callbackData(prefix + ":yes:" + players.indexOf(target));
         } else {
-            // ask the target
-            int objectionCount = (int) cards.stream().filter(card -> card instanceof JustSayNoCard).filter(card -> card.getState().equals(new CardStateInPlayerHand(activeRequest.getTarget()))).count();
-            InlineKeyboardButton[][] buttons;
-            if (objectionCount > 0) {
-                buttons = new InlineKeyboardButton[2][1];
-                buttons[0][0] = new InlineKeyboardButton(bot.translate(activeRequest.getTarget().getUserId(), "game.use_objection", objectionCount)).callbackData("obj:yes");
-            } else {
-                buttons = new InlineKeyboardButton[1][1];
-            }
-            buttons[buttons.length - 1][0] = new InlineKeyboardButton(bot.translate(activeRequest.getTarget().getUserId(), "misc.nope")).callbackData("obj:no");
-            bot.execute(new SendMessage(activeRequest.getTarget().getUserId(), bot.translate(activeRequest.getTarget().getUserId(), "%s {{game.say_no_prompt}}", activeRequest.getMessage(), activeRequest.getTarget().getName())).replyMarkup(new InlineKeyboardMarkup(buttons)));
+            buttons = new InlineKeyboardButton[1][1];
         }
+        buttons[buttons.length - 1][0] = new InlineKeyboardButton(bot.translate(target.getUserId(), "misc.nope")).callbackData(prefix + ":no:");
+        bot.execute(new SendMessage(target.getUserId(), bot.translate(target.getUserId(), "%s {{game.say_no_prompt}}", message)).replyMarkup(new InlineKeyboardMarkup(buttons)));
     }
 
     /**
@@ -573,6 +629,102 @@ public class Game {
         cards.addAll(used);
         deckPointer -= used.size();
         return used.size();
+    }
+
+    /**
+     * Request a player or all players to pay a fee
+     * @param playerIndex the index of the player in the game, -1 for all
+     * @param amount the amount to collect
+     */
+    public void requestPayment(int playerIndex, int amount, int group) {
+        confirmedCount = 0;
+        confirmedPlayers.clear();
+        paymentAmount = amount;
+        if (playerIndex == -1) {
+            requiredPaymentCount = players.size() - 1;
+            // all
+            for (int i = 0; i < players.size(); i++) {
+                if (i == currentPlayerIndex) {
+                    continue;
+                }
+                Player target = players.get(i);
+                if (group < 10) {
+                    paymentRequestMessage = bot.translate(target.getUserId(), "game.payment_requested", currentPlayer.getName(), amount, bot.translate(target.getUserId(), "game.property.colour.long." + group));
+                    promptForObjection("payobj", target, paymentRequestMessage);
+                }
+            }
+            return;
+        }
+        requiredPaymentCount = 1;
+        Player target = players.get(playerIndex);
+        if (group < 10) {
+            paymentRequestMessage = bot.translate(target.getUserId(), "game.payment_requested", currentPlayer.getName(), amount, bot.translate(target.getUserId(), "game.property.colour.long." + group));
+            promptForObjection("payobj", target, paymentRequestMessage);
+        }
+    }
+
+    /**
+     * Collects a fee from a player
+     * @param playerIndex the index of the player in the game
+     */
+    private void collectPayment(int playerIndex) {
+        updatePaymentButtons(playerIndex, 0);
+    }
+
+    private void updatePaymentButtons(int playerIndex, int messageId) {
+        Player target = players.get(playerIndex);
+        List<Card> paymentOptions = cards.stream().filter(c -> c.getState().equals(new CardStateInPlayerCurrency(target))).collect(Collectors.toList());
+        cards.stream().filter(c -> {
+            if (c.getState() instanceof CardStateInPlayerProperty) {
+                return ((CardStateInPlayerProperty) c.getState()).getPlayer().equals(target);
+            }
+            return false;
+        }).forEach(paymentOptions::add);
+        InlineKeyboardButton[][] buttons = paymentOptions.stream().map(card -> new InlineKeyboardButton[]{
+                new InlineKeyboardButton((paymentCards.getOrDefault(playerIndex, new HashSet<>()).contains(card.getId()) ? "✅ " : "") + bot.translate(target.getUserId(), card instanceof CurrencyCard ? card.getNameKey() : "[$ %sM] {{" + card.getNameKey() + "}}"))
+                        .callbackData("pay:" + card.getId())
+        }).toArray(i -> new InlineKeyboardButton[i + 1][1]);
+        buttons[buttons.length - 1][0] = new InlineKeyboardButton(bot.translate(target.getUserId(), "game.pay", 0)).callbackData("pay:confirm");
+        if (messageId == 0) {
+            bot.execute(new SendMessage(target.getUserId(), paymentRequestMessage).replyMarkup(new InlineKeyboardMarkup(buttons)));
+        } else {
+            bot.execute(new EditMessageReplyMarkup(target.getUserId(), messageId).replyMarkup(new InlineKeyboardMarkup(buttons)));
+        }
+    }
+
+    /**
+     * Confirms a payment from a player
+     * @param playerIndex the position of the player to confirm
+     */
+    private void confirmPayment(int playerIndex) {
+        List<Card> cards = paymentCards.getOrDefault(playerIndex, new HashSet<>()).stream().map(this.cards::get).collect(Collectors.toList());
+        // check ownership
+        if (cards.stream().anyMatch(card -> !card.getState().isOwnedBy(players.get(playerIndex)))) {
+            return;
+        }
+        // check value
+        int total = cards.stream().mapToInt(Card::getCurrencyValue).sum();
+        if (total < paymentAmount) {
+            return;
+        }
+        // change ownership
+        for (Card card : cards) {
+            CardState state = card.getState();
+            if (state instanceof CardStateInPlayerProperty) {
+                card.setState(new CardStateInPlayerProperty(currentPlayer, ((CardStateInPlayerProperty) state).getColour()));
+            }
+            if (state instanceof CardStateInPlayerCurrency) {
+                card.setState(new CardStateInPlayerCurrency(currentPlayer));
+            }
+        }
+        incrementConfirmPayments();
+    }
+    
+    private void incrementConfirmPayments() {
+        ++confirmedCount;
+        if (confirmedCount == requiredPaymentCount) {
+            resumeTurn();
+        }
     }
 
     private void pauseTurn() {
