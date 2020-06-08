@@ -89,7 +89,7 @@ return "Estender por 30 segundos. %d segundos restantes para enviar /join";
             case 26:
                 return "Companhia Elétrica";
             case 27:
-                return "Companhia de Gás";
+                return "Companhia de Água";
         }
         return "";
     }
@@ -97,49 +97,49 @@ return "Estender por 30 segundos. %d segundos restantes para enviar /join";
         return String.format(" (%d conjuntos completos)", sets);
     }
     public String WILD_CARD() {
-        return "Curinga multicolorido";
+        return "🃏 Curinga 🔴🟠🟡🟢🔵🟣⚫️🟤✈️💡";
     }
     public String WILD_CARD(int g1, int g2) {
-        return "Curinga";
+        return "🃏 Curinga";
     }
     public String ITS_MY_BDAY() {
-        return "É meu aniversário!";
+        return "🎂 É meu aniversário!";
     }
     public String DEBT_COLLECTOR() {
-        return "Cobrador de dívidas";
+        return "🚪 Cobrador de dívidas";
     }
     public String GO_PASS() {
-        return "Passe Livre";
+        return "🎟 Passe Livre";
     }
     public String DBL_RENT() {
-        return "Aluguel em dobro";
+        return "2️⃣ Aluguel em dobro";
     }
     public String JUST_SAY_NO() {
-        return "Diga Não!";
+        return "🙅 Diga Não!";
     }
     public String DEAL_BREAKER() {
-        return "Golpe Baixo";
+        return "😎 Golpe Baixo";
     }
     public String SLY_DEAL() {
-        return "Negociação Ligeira";
+        return "📨 Negociação Ligeira";
     }
     public String HOUSE() {
-        return "Casa";
+        return "🏠 Casa";
     }
     public String HOTEL() {
-        return "Hotel";
+        return "🏨 Hotel";
     }
     public String FORCED_DEAL() {
-        return "Negociação Forçada";
+        return "🔄 Negociação Forçada";
     }
     public String WILDCARD_RENT(int g1, int g2) {
-        return String.format("Aluguel [%s / %s]", PROPERTY_GROUP(g1), PROPERTY_GROUP(g2));
+        return String.format("✍️ Aluguel [%s / %s]", PROPERTY_GROUP(g1), PROPERTY_GROUP(g2));
     }
     public String RAINBOW_RENT() {
-        return "Aluguel multicolorido";
+        return "✍️ Aluguel 🔴🟠🟡🟢🔵🟣⚫️🟤✈️💡";
     }
     public String CURRENT_STATE() {
-        return "Estado atual:";
+        return "ℹ️ Estado atual:";
     }
     public String CARDS_IN_HAND() {
         return "Cartas na mão: ";
@@ -153,25 +153,25 @@ return "Estender por 30 segundos. %d segundos restantes para enviar /join";
     public String PROPERTY_GROUP(int group) {
         switch (group) {
             case 0:
-                return "Marrom";
+                return "🟤";
             case 1:
-                return "Violeta";
+                return "🟣";
             case 2:
-                return "Rosa";
+                return "⚫️";
             case 3:
-                return "Laranja";
+                return "🟠";
             case 4:
-                return "Vermelho";
+                return "🔴";
             case 5:
-                return "Amarelo";
+                return "🟡";
             case 6:
-                return "Verde";
+                return "🟢";
             case 7:
-                return "Azul";
+                return "🔵";
             case 8:
-                return "Aeroportos";
+                return "✈️";
             case 9:
-                return "Serviços Públicos";
+                return "💡";
         }
         return "";
     }
@@ -257,7 +257,7 @@ return String.format ("%s está cobrando uma dívida de $ %dM de você! Você te
 return String.format ("Descarte algumas cartas para ficar com 7 cartas (%d restantes)", remaining);
     }
     public String BUILD_THIS_ON(String name) {
-return String.format ("Construir  %s em qual grupo?", name);
+return String.format ("Construir %s em qual grupo?", name);
     }
     public String DEAL_BREAKER_DESC() {
 return "Retira um conjunto completo de propriedades de um jogador, incluindo qualquer construção.";
@@ -311,7 +311,7 @@ return "Colete $ 5M de um jogador".;
         return "Qual carta você oferece?";
     }
     public String FORCED_DEAL_SAY_NO_PROMPT(GamePlayer player, Card card, int group, Card selfCard) {
-        return String.format ( "%s usou Negociação Forçada contra  %s em %s por %s. Deseja dizer não?", player.getName (), card.getCardTitle (), PROPERTY_GROUP (group), selfCard.getCardTitle ());
+        return String.format ( "%s usou Negociação Forçada contra %s em %s por %s. Deseja dizer não?", player.getName (), card.getCardTitle (), PROPERTY_GROUP (group), selfCard.getCardTitle ());
     }
     public String GO_PASS_DESC() {
         return "Compre duas cartas do baralho";
@@ -329,7 +329,7 @@ return "Colete $ 5M de um jogador".;
         return "É seu aniversário! Todo mundo paga $ 2M como presente.";
     }
     public String RENT_CARD_DESC(int g1, int g2) {
-        return String.format ("Coleta aluguel para as propriedades %s ou  %s de todos os jogadores", PROPERTY_GROUP (g1), PROPERTY_GROUP (g2));
+        return String.format ("Coleta aluguel para as propriedades %s ou %s de todos os jogadores", PROPERTY_GROUP (g1), PROPERTY_GROUP (g2));
     }
     public String RAINBOW_RENT_CARD_DESC() {
         return "Coletar aluguel para qualquer conjunto de propriedades de um jogador";
@@ -347,7 +347,7 @@ return String.format ("Você usou %s para o grupo %s contra %s, coletando $ %dM.
 return String.format ("%s usou %s para o grupo %s contra %s, coletando $ %dM.", name, card, PROPERTY_GROUP(group), victim, amount);
     }
     public String COLLECTING_RENT(String from, int group, int amount) {
-return String.format ("Coletando aluguel de $ %dM de %s para %s", amount,  from == null ? "todo mundo":  from, PROPERTY_GROUP(group));
+return String.format ("Coletando aluguel de $ %dM de %s para %s", amount, from == null ? "todo mundo": from, PROPERTY_GROUP(group));
     }
     public String RENT_CHOOSE_GROUP() {
 return "Escolha um grupo para cobrar aluguel:";
@@ -362,7 +362,7 @@ return "Pega uma propriedade de um jogador que não faz parte de um conjunto com
 return "Quem vai participar desta negociação ligeira?";
     }
     public String SLY_DEAL_SAY_NO_PROMPT(String name, int group, String target) {
-return String.format ("%s usou o Negociação Ligeira contra  %s do grupo %s. Deseja dizer não?", name, target, PROPERTY_GROUP(group));
+return String.format ("%s usou o Negociação Ligeira contra %s do grupo %s. Deseja dizer não?", name, target, PROPERTY_GROUP(group));
     }
     public String ACTION_CARD_DESC(String title, String desc) {
 return String.format ("Usar %s como moeda ou uma ação?\nDescrição da carta: %s", title, desc);
@@ -689,7 +689,7 @@ return String.format ("Todo mundo foi eliminado, <a href=\"tg://user?id=%1$s\">%
 
     @Override
     public String STATS(int id, String name, int win, int total, float timePlayed, int cardsPlayed, int currency, int properties, int rent) {
-return String.format("Estatísticas do Monopoly Deal para  <a href=\"tg://user?id=%d\">%s</a>:\n", id, name) +
+return String.format("Estatísticas do Monopoly Deal para <a href=\"tg://user?id=%d\">%s</a>:\n", id, name) +
 String.format ("Vitórias/Total de jogos: %d / %d (%.2f%%)\n", win, total, 100.0 * win / total) +
 String.format ("Total em minutos do jogo: %.1f\n", timePlayed) +
 String.format ("Número de cartas jogadas: %d\n", cardsPlayed) +
