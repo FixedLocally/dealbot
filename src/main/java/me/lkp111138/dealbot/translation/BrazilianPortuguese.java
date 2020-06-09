@@ -121,7 +121,7 @@ return "Estender por 30 segundos. %d segundos restantes para enviar /join";
         return "😎 Golpe Baixo";
     }
     public String SLY_DEAL() {
-        return "📨 Negociação Ligeira";
+        return "⬅️ Negociação Ligeira";
     }
     public String HOUSE() {
         return "🏠 Casa";
@@ -693,7 +693,7 @@ return String.format("Estatísticas do Monopoly Deal para <a href=\"tg://user?id
 String.format ("Vitórias/Total de jogos: %d / %d (%.2f%%)\n", win, total, 100.0 * win / total) +
 String.format ("Total em minutos do jogo: %.1f\n", timePlayed) +
 String.format ("Número de cartas jogadas: %d\n", cardsPlayed) +
-String.format ("Moedas coletadas: $ %dM \n", currency) +
+String.format ("Dinheiro coletadas: $ %dM \n", currency) +
 String.format ("Propriedades coletadas: %d\n", properties)
                 String.format("Aluguel coletado: $ %dM\n", rent);
     }
