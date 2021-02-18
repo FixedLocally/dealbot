@@ -463,6 +463,7 @@ public class Game {
                 Connection conn = Main.getConnection();
                 for (int i = 0; i < gamePlayers.size(); i++) {
                     GamePlayer gamePlayer = gamePlayers.get(i);
+                    gamePlayer.end();
                     int propertiesPlayed = gamePlayer.getPropertiesPlayed();
                     int currencyCollected = gamePlayer.getCurrencyCollected();
                     int actionUsed = gamePlayer.getCardsPlayed();
@@ -515,6 +516,7 @@ public class Game {
         for (int i = 0; i < playerCount(); i++) {
             uidGames.remove(players.get(i).id());
         }
+        executor.shutdown();
     }
 
     public void kill() {

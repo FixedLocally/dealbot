@@ -852,4 +852,8 @@ public class GamePlayer {
     int getRentCollected() {
         return rentCollected;
     }
+
+    public void end() {
+        executor.shutdown();
+    }
 }
