@@ -31,20 +31,20 @@ import java.util.stream.Collectors;
 
 public class Game {
     private final GroupInfo groupInfo;
-    private int turnWait;
+    private final int turnWait;
     private int currentTurn = 0;
     private long startTime;
-    private long gid;
+    private final long gid;
     private boolean started = false;
-    private List<User> players = new ArrayList<>();
-    private List<GamePlayer> gamePlayers = new ArrayList<>();
+    private final List<User> players = new ArrayList<>();
+    private final List<GamePlayer> gamePlayers = new ArrayList<>();
     private ScheduledFuture future;
-    private String lang;
-    private Translation translation;
+    private final String lang;
+    private final Translation translation;
     private int id;
-    private List<Card> mainDeck = new ArrayList<>();
-    private List<Card> usedDeck = new ArrayList<>();
-    private Set<Integer> usedNonces = new HashSet<>();
+    private final List<Card> mainDeck = new ArrayList<>();
+    private final List<Card> usedDeck = new ArrayList<>();
+    private final Set<Integer> usedNonces = new HashSet<>();
     private int nextNonce = 0;
     private long turnStartTime;
     private long turnTime;
@@ -55,15 +55,15 @@ public class Game {
     private boolean ended = false;
 
     private int paymentConfirmationCount;
-    private Set<Integer> paidPlayers = new HashSet<>();
+    private final Set<Integer> paidPlayers = new HashSet<>();
 
-    private static Map<Long, Game> games = new HashMap<>();
+    private static final Map<Long, Game> games = new HashMap<>();
     public static boolean maintMode = false; // true=disallow starting games
     private static TelegramBot bot;
-    private static ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(2);
-    private static Map<Integer, Game> uidGames = new HashMap<>();
-    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-    private static int[] remindSeconds = new int[]{15, 30, 60, 90, 120, 180};
+    private static final ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(2);
+    private static final Map<Integer, Game> uidGames = new HashMap<>();
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    private static final int[] remindSeconds = new int[]{15, 30, 60, 90, 120, 180};
     private Card currentCard = null;
 
     public static void init(TelegramBot _bot) {
@@ -516,7 +516,6 @@ public class Game {
         for (int i = 0; i < playerCount(); i++) {
             uidGames.remove(players.get(i).id());
         }
-        executor.shutdown();
     }
 
     public void kill() {
