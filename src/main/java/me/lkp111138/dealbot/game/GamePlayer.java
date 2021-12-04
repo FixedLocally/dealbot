@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 public class GamePlayer {
     // player info
-    private final int tgid;
+    private final long tgid;
     private final Game game;
     private final User user;
     private final Translation translation;
@@ -68,7 +68,7 @@ public class GamePlayer {
     private final List<Card> currencyDeck = new ArrayList<>();
     private final Map<Integer, List<Card>> propertyDecks = new HashMap<>();
 
-    public GamePlayer(Game game, int tgid, User user) {
+    public GamePlayer(Game game, long tgid, User user) {
         this.tgid = tgid;
         this.game = game;
         this.user = user;
@@ -255,7 +255,7 @@ public class GamePlayer {
         ++actionCount;
     }
 
-    public int getTgid() {
+    public long getTgid() {
         return tgid;
     }
 

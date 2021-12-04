@@ -50,7 +50,7 @@ public class ConfigCommand implements Command {
             case group:
             case supergroup:
                 long gid = msg.chat().id();
-                int uid = msg.from().id();
+                long uid = msg.from().id();
                 try (PreparedStatement stmt = Main.getConnection().prepareStatement("SELECT turn_wait_time, pay_time, say_no_time FROM `groups` where gid=?")) {
                     stmt.setLong(1, gid);
                     ResultSet rs = stmt.executeQuery();

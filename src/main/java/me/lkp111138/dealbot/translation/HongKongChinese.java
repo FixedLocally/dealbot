@@ -465,7 +465,7 @@ public class HongKongChinese extends TraditionalChinese {
     }
 
     @Override
-    public String WON_ANNOUNCEMENT(int tgid, String name) {
+    public String WON_ANNOUNCEMENT(long tgid, String name) {
         return String.format("<a href=\"tg://user?id=%1$s\">%2$s</a> 成功收集三套完整物業，贏咗呢場遊戲！", tgid, name);
     }
 
@@ -674,7 +674,7 @@ public class HongKongChinese extends TraditionalChinese {
     }
 
     @Override
-    public String LONE_WIN(int tgid, String name) {
+    public String LONE_WIN(long tgid, String name) {
         return String.format("其他人均已出局，<a href=\"tg://user?id=%1$s\">%2$s</a> 尚未出局，並自動勝出遊戲！", tgid, name);
     }
 }

@@ -123,7 +123,7 @@ public abstract class Translation {
     public abstract String SB_DISPOSED(String name, String card);
     public abstract String YOU_DISPOSED(String card);
     public abstract String PASS_ANNOUNCEMENT();
-    public abstract String WON_ANNOUNCEMENT(int tgid, String name);
+    public abstract String WON_ANNOUNCEMENT(long tgid, String name);
     public abstract String PASS_TIMEOUT();
     public abstract String PASS_CLICK();
     public abstract String NEW_GAME_PROMPT();
@@ -164,7 +164,7 @@ public abstract class Translation {
     public abstract String GAME_STARTING_IN(String name);
     public abstract String CANCEL();
     public abstract String SB_IS_ELIMINATED(String name);
-    public abstract String LONE_WIN(int tgid, String name);
+    public abstract String LONE_WIN(long tgid, String name);
     public abstract String HOW_TO_PLAY();
-    public abstract String STATS(int id, String name, int win, int total, float timePlayed, int cardsPlayed, int currency, int properties, int rent);
+    public abstract String STATS(long id, String name, int win, int total, float timePlayed, int cardsPlayed, int currency, int properties, int rent);
 }

@@ -422,7 +422,7 @@ public class TraditionalChinese extends Translation {
     public String PASS_ANNOUNCEMENT() {
         return "%s 選擇結束回合";
     }
-    public String WON_ANNOUNCEMENT(int tgid, String name) {
+    public String WON_ANNOUNCEMENT(long tgid, String name) {
         return String.format("<a href=\"tg://user?id=%1$s\">%2$s</a> 成功收集三套完整物業，並勝出遊戲！", tgid, name);
     }
     public String PASS_TIMEOUT() {
@@ -692,7 +692,7 @@ public class TraditionalChinese extends Translation {
     }
 
     @Override
-    public String LONE_WIN(int tgid, String name) {
+    public String LONE_WIN(long tgid, String name) {
         return String.format("其他人均已出局，<a href=\"tg://user?id=%1$s\">%2$s</a> 尚未出局，並自動勝出遊戲！", tgid, name);
     }
 
@@ -721,7 +721,7 @@ public class TraditionalChinese extends Translation {
     }
 
     @Override
-    public String STATS(int id, String name, int win, int total, float timePlayed, int cardsPlayed, int currency, int properties, int rent) {
+    public String STATS(long id, String name, int win, int total, float timePlayed, int cardsPlayed, int currency, int properties, int rent) {
          return String.format("<a href=\"tg://user?id=%d\">%s</a> 的 Monopoly Deal 統計資料：\n", id, name) +
                 String.format("勝出 / 總共遊戲場數: %d / %d (%.2f%%)\n", win, total, 100.0 * win / total) +
                 String.format("遊戲時間（分鐘）：%.1f\n", timePlayed) +

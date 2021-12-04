@@ -100,7 +100,7 @@ public class DealBot {
         PreCheckoutQuery preCheckoutQuery = update.preCheckoutQuery();
         if (msg != null) {
             MessageEntity[] entities = msg.entities();
-            int sender = msg.from().id();
+            long sender = msg.from().id();
             // blacklist
             if ("COMMAND".equals(queryBan(sender))) {
                 return;
@@ -208,7 +208,7 @@ public class DealBot {
         }
     }
 
-    public static void triggerAchievement(int tgid, Achievement ach) {
+    public static void triggerAchievement(long tgid, Achievement ach) {
         if (realTriggerAchievement(tgid, ach)) {
             Game g = Game.byUser(tgid);
             Translation translation = g.getTranslation();
@@ -217,11 +217,11 @@ public class DealBot {
         }
     }
 
-    private static boolean realTriggerAchievement(int tgid, Achievement ach) {
+    private static boolean realTriggerAchievement(long tgid, Achievement ach) {
         try {
             Connection conn = Main.getConnection();
             PreparedStatement stmt = conn.prepareStatement("insert into achv_log values (?, ?)");
-            stmt.setInt(1, tgid);
+            stmt.setLong(1, tgid);
             stmt.setString(2, ach.name());
             stmt.executeUpdate();
             return true;

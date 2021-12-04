@@ -16,7 +16,7 @@ public class StartCommand implements Command {
         // init the user if needed
         try (Connection conn = Main.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("INSERT IGNORE INTO tg_users (tgid, username) VALUES (?, ?)");
-            stmt.setInt(1, msg.from().id());
+            stmt.setLong(1, msg.from().id());
             stmt.setString(2, msg.from().username());
             stmt.execute();
             if (msg.chat().type() == Chat.Type.Private) {

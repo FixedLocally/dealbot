@@ -55,13 +55,13 @@ public class Game {
     private boolean ended = false;
 
     private int paymentConfirmationCount;
-    private final Set<Integer> paidPlayers = new HashSet<>();
+    private final Set<Long> paidPlayers = new HashSet<>();
 
     private static final Map<Long, Game> games = new HashMap<>();
     public static boolean maintMode = false; // true=disallow starting games
     private static TelegramBot bot;
     private static final ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(2);
-    private static final Map<Integer, Game> uidGames = new HashMap<>();
+    private static final Map<Long, Game> uidGames = new HashMap<>();
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     private static final int[] remindSeconds = new int[]{15, 30, 60, 90, 120, 180};
     private Card currentCard = null;
@@ -132,7 +132,7 @@ public class Game {
         this.execute(new SendMessage(gid, String.format(this.translation.GAME_START_ANNOUNCEMENT(), msg.from().id(), msg.from().firstName(), wait, id)).parseMode(ParseMode.HTML), new EmptyCallback<>());
         games.put(gid, this);
         addPlayer(msg);
-        startTime = System.currentTimeMillis() + wait * 1000;
+        startTime = System.currentTimeMillis() + wait * 1000L;
         int i;
         i = 0;
         while (wait > remindSeconds[i]) {
@@ -143,7 +143,7 @@ public class Game {
         this.logf("Game created in %s [%d]", msg.chat().title(), msg.chat().id());
     }
 
-    public static Game byUser(int tgid) {
+    public static Game byUser(long tgid) {
         return uidGames.get(tgid);
     }
 
@@ -172,7 +172,7 @@ public class Game {
             // .replyMarkup(new InlineKeyboardMarkup(new InlineKeyboardButton[]{}
             SendMessage send = new SendMessage(msg.from().id(), String.format(Translation.get(DealBot.lang(msg.from().id())).JOIN_SUCCESS(), msg.chat().title().replace("*", "\\*"), this.id)).parseMode(ParseMode.Markdown);
             if (msg.chat().username() != null) {
-                send.replyMarkup(new InlineKeyboardMarkup(new InlineKeyboardButton[]{new InlineKeyboardButton(this.translation.BACK_TO() + msg.chat().title()).url("https://t.me/" + msg.chat().username())}));
+                send.replyMarkup(new InlineKeyboardMarkup(new InlineKeyboardButton(this.translation.BACK_TO() + msg.chat().title()).url("https://t.me/" + msg.chat().username())));
             }
             this.execute(send, new Callback<SendMessage, SendResponse>() {
                 @Override
@@ -197,7 +197,7 @@ public class Game {
                         // for some reason we cant deliver the msg to the user, so we ask them to start me in the group
                         Game.this.execute(new SendMessage(msg.chat().id(), Game.this.translation.START_ME_FIRST())
                                 .replyToMessageId(msg.messageId())
-                                .replyMarkup(new InlineKeyboardMarkup(new InlineKeyboardButton[]{new InlineKeyboardButton(Game.this.translation.START_ME()).url("https://t.me/" + Main.getConfig("bot.username"))})));
+                                .replyMarkup(new InlineKeyboardMarkup(new InlineKeyboardButton(Game.this.translation.START_ME()).url("https://t.me/" + Main.getConfig("bot.username")))));
                     }
                 }
 
@@ -209,7 +209,7 @@ public class Game {
         }
     }
 
-    public boolean removePlayer(int tgid) {
+    public boolean removePlayer(long tgid) {
         // if not in game then do nothing
         // otherwise remove them
         if (!started && players.removeIf(user -> user.id() == tgid)) {
@@ -430,7 +430,7 @@ public class Game {
     public void resumeTurn() {
         cancelFuture();
         turnPaused = false;
-        schedule(gamePlayers.get(currentTurn)::endTurnTimeout, turnWait * 1000 - turnTime);
+        schedule(gamePlayers.get(currentTurn)::endTurnTimeout, turnWait * 1000L - turnTime);
         gamePlayers.get(currentTurn).promptForCard();
         turnStartTime = System.currentTimeMillis();
     }
@@ -476,11 +476,11 @@ public class Game {
                     stmt.setInt(4, currencyCollected);
                     stmt.setInt(5, propertiesPlayed);
                     stmt.setInt(6, rentCollected);
-                    stmt.setInt(7, gamePlayer.getTgid());
+                    stmt.setLong(7, gamePlayer.getTgid());
                     stmt.executeUpdate();
                     stmt.close();
                     stmt = conn.prepareStatement("select game_count, won_count from tg_users where tgid=?");
-                    stmt.setInt(1, gamePlayer.getTgid());
+                    stmt.setLong(1, gamePlayer.getTgid());
                     ResultSet rs = stmt.executeQuery();
                     if (rs.next()) {
                         int wins = rs.getInt(2);
@@ -503,7 +503,7 @@ public class Game {
                         if (games == 50) {
                             DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.ADDICTED);
                         }
-                        if (players.stream().mapToInt(User::id).anyMatch(x -> x == Main.BOT_OWNER)) {
+                        if (players.stream().mapToLong(User::id).anyMatch(x -> x == Main.BOT_OWNER)) {
                             DealBot.triggerAchievement(gamePlayer.getTgid(), DealBot.Achievement.PLAY_WITH_MINT);
                         }
                     }
@@ -552,7 +552,7 @@ public class Game {
         logf("%s has been afk for 3 turns, eliminating!", removed.getTgid());
         try (Connection conn = Main.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("update tg_users set game_count=game_count+1 where tgid=?");
-            stmt.setInt(1, removed.getTgid());
+            stmt.setLong(1, removed.getTgid());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -925,7 +925,7 @@ public class Game {
             case "pay_choose":
             case "pay_confirm":
             case "pay_reject":
-                int tgid = query.from().id();
+                long tgid = query.from().id();
                 for (GamePlayer gamePlayer : gamePlayers) {
                     if (gamePlayer.getTgid() == tgid) {
                         gamePlayer.payCallback(args, query.id());
@@ -962,7 +962,7 @@ public class Game {
         usedDeck.remove(card);
     }
 
-    boolean confirmPayment(List<Card> payment, int tgid) {
+    boolean confirmPayment(List<Card> payment, long tgid) {
         if (paidPlayers.contains(tgid)) {
             logf("confirm payment from %s but duplicated", tgid);
             return false;
@@ -978,7 +978,7 @@ public class Game {
         ++paymentConfirmationCount;
         logf("confirmed payments: %s / %s", paymentConfirmationCount, gamePlayers.size() - 1);
         paidPlayers.add(tgid);
-        int id = gamePlayers.get(currentTurn).getTgid();
+        long id = gamePlayers.get(currentTurn).getTgid();
         if (payment != null) {
             String paymentStr = (payment.stream().map(x -> x.isCurrency() ? ("$ " + x.currencyValue() + "M") : (x.getCardTitle())).collect(Collectors.joining(", ")));
             for (Card card : payment) {

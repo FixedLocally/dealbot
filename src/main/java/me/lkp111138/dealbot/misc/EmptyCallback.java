@@ -6,7 +6,7 @@ import com.pengrad.telegrambot.response.BaseResponse;
 
 import java.io.IOException;
 
-public class EmptyCallback<T extends BaseRequest, R extends BaseResponse> implements Callback<T, R> {
+public class EmptyCallback<T extends BaseRequest<T, R>, R extends BaseResponse> implements Callback<T, R> {
     @Override
     public void onResponse(T request, R response) {
 

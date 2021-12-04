@@ -30,7 +30,7 @@ public class StatCommand implements Command {
         }
         try (Connection conn = Main.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT won_count, game_count, game_minutes, cards_played, currency_collected, properties_collected, rent_collected FROM tg_users WHERE tgid=?");
-            stmt.setInt(1, target.id());
+            stmt.setLong(1, target.id());
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 if (rs.getInt(4) > 0) {

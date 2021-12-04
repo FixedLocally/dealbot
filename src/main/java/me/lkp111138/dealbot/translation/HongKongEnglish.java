@@ -412,7 +412,7 @@ public class HongKongEnglish extends Translation {
     public String PASS_ANNOUNCEMENT() {
         return "%s ended their turn";
     }
-    public String WON_ANNOUNCEMENT(int tgid, String name) {
+    public String WON_ANNOUNCEMENT(long tgid, String name) {
         return String.format("<a href=\"tg://user?id=%1$s\">%2$s</a> has successfully gathered 3 full sets of properties and won!", tgid, name);
     }
     public String PASS_TIMEOUT() {
@@ -659,7 +659,7 @@ public class HongKongEnglish extends Translation {
         return String.format("%s has been away for 3 turns. Out!", name);
     }
 
-    public String LONE_WIN(int tgid, String name) {
+    public String LONE_WIN(long tgid, String name) {
         return String.format("Everybody has been eliminated, <a href=\"tg://user?id=%1$s\">%2$s</a> remained and won.", tgid, name);
     }
 
@@ -688,7 +688,7 @@ public class HongKongEnglish extends Translation {
     }
 
     @Override
-    public String STATS(int id, String name, int win, int total, float timePlayed, int cardsPlayed, int currency, int properties, int rent) {
+    public String STATS(long id, String name, int win, int total, float timePlayed, int cardsPlayed, int currency, int properties, int rent) {
         return String.format("Monopoly Deal Statistics for <a href=\"tg://user?id=%d\">%s</a>:\n", id, name) +
                 String.format("Won/Total games: %d / %d (%.2f%%)\n", win, total, 100.0 * win / total) +
                 String.format("Total in game minutes: %.1f\n", timePlayed) +

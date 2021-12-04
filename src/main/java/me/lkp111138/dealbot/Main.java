@@ -12,7 +12,7 @@ import java.sql.*;
 import java.util.Properties;
 
 public class Main {
-    public static final int BOT_OWNER = 389061708;
+    public static final long BOT_OWNER = 1097982911;
 
     private static Connection conn;
     private static Properties config = new Properties();

@@ -21,8 +21,8 @@ public class NextGameCommand implements Command {
     public void respond(TelegramBot bot, Message msg, String[] args) {
         try (PreparedStatement stmt = Main.getConnection().prepareStatement("replace into next_game values (?, ?)")) {
             long gid = msg.chat().id();
-            int uid = msg.from().id();
-            stmt.setInt(1, uid);
+            long uid = msg.from().id();
+            stmt.setLong(1, uid);
             stmt.setLong(2, gid);
             stmt.execute();
             SendMessage send = new SendMessage(uid, Translation.get(DealBot.lang(gid)).NEXT_GAME_QUEUED(msg.chat().title()));
@@ -38,7 +38,7 @@ public class NextGameCommand implements Command {
     }
 
     public static boolean callback(TelegramBot bot, CallbackQuery query) {
-        int tgid = query.from().id();
+        long tgid = query.from().id();
         int mid = query.message().messageId();
         String payload = query.data();
         String[] args = payload.split(":");
@@ -47,7 +47,7 @@ public class NextGameCommand implements Command {
             long gid = Long.parseLong(args[1]);
             try (Connection conn = Main.getConnection()) {
                 PreparedStatement stmt = conn.prepareStatement("delete from next_game where tgid=? and gid=?");
-                stmt.setInt(1, tgid);
+                stmt.setLong(1, tgid);
                 stmt.setLong(2, gid);
                 stmt.executeUpdate();
                 bot.execute(answer);
