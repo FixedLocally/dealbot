@@ -68,7 +68,7 @@ public class SetLangCommand implements Command {
         AnswerCallbackQuery answer = new AnswerCallbackQuery(query.id());
         if ("lang".equals(args[0])) {
             if (args.length > 2) {
-                int from_id = Integer.parseInt(args[2]);
+                long from_id = Long.parseLong(args[2]);
                 if (tgid == from_id) {
                     // authorized
                     if (args[1].equals("close")) {
