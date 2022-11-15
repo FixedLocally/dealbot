@@ -121,7 +121,7 @@ public class Game {
             ResultSet rs = stmt.executeQuery();
             String startMsg = this.translation.GAME_STARTING_IN(msg.chat().title());
             while (rs.next()) {
-                SendMessage send = new SendMessage(rs.getInt(1), startMsg);
+                SendMessage send = new SendMessage(rs.getLong(1), startMsg);
                 this.execute(send);
             }
             stmt.close();
