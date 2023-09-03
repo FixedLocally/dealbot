@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -237,7 +238,8 @@ public class DealBot {
      */
     public static String queryBan(long tgid) {
         Ban ban = bans.get(tgid);
-        if (ban == null) {
+        long now = System.currentTimeMillis() / 1000;
+        if (ban == null || ban.expiry < now) {
             return null;
         }
         return ban.type;
