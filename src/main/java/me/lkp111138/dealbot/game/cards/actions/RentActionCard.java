@@ -70,7 +70,7 @@ public class RentActionCard extends ActionCard {
                     player.setDoubleRentBuff(false);
                     String victim = players.get(order).getName();
                     EditMessageText edit = new EditMessageText(player.getTgid(), player.getMessageId(),
-                            translation.COLLECTING_RENT(victim, group, value * doubleRentBuff));
+                            translation.COLLECTING_RENT(victim, group, value));
                     player.getGame().execute(edit);
                     String msg = translation.YOU_HAVE_USED_RENT_FOR_AGAINST(getCardFunctionalTitle(), victim, group, value);
                     SendMessage send = new SendMessage(player.getTgid(), msg);
