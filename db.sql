@@ -65,7 +65,7 @@ CREATE TABLE `groups` (
                           `say_no_time` int(11) DEFAULT '15',
                           `pay_time` int(11) DEFAULT '30',
                           `current_game` int(11) DEFAULT NULL,
-                          `lang` enum('en','zh','hk','en_us','en_gb') NOT NULL DEFAULT 'en',
+                          `lang` enum('en','zh','hk','en_us','en_gb','en_id') NOT NULL DEFAULT 'en',
                           `protest_mode` bit(1) DEFAULT b'1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
