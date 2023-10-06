@@ -55,6 +55,7 @@ public class SetLangCommand implements Command {
                 new InlineKeyboardButton[]{new InlineKeyboardButton("English (HK)").callbackData("lang:en:" + uid)},
                 new InlineKeyboardButton[]{new InlineKeyboardButton("English (US)").callbackData("lang:en_us:" + uid)},
                 new InlineKeyboardButton[]{new InlineKeyboardButton("English (UK)").callbackData("lang:en_gb:" + uid)},
+                new InlineKeyboardButton[]{new InlineKeyboardButton("English (IN)").callbackData("lang:en_in:" + uid)},
                 new InlineKeyboardButton[]{new InlineKeyboardButton(Translation.get(DealBot.lang(gid)).CLOSE()).callbackData("lang:close:" + uid)}
         )));
     }
